@@ -79,6 +79,8 @@ Session: closed ✅
 
 Say:
 > The book is done. Read it in one sitting, as a reader — not as the author.
+>
+> When you're ready to share a first draft with readers, Claude can convert the manuscript to PDF. Just ask: "Convert manuscript/[title]-final.md to PDF."
 
 
 This macro closes the book. It runs in sequence: introduction, conclusion, final audit, manuscript assembly.

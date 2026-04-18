@@ -13,7 +13,18 @@ This is the third and final onboarding session. You are defining the author's vo
 
 ## Prerequisites
 
-Read `book.config.json`. If `author_profile` or `book_profile` are missing, recommend running the previous sessions first. But if the author wants to proceed, continue.
+Read `book.config.json`.
+
+**If `author_voice.voice_source` is `"wizard_dump"`**, a voice profile already exists — built from the author's actual words during the wizard session. Do not rebuild from scratch.
+
+Instead, say:
+> You already have a voice profile built from our initial conversation. Here's what I found: [present the current author_voice fields in plain language, not JSON]. Does this feel like you? Is anything off?
+
+Then offer two paths:
+- **Looks right** → skip to Part 2 (writing sample) to confirm and refine
+- **Something's off** → ask what specifically feels wrong, update only those fields
+
+If `author_profile` or `book_profile` are missing and no wizard profile exists, recommend running the previous sessions first. But if the author wants to proceed, continue.
 
 ---
 

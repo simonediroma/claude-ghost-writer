@@ -185,3 +185,5 @@ Issues accepted as limitations:
 
 Then say:
 > The manuscript is assembled. One last thing before you send it anywhere: read it in one sitting, as a reader — not as the author. Every problem you notice in that read is real. Every part that surprises you with how good it is — that's also real.
+>
+> When you're ready to share with beta readers, run `/ghost-writer:export-pdf` to generate a clean, readable PDF.

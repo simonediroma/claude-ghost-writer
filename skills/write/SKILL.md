@@ -23,6 +23,8 @@ Generate final text only after the structured dialogue (`ask-before-writing`) is
 
 When writing, use terms **exactly** as defined in memory. Do not introduce new definitions for already-defined terms. Do not use examples already listed as if they're new.
 
+If `author_voice.signature_phrases` contains entries, use them as anchors — these are phrases extracted from the author's actual speech and should appear naturally in the text where they fit.
+
 If `ask-before-writing` has not been done, ask:
 > We haven't done the structured dialogue for this section yet. Do you want to proceed anyway, or start with `/ghost-writer:ask-before-writing`?
 

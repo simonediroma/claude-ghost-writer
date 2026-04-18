@@ -26,6 +26,16 @@ claude --plugin-dir ./ghost-writer
 
 ---
 
+## The one command to remember
+
+```bash
+/ghost-writer:resume
+```
+
+Run this whenever you open the project. It tells you what you last did, what's waiting, and exactly what to do next.
+
+---
+
 ## Quick Start — Macro Commands
 
 Four commands cover the entire book lifecycle. Use these if you don't want to manage the sequence manually.
@@ -33,10 +43,13 @@ Four commands cover the entire book lifecycle. Use these if you don't want to ma
 | Command | What it runs |
 |---|---|
 | `/ghost-writer:check` | **Run this first** — verifies installation and setup in 60 seconds |
+| `/ghost-writer:wizard` | **Start here if you don't know where to begin** — conversational setup from scratch |
 | `/ghost-writer:start` | Full onboarding — author interview + book definition + voice fingerprint |
 | `/ghost-writer:chapter` | Full chapter cycle — dialogue + write + demolish + integrate |
 | `/ghost-writer:review [file]` | Full persona review — all 5 readers + integrate |
 | `/ghost-writer:finish` | Book closing — introduction + conclusion + final audit + manuscript |
+
+**Not sure which to use?** → `/ghost-writer:wizard`
 
 The atomic commands (below) remain available for authors who want to control the sequence directly.
 

@@ -46,6 +46,8 @@ setup-author
 ## How it works
 
 Check `book.config.json` to determine state:
+- File doesn't exist → suggest `/ghost-writer:wizard` first: > "It looks like you're starting fresh. If you're not sure what kind of book you want to write, `/ghost-writer:wizard` is easier — it sets everything up through conversation. Or continue here for the full structured onboarding."
+- `wizard_setup: true` exists → skip Session 2, go to Session 3 (voice only)
 - `author_profile` missing → Session 1
 - `book_profile` missing → Session 2
 - `author_voice` incomplete → Session 3
