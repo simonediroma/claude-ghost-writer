@@ -8,20 +8,29 @@ Based on the writing method developed in [quantum_fatalism](https://github.com/s
 
 ## Installation
 
+### From GitHub (disponibile ora)
+
+Due comandi:
+
+```bash
+# Step 1 — aggiungi il repo come marketplace
+/plugin marketplace add simonediroma/ghost-writer
+
+# Step 2 — installa il plugin
+/plugin install ghost-writer@simonediroma-ghost-writer
+```
+
+### Dal marketplace ufficiale (coming soon)
+
 ```bash
 /plugin install ghost-writer@claude-plugins-official
 ```
 
-Or directly from GitHub:
-
-```bash
-/plugin install https://github.com/your-username/ghost-writer
-```
-
-Test locally before publishing:
+### Test in locale
 
 ```bash
 claude --plugin-dir ./ghost-writer
+/ghost-writer:check
 ```
 
 ---
