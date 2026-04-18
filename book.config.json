@@ -1,0 +1,30 @@
+{
+  "title": "Your Book Title",
+  "subtitle": "",
+  "genre": "essay | narrative | manual | other",
+  "preset": "essay | fiction | manual | biography | fable | childrens-book",
+  "language": "en",
+  "target_reader": "Describe your ideal reader in one sentence",
+  "version": "0.1",
+  "author_voice": {
+    "tone": "e.g. direct, ironic, warm, analytical",
+    "register": "e.g. conversational, academic, journalistic",
+    "pov": "e.g. first person singular, third person",
+    "rhythm": "e.g. short sentences, long periods, alternating",
+    "avoid": [
+      "unexplained technical jargon",
+      "passive voice",
+      "preachy or moralizing tone"
+    ],
+    "reference_authors": [
+      "Author 1 \u2014 for style",
+      "Author 2 \u2014 for argumentative structure"
+    ]
+  },
+  "structure": {
+    "outline_file": "outline.md",
+    "chapters_dir": "chapters/"
+  },
+  "writing_log": [],
+  "language_note": "Output language for all skill responses. Supported: en, it, es, fr, de, pt. The author may respond in any language \u2014 the plugin always replies in this language."
+}
