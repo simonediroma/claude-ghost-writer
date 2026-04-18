@@ -1,0 +1,22 @@
+# Ghost Writer — .gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Manuscript exports (optional — remove if you want to version the final manuscript)
+# manuscript/
+
+# Local session files (optional — include if collaborating so partners see open sessions)
+# sessions/
+
+# Keep all .md and .json files tracked by default
+
+# Generated PDF exports (optional — remove if you want to version them)
+# manuscript/*.pdf

@@ -1,0 +1,25 @@
+{
+  "name": "ghost-writer",
+  "description": "Collaborative ghost writing assistant for books and long-form writing. Full onboarding (author interview, book brainstorm, voice fingerprint) + structured writing cycle (concept dialogue, drafting, hostile critique, integration). Supports 6 genre presets, 5 reader personas, long-form mode, and session resume. Based on the quantum_fatalism writing method.",
+  "version": "1.0.0",
+  "author": {
+    "name": "simone di roma",
+    "email": "simone.razzano@gmail.com"
+  },
+  "homepage": "https://github.com/simonediroma/claude-ghost-writer",
+  "repository": "https://github.com/simonediroma/claude-ghost-writer",
+  "license": "MIT",
+  "keywords": [
+    "writing",
+    "ghost-writer",
+    "book",
+    "essay",
+    "fiction",
+    "long-form",
+    "creative-writing",
+    "childrens-book",
+    "fable",
+    "biography"
+  ],
+  "category": "productivity"
+}

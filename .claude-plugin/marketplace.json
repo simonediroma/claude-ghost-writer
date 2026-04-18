@@ -1,0 +1,20 @@
+{
+  "name": "simonediroma-ghost-writer",
+  "owner": {
+    "name": "Simone Di Roma",
+    "email": "simone.razzano@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "ghost-writer",
+      "source": {
+        "source": "github",
+        "repo": "simonediroma/claude-ghost-writer"
+      },
+      "version": "1.0.0",
+      "description": "Collaborative ghost writing assistant for books and long-form writing. Full onboarding, structured writing cycle, hostile critique, and integration. Supports 6 genre presets, 5 reader personas, long-form mode, and session resume.",
+      "category": "productivity",
+      "keywords": ["writing", "book", "ghost-writer", "fiction", "essay", "fable", "childrens-book", "biography"]
+    }
+  ]
+}
