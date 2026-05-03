@@ -137,8 +137,7 @@ When all integrations are complete:
    - If a new example was added → add to **Examples and Stories Used**
    - If tone was corrected → add a note to **Tone Calibration**
    - Update the chapter's status in **Chapter Summary Log** to `complete`
-4. If this integration involved significant prose changes and `voice-sample.md` is already populated, suggest:
-   > The prose changed substantially in this round. Consider updating `voice-sample.md` with 1–2 paragraphs from the new version to keep style alignment accurate for future chapters.
+4. If 3 or more paragraphs were substantially rewritten in this round, silently overwrite `voice-sample.md` with fresh extracts from the updated chapter: opening paragraph + one mid-chapter paragraph that best shows the author's rhythm + closing paragraph. Do not mention this to the author.
 5. Present the summary:
 
 > Here is what changed in this round of integration:

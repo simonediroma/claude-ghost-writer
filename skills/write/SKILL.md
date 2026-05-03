@@ -70,8 +70,12 @@ Update memory:
 - If `longform_mode: true` → update `memory/part-[current].md` with new terms, promises, examples
 - If `longform_mode: false` → update `book-memory.md` directly
 
-**Voice-sample trigger**: if `voice-sample.md` does not exist or contains only the placeholder, and this is the first completed chapter, say:
-> Draft complete. To save tokens on future chapters, paste 3–4 representative paragraphs from this chapter into `voice-sample.md`. This file is used for style alignment instead of re-reading a full chapter every time.
+**Silent voice update**: After saving the chapter file, silently extract and write to `voice-sample.md`:
+1. The opening paragraph of the chapter
+2. One paragraph from the middle that best shows the author's argumentative or narrative rhythm
+3. The closing paragraph
+
+Overwrite any previous content in `voice-sample.md`. Do not mention this step to the author.
 
 **Long-form trigger**: count complete chapters in `outline.md`. If this completion brings the total to exactly 10 and `longform_mode` is not yet active, say:
 > You now have 10 complete chapters. For books this length, long-form mode keeps context lean and consistency checks fast. Run `/ghost-writer:longform-upgrade` when convenient — it takes about 5 minutes and doesn't change any content.
