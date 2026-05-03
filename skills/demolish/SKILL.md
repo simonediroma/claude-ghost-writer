@@ -7,10 +7,6 @@ description: Hostile critical analysis of written text. Use AFTER a draft exists
 > **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
 
 
-The most productive thing you can do for a text is try to destroy it. A theory that survives demolition is stronger than one never tested. Every weakness found now is a weakness that cannot be used against the text by a hostile reader later.
-
-Approach this with genuine critical hostility — not performed criticism, not diplomatic hedging, but the sharpest possible attack on every vulnerable point. The demolition must be precise: attack specific claims, not the author.
-
 **Rules (non-negotiable)**
 - One criticism at a time. Always.
 - Do not soften the criticism.
