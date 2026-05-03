@@ -14,11 +14,11 @@ Generate final text only after the structured dialogue (`ask-before-writing`) is
 ## Before Writing
 
 1. Read `book.config.json` — check preset and `longform_mode`
-2. **If `longform_mode: true`**: read `book-memory.md` (global index only) + `memory/part-[current].md` + handoff section of the previous part file + summaries from adjacent chapter frontmatters
-3. **If `longform_mode: false`**: read full `book-memory.md`
+2. **If `longform_mode: true`**: read `book-memory.md` (global index only) + `memory/part-[current].md` + handoff section of the previous part file + summaries from adjacent chapter frontmatters. Read only `## Defined Terms`, `## Central Claims Made`, and `## Open Promises to the Reader` sections.
+3. **If `longform_mode: false`**: read `book-memory.md` — but only the sections `## Defined Terms`, `## Central Claims Made`, and `## Open Promises to the Reader`. Skip `## Session Log`, `## Tone Calibration`, `## Recurring Metaphors`.
 4. If this chapter features profiled characters, read their files in `characters/`
 5. Read `outline.md` — identify the requested section and its central claim
-6. Read at least one existing chapter in `chapters/` — align to established style
+6. **Style alignment**: if `voice-sample.md` exists and is populated, read it. If it does not exist or contains only the placeholder text, read one existing chapter from `chapters/` instead.
 7. Confirm that `ask-before-writing` has been completed for this section
 
 When writing, use terms **exactly** as defined in memory. Do not introduce new definitions for already-defined terms. Do not use examples already listed as if they're new.
@@ -69,6 +69,13 @@ Update `outline.md` — change the section status to `draft`.
 Update memory:
 - If `longform_mode: true` → update `memory/part-[current].md` with new terms, promises, examples
 - If `longform_mode: false` → update `book-memory.md` directly
+
+**Silent voice update**: After saving the chapter file, silently extract and write to `voice-sample.md`:
+1. The opening paragraph of the chapter
+2. One paragraph from the middle that best shows the author's argumentative or narrative rhythm
+3. The closing paragraph
+
+Overwrite any previous content in `voice-sample.md`. Do not mention this step to the author.
 
 **Long-form trigger**: count complete chapters in `outline.md`. If this completion brings the total to exactly 10 and `longform_mode` is not yet active, say:
 > You now have 10 complete chapters. For books this length, long-form mode keeps context lean and consistency checks fast. Run `/ghost-writer:longform-upgrade` when convenient — it takes about 5 minutes and doesn't change any content.
