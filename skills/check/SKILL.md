@@ -61,7 +61,7 @@ Check `book.config.json` for:
 - `author_voice.tone` not empty/default → onboarding session 3 complete
 
 ### 6. Skills count
-Count `.md` files in `skills/` subdirectories. Expected: 23.
+Count `.md` files in `skills/` subdirectories. Expected: 27.
 
 ### 7. Quick smoke test
 Generate one sentence in the author's voice (from `book.config.json → author_voice`) about the book's topic (from `book_profile → premise`). This proves the voice profile is readable and usable.
@@ -95,7 +95,7 @@ Onboarding status
   ⚠️  Session 3 — Voice profile: incomplete — run /ghost-writer:setup-voice
 
 Skills
-  ✅ 23 skills found
+  ✅ 27 skills found
 
 Voice smoke test
   ✅ "[one sentence generated in the author's voice about the book's topic]"
