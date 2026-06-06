@@ -38,10 +38,12 @@ claude --plugin-dir ./ghost-writer
 ## The one command to remember
 
 ```bash
-/ghost-writer:resume
+/ghost-writer:session-start
 ```
 
-Run this whenever you open the project. It tells you what you last did, what's waiting, and exactly what to do next.
+Run this whenever you open the project. It reads `project-state.md` (a compact digest updated at the end of every session) and briefs you in seconds — where you left off, what's pending, what to do today.
+
+On the very first session, or if the digest is older than 7 days, it does a full read and regenerates the digest automatically.
 
 ---
 
@@ -82,7 +84,9 @@ The atomic commands (below) remain available for authors who want to control the
 | `/ghost-writer:ask-before-writing` | Structured dialogue before writing anything |
 | `/ghost-writer:freeflow` | For blocked authors — dump everything, plugin organizes |
 | `/ghost-writer:write [section]` | Generates the section after dialogue is confirmed |
+| `/ghost-writer:write [section] --quick` | Skips dialogue — asks one question, writes directly |
 | `/ghost-writer:demolish [file]` | Hostile critical analysis — one objection at a time |
+| `/ghost-writer:demolish [file] --light` | Fast stress-test — finds only the 3 most critical issues |
 | `/ghost-writer:demolish-persona [persona]` | Demolition from a specific reader's perspective |
 | `/ghost-writer:integrate` | Incorporates responses into the text — one change at a time |
 
@@ -115,7 +119,7 @@ The atomic commands (below) remain available for authors who want to control the
 ```
 ONBOARDING (once)
 ─────────────────────────────────────
-session-start         → orient to the project
+session-start         → orient to the project (reads project-state.md digest)
 setup-author          → who are you, your authority, your stake
 setup-book            → what is the book + genre preset + first outline draft
 setup-voice           → tone of voice via interview + sample analysis
@@ -125,8 +129,10 @@ PER CHAPTER (repeated)
 session-start                   → briefing: where we left off
 ask-before-writing              → concept dialogue, one question at a time
   └─ blocked? → freeflow        → dump everything, plugin organizes
+  └─ clear idea? → write --quick → skip dialogue, one question, write directly
 write [section]                 → generates draft in author's voice
-demolish [file]                 → hostile critique, logic and structure
+demolish [file]                 → hostile critique, logic and structure (7 vectors)
+  └─ time-limited? → demolish --light  → 3 most critical issues only
 demolish-persona editor         → structural diagnosis
 demolish-persona target-reader  → does it work for the intended reader?
 demolish-persona hostile-reader → does the argument hold under pressure?
@@ -136,6 +142,8 @@ integrate                       → incorporates all responses, one change at a 
 EVERY 3-4 CHAPTERS
 ─────────────────────────────────────
 consistency-check     → term drift, contradicted claims, broken promises, tone arc
+                         (streams findings as found; uses summaries first, full
+                          text only on flagged chapters)
 
 OPTIONAL (narrative books)
 ─────────────────────────────────────
@@ -168,7 +176,7 @@ Selected during `setup-book`. Adapts vocabulary, questions, and demolition logic
 
 ## Reader Personas
 
-Used with `/ghost-writer:demolish-persona`.
+Used with `/ghost-writer:demolish-persona` or run all five sequentially with `/ghost-writer:review`.
 
 | Persona | What they find |
 |---|---|
@@ -177,6 +185,8 @@ Used with `/ghost-writer:demolish-persona`.
 | `domain-expert` | Technical gaps, overclaims |
 | `editor` | Structure, pacing, prose problems |
 | `out-of-target` | Unexplained jargon, invisible assumptions |
+
+Each persona file opens with a `## Quick Summary` (role, focus, key questions, feedback style) that `demolish-persona` uses by default. The full behavioral profile is in the same file for deeper reads.
 
 Custom personas: copy `personas/custom-template.md` and fill in.
 
@@ -191,6 +201,24 @@ Custom personas: copy `personas/custom-template.md` and fill in.
 - **Genre adapts everything.** Vocabulary, questions, structure — all shaped by the preset.
 - **Memory is explicit.** Every term, promise, and demolition cycle is written down.
 - **The introduction is written last.**
+
+---
+
+## Project Files
+
+Files the plugin reads and writes automatically. You don't need to edit these manually.
+
+| File | Purpose | Updated by |
+|---|---|---|
+| `book.config.json` | Project metadata, voice profile, preset digest | setup-book, wizard, retune |
+| `book-memory.md` | Defined terms, promises, claims, chapter log | write, integrate, consistency-check |
+| `outline.md` | Chapter list with statuses | write, chapter, longform-upgrade |
+| `voice-sample.md` | 3 paragraphs extracted from the last written chapter — style reference | write, integrate (silently) |
+| `project-state.md` | Compact session digest — chapter counts, last step, open issues | session-start (silently, at end of session) |
+| `demolition-history.md` | Book-level issue log, active + archived | demolish |
+| `chapters/NN-slug.md` | Chapter text with frontmatter (title, version, claim, status, summary) | write, integrate |
+| `sessions/` | Macro session state for resume support | chapter, review, finish |
+| `memory/part-N.md` | Per-part memory (longform mode only) | longform-upgrade, write |
 
 ---
 

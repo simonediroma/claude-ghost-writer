@@ -48,10 +48,12 @@ Author reviews the PR, accepts or rejects changes, merges.
 ## What to commit
 
 Always commit together:
-- The chapter file (`chapters/NN-*.md`) — includes Demolition Log
+- The chapter file (`chapters/NN-*.md`) — includes Demolition Log and `summary` frontmatter field
 - `book-memory.md` or the relevant `memory/part-N.md`
 - `demolition-history.md`
 - `outline.md` if status changed
+- `project-state.md` — commit this at the end of each session so collaborators open with a current digest
+- `voice-sample.md` if updated (after write or integrate)
 
 Commit message convention:
 ```
@@ -65,6 +67,7 @@ Examples:
 [ch3] integrate: v1.1 — falsifiability issue resolved
 [ch5] write-opening: introduction draft
 [book] consistency-check: part 1 audit complete
+[book] session: end of day — ch4 demolition in progress
 ```
 
 ---
