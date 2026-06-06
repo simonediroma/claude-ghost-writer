@@ -4,10 +4,23 @@ description: Generate a section of the book from the outline. Use AFTER ask-befo
 
 # Skill: Write a Section
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 Generate final text only after the structured dialogue (`ask-before-writing`) is complete and the author has confirmed the summary.
+
+---
+
+## Quick-Write Mode
+
+If the author invokes this skill with `--quick`, or explicitly says they want to skip the dialogue and write directly, activate Quick-Write Mode:
+
+1. Do not run or wait for `ask-before-writing`
+2. Ask one single question instead:
+   > In 2-3 sentences: what is this chapter about and what should the reader understand by the end of it?
+3. After the author answers, proceed directly to writing — treat their description as the brief
+
+Quick-Write is appropriate when the author already has a clear idea, wants a fast first draft to react to, or the chapter is straightforward enough that a full dialogue would add friction without value. Quick-Write drafts typically need more `integrate` work — flag this when presenting the draft.
 
 ---
 
@@ -59,6 +72,7 @@ title: [Section Title]
 version: 1.0
 claim: [central claim of this section]
 status: draft
+summary:
 ---
 
 [text]
@@ -76,6 +90,8 @@ Update memory:
 3. The closing paragraph
 
 Overwrite any previous content in `voice-sample.md`. Do not mention this step to the author.
+
+**Silent summary update**: Immediately after the voice update, silently write a `summary` into the chapter file's frontmatter (the `summary:` field saved above). Write 3-5 sentences covering: what happens in this chapter, what the reader learns, what changes, and what remains open. Written for a reader who has already read everything before this chapter. Do not mention this step to the author. If `longform-upgrade` is later run, the summary is already present — present it for confirmation rather than regenerating it.
 
 **Long-form trigger**: count complete chapters in `outline.md`. If this completion brings the total to exactly 10 and `longform_mode` is not yet active, say:
 > You now have 10 complete chapters. For books this length, long-form mode keeps context lean and consistency checks fast. Run `/ghost-writer:longform-upgrade` when convenient — it takes about 5 minutes and doesn't change any content.

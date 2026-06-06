@@ -4,7 +4,7 @@ description: Translate the author's responses to demolition into precise text mo
 
 # Skill: Integrate Responses After Demolition
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 **Rules (non-negotiable)**

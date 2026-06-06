@@ -4,7 +4,7 @@ description: Optional. Verifies that a character behaves consistently with their
 
 # Skill: Character Consistency Check
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 Read the written chapter or scene and the character's profile. Find every place where the character on the page contradicts the character as defined.

@@ -4,7 +4,7 @@ description: Quick installation and setup check. Run this first after installing
 
 # Skill: Check
 
-> **Language**: Read `book.config.json → language`. Write all output in that language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 Quick verification that the plugin is installed correctly and the project is ready to use.
 

@@ -4,7 +4,7 @@ description: The one command to remember. Run this whenever you open the project
 
 # Skill: Resume
 
-> **Language**: Read `book.config.json → language`. Write all output in that language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 One command. One answer. Where were you, and what do you do now.
 

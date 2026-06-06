@@ -4,7 +4,7 @@ description: Export the assembled manuscript as a readable PDF. Generates a clea
 
 # Skill: Export PDF
 
-> **Language**: Read `book.config.json → language`. Write all output in that language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 Converts the assembled manuscript into a shareable PDF. Clean typography, minimal design, ready to send.
 

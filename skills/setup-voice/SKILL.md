@@ -4,7 +4,7 @@ description: Third onboarding session. Defines the author's tone of voice throug
 
 # Skill: Setup — How the Book Sounds
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 This is the third and final onboarding session. You are defining the author's voice — the specific way they sound on the page. This is done in two parts: a guided interview, then analysis of writing samples.

@@ -21,5 +21,9 @@
     "fable",
     "biography"
   ],
-  "category": "productivity"
+  "category": "productivity",
+  "shared_instructions": {
+    "language": "Read `book.config.json → language`. Write all output in that language. Author may write in any language; always reply in the configured one. Default: English.",
+    "note": "This rule is condensed inline in every SKILL.md. Update here when changing the canonical wording."
+  }
 }

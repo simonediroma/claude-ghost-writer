@@ -4,7 +4,7 @@ description: Guided chapter macro. Runs the complete writing cycle for one chapt
 
 # Macro: Chapter
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 This macro runs the full writing cycle for one chapter. If interrupted, it resumes from the last completed step.
@@ -40,7 +40,7 @@ If no open sessions exist, proceed directly to chapter selection.
 
 ## New Session — Chapter Selection
 
-Read `book.config.json`, `book-memory.md`, `outline.md`, and the preset file.
+Read `book.config.json`, `book-memory.md`, and `outline.md`. For preset rules, use `book.config.json → preset_digest` if it exists — do not read the full preset file unless `preset_digest` is null.
 
 Check onboarding: if `author_voice` or `preset` is missing:
 > Your project isn't set up yet. Run `/ghost-writer:start` first.
@@ -97,6 +97,9 @@ After each step completes, update the session file:
 
 ## Step 1 — Concept Dialogue
 
+If the macro was invoked with `--quick`, skip the full `ask-before-writing` dialogue. Instead, ask the author for a 2-3 sentence description of the chapter (quick-write mode), then proceed directly to Step 2.
+
+Otherwise:
 Tell the author:
 > Before writing, let's make sure the concepts are clear. One question at a time.
 

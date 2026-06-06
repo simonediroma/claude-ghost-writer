@@ -4,7 +4,7 @@ description: Optional. Deep interview to define a character's psychology, behavi
 
 # Skill: Character Interview
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 This skill builds a precise psychological profile of a character through structured dialogue with the author. The goal is not a biography — it is a **behavioral map**: given any situation, how does this character think, react, and speak?
