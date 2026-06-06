@@ -115,8 +115,11 @@ title: Conclusion
 version: 1.0
 status: draft
 written: last
+summary:
 ---
 ```
+
+**Silent summary update**: After saving, silently generate a 3-5 sentence summary of the conclusion (what it lands, which promises it resolves, and what the reader carries away) and write it to the `summary:` field. Do not mention this to the author.
 
 Update `book-memory.md → Open Promises` — mark all resolved promises as resolved.
 

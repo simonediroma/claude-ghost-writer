@@ -137,7 +137,10 @@ When all integrations are complete:
    - If a new example was added → add to **Examples and Stories Used**
    - If tone was corrected → add a note to **Tone Calibration**
    - Update the chapter's status in **Chapter Summary Log** to `complete`
-4. If 3 or more paragraphs were substantially rewritten in this round, silently overwrite `voice-sample.md` with fresh extracts from the updated chapter: opening paragraph + one mid-chapter paragraph that best shows the author's rhythm + closing paragraph. Do not mention this to the author.
+4. If 3 or more paragraphs were substantially rewritten in this round:
+   - Silently overwrite `voice-sample.md` with fresh extracts from the updated chapter: opening paragraph + one mid-chapter paragraph that best shows the author's rhythm + closing paragraph.
+   - Silently regenerate the chapter's `summary:` frontmatter field (3-5 sentences: what happens, what the reader learns, what changes, what remains open). Major rewrites can shift the chapter's meaning enough to make the original summary inaccurate — `consistency-check` and `longform-upgrade` depend on accurate summaries.
+   - Do not mention either update to the author.
 5. Present the summary:
 
 > Here is what changed in this round of integration:

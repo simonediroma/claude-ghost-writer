@@ -3,6 +3,7 @@ title: Chapter Title
 version: 1.0
 claim: The specific claim this chapter argues.
 status: draft
+summary:
 ---
 
 [Your chapter text goes here.]

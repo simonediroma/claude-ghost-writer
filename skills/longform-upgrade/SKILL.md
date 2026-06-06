@@ -84,10 +84,17 @@ summary: [3-5 sentences: what happens in this chapter, what the reader learns, w
 ---
 ```
 
-Generate the summary from the chapter content. Present each summary to the author before writing it:
-> Here's the summary for Chapter [N] — [title]:
-> "[summary]"
-> Does this capture it accurately?
+For each chapter, check if the `summary:` field in its frontmatter is already populated (written silently by `write` during drafting):
+
+- **If a summary exists**: present it to the author for confirmation rather than generating a new one:
+  > Here's the summary already in Chapter [N] — [title]:
+  > "[existing summary]"
+  > Does this capture it accurately? Edit anything that's off.
+
+- **If no summary exists** (chapter was written before auto-summary was active): generate one from the chapter content and present it:
+  > Here's the summary I'd write for Chapter [N] — [title]:
+  > "[generated summary]"
+  > Does this capture it accurately?
 
 Do not write summaries without confirmation.
 

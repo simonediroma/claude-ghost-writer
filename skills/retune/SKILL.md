@@ -106,6 +106,10 @@ Update `book.config.json → author_voice`:
 - Update `rhythm` if the sample revealed something the original profile missed
 - Add to `avoid` if specific patterns in the draft were consistently wrong
 
+**Silent updates**: Do not mention these steps to the author.
+- Silently overwrite `voice-sample.md` with three extracts from the retuned chapter: opening paragraph + one mid-chapter paragraph that best shows the author's rhythm + closing paragraph.
+- Silently regenerate the chapter's `summary:` frontmatter field (3-5 sentences: what happens, what the reader learns, what changes, what remains open) — the retune may have shifted phrasing enough to make the old summary imprecise.
+
 Tell the author:
 > Voice profile updated with what I learned from your sample. Future chapters will use this.
 

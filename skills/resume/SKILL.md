@@ -1,5 +1,5 @@
 ---
-description: The one command to remember. Run this whenever you open the project and don't know where to start. Shows what you last did, what's waiting, and exactly what to do next — one clear recommendation. Nothing else.
+description: Fast in-session orientation. One sentence on where you are and one command for what to do next. Lighter than session-start — use this for quick mid-session checks. To open a new writing session with full project context, use session-start instead.
 ---
 
 # Skill: Resume
@@ -7,6 +7,8 @@ description: The one command to remember. Run this whenever you open the project
 > **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 One command. One answer. Where were you, and what do you do now.
+
+**When to use this vs. `session-start`**: use `resume` for a quick check mid-session or when you already know roughly where you are and just need a next-step prompt. Use `/ghost-writer:session-start` to open a new writing session — it reads `project-state.md` and gives you the full picture: what's done, what's pending, open issues, and today's recommendation.
 
 ---
 

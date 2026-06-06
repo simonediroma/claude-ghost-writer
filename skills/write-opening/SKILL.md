@@ -99,8 +99,11 @@ title: Introduction
 version: 1.0
 status: draft
 written: last
+summary:
 ---
 ```
+
+**Silent summary update**: After saving, silently generate a 3-5 sentence summary of the introduction (what it promises, the entry point it establishes, and the emotional or intellectual state it leaves the reader in) and write it to the `summary:` field. Do not mention this to the author.
 
 ---
 

@@ -27,7 +27,7 @@ If any file is still `draft` or `in-review`, say:
 
 ## Phase 1 — The Arc Audit
 
-Read the entire manuscript in order: introduction → chapters → conclusion.
+**Before reading full text**: read all `summary:` fields from chapter frontmatter in sequence (introduction → chapters → conclusion). Use these to map the logical and emotional arc at a glance and identify any obvious gaps or breaks. Only then read the full text of chapters flagged by the summary scan — or when the check specifically requires it (opening/closing correspondence reads the first and last paragraphs directly).
 
 Check these five things. Present findings one at a time.
 
