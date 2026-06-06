@@ -4,7 +4,7 @@ description: Guided chapter macro. Runs the complete writing cycle for one chapt
 
 # Macro: Chapter
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 This macro runs the full writing cycle for one chapter. If interrupted, it resumes from the last completed step.

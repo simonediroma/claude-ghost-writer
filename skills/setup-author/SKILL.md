@@ -4,7 +4,7 @@ description: First onboarding session. Interviews the author about themselves �
 
 # Skill: Setup — Who Is the Author
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 This is the first of three onboarding sessions. You are interviewing the author, not advising them. Your job is to listen, ask follow-up questions, and extract precise answers.

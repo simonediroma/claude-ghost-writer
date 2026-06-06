@@ -4,7 +4,7 @@ description: Hostile critical analysis of written text. Use AFTER a draft exists
 
 # Skill: Demolish the Text
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 **Rules (non-negotiable)**
@@ -22,7 +22,7 @@ description: Hostile critical analysis of written text. Use AFTER a draft exists
 Read in this order:
 1. The full chapter text
 2. The `## Demolition Log` at the bottom of the chapter file
-3. `demolition-history.md` — the book-level log
+3. `demolition-history.md` — **active sections only**: `## Summary`, `## Recurring Patterns`, `## Open Deferred Issues`, and `## Accepted Limitations`. Skip `## Archived Cycles` and the Full Log entries for chapters already marked `complete` in the outline — those are closed.
 
 From `demolition-history.md`, check:
 - **Recurring Patterns**: has this type of vulnerability appeared in other chapters? If yes, flag it immediately as a pattern, not just a local issue.
@@ -161,6 +161,8 @@ End with a summary, then update **both logs**:
 - If any issue matches a pattern already seen in another chapter → add or update the entry in **Recurring Patterns**
 - If any issue was deferred → add to **Open Deferred Issues**
 - If any issue was accepted-limitation → add to **Accepted Limitations**
+
+**Archive completed chapters**: After updating the Full Log, check `outline.md` for chapters with `status: complete`. If a chapter appears in the Full Log and all its issues are `integrated` or `accepted-limitation` (none deferred), move its entire Full Log section to `## Archived Cycles` at the bottom of `demolition-history.md`. This keeps the active log lean — only chapters still in progress stay in the Full Log.
 
 Then say:
 > Both logs updated. Run `/ghost-writer:integrate` to apply the resolved responses to the text.

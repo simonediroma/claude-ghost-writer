@@ -4,7 +4,7 @@ description: Final manuscript audit and preparation. Run after introduction, all
 
 # Skill: Final Manuscript
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 This is the last skill. Run it when every chapter, introduction, and conclusion is at final version.

@@ -4,7 +4,7 @@ description: Use when the author is blocked, doesn't know where to start, or has
 
 # Skill: Freeflow
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 The author has something to say but can't find the form. This skill inverts the process: form comes last.

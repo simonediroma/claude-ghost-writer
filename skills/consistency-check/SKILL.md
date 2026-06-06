@@ -4,7 +4,7 @@ description: Cross-chapter consistency audit. Reads all written chapters and boo
 
 # Skill: Consistency Check
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 Read the entire book written so far and find every place where the text is inconsistent with itself.

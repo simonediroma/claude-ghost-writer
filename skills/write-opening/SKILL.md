@@ -4,7 +4,7 @@ description: Write the book's introduction or opening chapter. Run AFTER all oth
 
 # Skill: Write the Opening
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 The introduction is written last. It is the only part of the book that knows what the whole book is.

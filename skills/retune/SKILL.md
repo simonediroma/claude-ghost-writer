@@ -4,7 +4,7 @@ description: Use when the author reads a draft and says "this doesn't sound like
 
 # Skill: Retune
 
-> **Language**: Read `book.config.json → language`. Write all output in that language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 The author reads the draft and feels something is off. Not wrong — off. The words are right but the voice isn't theirs.
 

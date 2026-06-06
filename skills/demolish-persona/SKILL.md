@@ -4,7 +4,7 @@ description: Runs a demolition of a chapter from the perspective of a specific r
 
 # Skill: Persona Demolition
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 Standard demolition attacks logical and structural weaknesses. Persona demolition asks: how does a specific type of reader actually experience this text?

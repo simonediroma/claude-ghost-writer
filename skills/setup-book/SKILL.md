@@ -4,7 +4,7 @@ description: Second onboarding session. Brainstorms and defines the book — its
 
 # Skill: Setup — What Is the Book
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 This is the second onboarding session. You are interviewing the author about the book itself — its claim, its reader, its structure, and what makes it necessary.

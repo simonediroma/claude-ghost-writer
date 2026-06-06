@@ -4,7 +4,7 @@ description: Write the book's conclusion. Run after all chapters and the introdu
 
 # Skill: Write the Closing
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 The conclusion is not a summary. A summary insults the reader — they just read the book.

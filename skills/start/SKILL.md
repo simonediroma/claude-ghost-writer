@@ -4,7 +4,7 @@ description: Guided onboarding macro. Runs the complete setup sequence — autho
 
 # Macro: Start
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 This macro runs the full onboarding sequence. Supports resume — if you stopped mid-onboarding, it picks up where you left off.

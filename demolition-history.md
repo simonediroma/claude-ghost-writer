@@ -67,3 +67,11 @@ Issues declared out of scope at the chapter level. Listed here for visibility â€
 *(no cycles yet)*
 
 ---
+
+## Archived Cycles
+
+Chapters whose demolition is fully resolved (all issues integrated or accepted as limitations). Moved here automatically when a chapter reaches `status: complete` in `outline.md` with no open deferred issues. Demolish and consistency-check skip this section.
+
+---
+
+*(empty â€” no chapters archived yet)*

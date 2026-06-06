@@ -4,7 +4,7 @@ description: Guided closing macro. Runs the complete book-closing sequence — i
 
 # Macro: Finish
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 Closes the book. Supports resume — if interrupted, picks up where it left off.

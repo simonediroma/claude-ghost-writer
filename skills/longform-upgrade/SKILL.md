@@ -4,7 +4,7 @@ description: Activates long-form mode for books with 10+ chapters. Restructures 
 
 # Skill: Long-Form Upgrade
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 This skill upgrades a standard project to long-form mode. It reorganizes how memory and context work — without changing the content of any chapter.

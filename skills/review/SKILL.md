@@ -4,7 +4,7 @@ description: Full review macro. Runs demolition from all five reader personas in
 
 # Macro: Review
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 Five reader perspectives on one chapter. Supports resume — if interrupted, picks up from the last completed persona.

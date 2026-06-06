@@ -4,7 +4,7 @@ description: Show the current state of the book project. Chapters completed, in 
 
 # Skill: Project Status
 
-> **Language**: Read `book.config.json → language`. Write all output — questions, feedback, summaries, logs — in that language. The author may respond in any language; always reply in the configured language. Default: English.
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
 
 
 Read `book.config.json` and `outline.md` and present a status report.

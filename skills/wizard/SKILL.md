@@ -4,7 +4,7 @@ description: Project setup wizard for authors who don't know where to start. No 
 
 # Skill: Project Wizard
 
-> **Language**: Read `book.config.json → language` if it exists. Otherwise detect the language the author writes in and use that. Write all output in that language.
+> **Language**: `book.config.json → language` if it exists; otherwise detect from conversation. Always reply in that language.
 
 This wizard is for authors who have an idea but don't know how to start. No files to configure. No choices to make upfront. Just talk.
 
