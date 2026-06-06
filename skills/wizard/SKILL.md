@@ -158,6 +158,7 @@ Create `book.config.json`:
     "target_reader": "[from Question 1]",
     "promise": "to be defined"
   },
+  "preset_digest": "[compact one-paragraph digest extracted from the preset file: core identity + 3-4 key vocabulary substitutions + primary demolish vectors + write structure pattern]",
   "wizard_setup": true
 }
 ```

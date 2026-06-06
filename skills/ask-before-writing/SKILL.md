@@ -33,9 +33,9 @@ Never suggest what the answer might be.
 ## Before Starting
 
 Read:
-1. `book.config.json` — check `preset` and `language`
-2. The corresponding preset file in `presets/` — this determines write/demolish adaptations
-3. `presets/[preset]-dialogue.md` — the dialogue track for this genre (e.g. `presets/essay-dialogue.md`)
+1. `book.config.json` — check `preset`, `language`, and `preset_digest`
+2. **Preset rules**: if `preset_digest` exists in config, use it directly — do not read the full preset file from `presets/`. Only read the full file if `preset_digest` is null or missing.
+3. `presets/[preset]-dialogue.md` — the dialogue track for this genre (always read this; it is small and genre-specific)
 4. `book-memory.md` — read only `## Defined Terms`, `## Open Promises to the Reader`, and `## Chapter Summary Log`
 
 If `book-memory.md` shows open promises relevant to this chapter:

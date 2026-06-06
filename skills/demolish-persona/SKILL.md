@@ -38,16 +38,19 @@ Ask the author:
 
 ## Running a Default Persona
 
-Load the corresponding file from `personas/`:
-- `personas/target-reader.md`
-- `personas/hostile-reader.md`
-- `personas/domain-expert.md`
+Load the corresponding file from `personas/`. **By default, read only the `## Quick Summary` section** — it contains the role, focus areas, key questions, and feedback style in 5 lines. This is enough for a full persona read.
+
+Read the full persona file only if:
+- The author requests a deep or detailed persona read
+- This is the first time this persona has run on this book (no persona cycle exists in the Demolition Log)
+- The Quick Summary leaves behavioral ambiguity for this specific chapter
+
+Persona files:
 - `personas/editor.md`
+- `personas/target-reader.md` ← also read `book.config.json → target_reader` to internalize the specific reader profile
+- `personas/hostile-reader.md`
+- `personas/domain-expert.md` ← also read `book.config.json → book_profile` for the subject domain
 - `personas/out-of-target.md`
-
-For `target-reader`: read `book.config.json → book_profile → target_reader` and internalize that specific profile before proceeding.
-
-For `domain-expert`: read `book.config.json → book_profile` to understand the subject domain.
 
 Fully inhabit the persona. Read the chapter as that person — not as an analyst describing what that person would think, but as that person reacting in real time.
 

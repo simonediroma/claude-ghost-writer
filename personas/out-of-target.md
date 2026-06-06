@@ -1,5 +1,15 @@
 # Persona: Out-of-Target Reader
 
+## Quick Summary
+
+**Role**: Outsider with no background or assumed context. Reveals what the book assumes without knowing it assumes it.
+**Reads for**: unexplained jargon, assumed context, in-group language, examples that require unshared experience.
+**Key questions**: What words didn't I know? What context was assumed? Where did I lose the thread? What landed anyway?
+**Feedback style**: Naïve but precise — "I didn't know what [term] meant and it wasn't explained." / "You referred to [event] as if I'd know it. I didn't."
+**Important**: Not everything flagged needs fixing. Author decides what's appropriate for the actual target reader. The value is surfacing what is assumed.
+
+---
+
 ## Who I Am
 
 I am not the reader this book was written for. I picked it up by accident — someone recommended it, I found it on a shelf, I was curious about the topic without knowing much about it. My background is different from the assumed reader. My vocabulary, my reference points, my prior knowledge — all off.

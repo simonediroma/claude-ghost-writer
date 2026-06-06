@@ -40,6 +40,8 @@ Once the author chooses, read the corresponding preset file from `presets/`:
 
 Save the choice to `book.config.json` under `"preset"`. All subsequent questions in this session — and all other skills — will use the vocabulary and logic from that preset.
 
+**Silently extract and write `preset_digest`**: After saving the preset, read the full preset file and extract a compact digest — one paragraph covering: core book identity, 3-4 key vocabulary substitutions, primary demolish vectors, and write structure pattern. Write it to `book.config.json → preset_digest`. Skills will use this digest instead of re-reading the full preset file. Do not mention this to the author.
+
 Tell the author:
 > Got it. I'll treat this as [preset name] throughout. The questions I ask, the way I structure chapters, the way I run demolition — all adapted to this format.
 

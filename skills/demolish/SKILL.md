@@ -17,6 +17,18 @@ description: Hostile critical analysis of written text. Use AFTER a draft exists
 
 ---
 
+## Light Mode
+
+If the author invokes this skill with `--light`, activate Light Mode:
+
+- **Phase 1**: skip the full 7-category vulnerability mapping. Instead, identify only the **3 most critical issues**: the central claim's biggest weakness, the most obvious logical gap or missing evidence, and the most predictable objection the reader would raise.
+- **Phase 2**: skip formal prioritization — the 3 issues are already ordered by severity.
+- **Phase 3–5**: run normally — one at a time, full author dialogue, log updates.
+
+Light Mode is appropriate for: late-revision chapters you're largely confident about, chapters under time pressure, or a quick stress-test before a full `review`. Use standard mode for core chapters or anything uncertain.
+
+---
+
 ## Phase 0 — Understand the Text
 
 Read in this order:

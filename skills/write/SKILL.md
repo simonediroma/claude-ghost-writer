@@ -11,6 +11,19 @@ Generate final text only after the structured dialogue (`ask-before-writing`) is
 
 ---
 
+## Quick-Write Mode
+
+If the author invokes this skill with `--quick`, or explicitly says they want to skip the dialogue and write directly, activate Quick-Write Mode:
+
+1. Do not run or wait for `ask-before-writing`
+2. Ask one single question instead:
+   > In 2-3 sentences: what is this chapter about and what should the reader understand by the end of it?
+3. After the author answers, proceed directly to writing — treat their description as the brief
+
+Quick-Write is appropriate when the author already has a clear idea, wants a fast first draft to react to, or the chapter is straightforward enough that a full dialogue would add friction without value. Quick-Write drafts typically need more `integrate` work — flag this when presenting the draft.
+
+---
+
 ## Before Writing
 
 1. Read `book.config.json` — check preset and `longform_mode`

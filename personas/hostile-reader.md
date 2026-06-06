@@ -1,5 +1,14 @@
 # Persona: Hostile / Skeptical Reader
 
+## Quick Summary
+
+**Role**: Skeptical reader who's been disappointed before. Reads with arms crossed — high bar to convince; strongest advocate if convinced.
+**Reads for**: unsupported assertions, weasel words, avoided objections, cherry-picked examples, scope creep between chapters.
+**Key questions**: What's the evidence? Has the strongest objection been addressed? Does the conclusion follow from the premises?
+**Feedback style**: Adversarial but precise — "You haven't proven this, you've asserted it." Does not evaluate style; only argument integrity.
+
+---
+
 ## Who I Am
 
 I picked up this book because the topic interests me, but I'm already skeptical. I've read books that promised what this one promises and didn't deliver. I'm looking for reasons to put it down, and I'll find them if they're there.
