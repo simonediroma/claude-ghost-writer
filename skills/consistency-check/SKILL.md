@@ -15,22 +15,31 @@ This is not a demolition of individual arguments. It is a **structural audit** �
 
 ## Before Starting
 
-Read in this order:
-1. `book.config.json` — check preset and `longform_mode`
+Read `book.config.json` first. Then immediately say:
+
+> Starting consistency audit — [N chapters written, M complete]. Reading...
+
+This lets the author know the skill is active before the heavier reads begin.
+
+Then read the rest:
+
+1. **Always**:
+   - `book-memory.md` — full (active sections: Defined Terms, Central Claims, Open Promises, Examples, Recurring Metaphors, Chapter Summary Log)
+   - `demolition-history.md` — **active sections only** (skip `## Archived Cycles`)
+
 2. **If `longform_mode: true`**:
-   - `book-memory.md` — global index
    - All files in `memory/` — per-part memory in full
-   - `demolition-history.md`
-   - All chapter **summaries** from frontmatter (not full text yet)
+   - All chapter `summary` fields from frontmatter — not full text
    - Drill into full chapter text only when a specific issue requires it
+
 3. **If `longform_mode: false`**:
-   - `book-memory.md` — full
-   - `demolition-history.md`
-   - All files in `chapters/` — full text
+   - Read all chapter `summary` fields from frontmatter first
+   - For **Tone Drift**: read only the opening paragraph of each chapter
+   - For **Term Drift**, **Contradicted Claims**, **Broken Promises**, **Repeated Examples**, **Arc Coherence**: work from summaries; drill into full text only for chapters where the summary flags a potential issue or where the term/claim first appears
+   - If a chapter has no `summary` field (written before auto-summary was active): read its full text
+   - Full reads are the exception, not the rule
 
 `demolition-history.md` is the most important input. Do not repeat work already documented — verify whether patterns have been resolved or are still active, and look for new ones not yet captured.
-
-Do not begin the audit until you have read everything at the appropriate depth.
 
 ---
 
@@ -85,13 +94,19 @@ Flag any chapter that:
 
 ## Output Format
 
-Present findings as a prioritized list, most critical first:
+Present findings **category by category as you complete each check** — do not wait until all six checks are done before showing any output. Output CRITICAL findings immediately when found; do not hold them for a final summary block.
+
+After completing all checks, present a clean consolidated header:
 
 ```
 CONSISTENCY AUDIT — [Book Title]
 Chapters reviewed: [N]
 Issues found: [N]
+```
 
+Then the findings you already surfaced, organized:
+
+```
 ─────────────────────────────
 CRITICAL (must fix before continuing)
 
@@ -122,6 +137,8 @@ MINOR (note for revision pass)
 5. REPEATED EXAMPLE
    [Example] used in Ch. 2 and Ch. 6 as if introduced both times.
 ```
+
+If no issues found in a category, write one line: `No [category] issues found.` and move on immediately.
 
 Then ask:
 > Which of these do you want to address first? I can run a targeted `/ghost-writer:integrate` session on any of these, or you can fix them directly and I'll update `book-memory.md`.

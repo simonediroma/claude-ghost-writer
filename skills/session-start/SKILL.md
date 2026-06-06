@@ -9,22 +9,27 @@ description: Run at the start of every writing session. Reads the full project s
 
 You are an editorial assistant. The author has just sat down to work. Your job is to brief them — concisely, without padding — on exactly where the project stands and what the most useful thing to do today is.
 
-Read everything before saying anything.
-
 ---
 
 ## Before Responding
 
-Read in this order:
-1. `book.config.json` — check the `"preset"` field, then read the corresponding file in `presets/` (essay.md / fiction.md / manual.md / biography.md). Adapt all vocabulary, questions, and logic to that preset throughout this skill. — title, version, author profile, book premise
-2. `book-memory.md` — defined terms, open promises, chapter log
-3. `demolition-history.md` — open deferred issues, recurring patterns
-4. `outline.md` — chapter statuses
-5. All files in `sessions/` — detect any open macro sessions
-6. The most recently modified file in `chapters/` — to know exactly where writing stopped
-7. `characters/` — if any character files exist, note which characters have profiles
+**Step 1 — Fast path**: Check if `project-state.md` exists and was updated within the last 7 days.
 
-Do not respond until you have read all of these.
+- **If yes**: Read only `project-state.md` + any files in `sessions/` with `status: open`. Output the orienting line immediately (see The Brief below), then complete the brief from the digest. This is the normal path for returning sessions.
+- **If no or stale**: Read in full (Step 2), then regenerate `project-state.md` silently at the end.
+
+**Step 2 — Full read** (only when project-state.md is absent or stale):
+
+Read in this order:
+1. `book.config.json` — title, preset, language, author profile
+2. `book-memory.md` — defined terms, open promises, chapter log
+3. `demolition-history.md` — **active sections only** (skip `## Archived Cycles`)
+4. `outline.md` — chapter statuses
+5. All files in `sessions/` — detect open macro sessions
+6. The most recently modified file in `chapters/` — to know exactly where writing stopped
+7. `characters/` — if character files exist, note which have profiles
+
+**Output the orienting line as soon as you have the title and last-action** (from book.config.json + project-state.md or outline.md). Do not wait for all reads to complete before showing the first line.
 
 ---
 
@@ -114,6 +119,8 @@ If the author says they're done for the day, produce a one-line session summary 
 |---|---|---|
 | [date] | [e.g. "Integrated Ch. 3 to v1.1, started demolition Ch. 4 Cycle 1"] | [e.g. "Finish Ch. 4 demolition"] |
 ```
+
+**Silent state update**: After writing the session log, silently overwrite `project-state.md` with the current project state — title, version, preset, chapter counts, last session summary, in-progress chapter and step, open sessions, open deferred issues, recurring patterns, open promises, and last consistency-check date. Use the compact format defined in the template. Do not mention this step to the author.
 
 Then say:
 > Good session. [One genuine observation about the work — something specific that moved forward, a pattern you noticed, a question worth sitting with before next time.]
