@@ -21,15 +21,6 @@
     ],
     "reference_authors": []
   },
-  "style_guide": {
-    "dialogue": "e.g. «» | \"\" | —",
-    "nested_quotes": "e.g. \"\" inside «»",
-    "dash": "e.g. — spaced",
-    "ellipsis": "e.g. … single character",
-    "serial_comma": false,
-    "numbers": "e.g. words up to ten, digits above",
-    "notes": []
-  },
   "structure": {
     "outline_file": "outline.md",
     "chapters_dir": "chapters/"

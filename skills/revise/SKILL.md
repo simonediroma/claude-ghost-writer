@@ -1,5 +1,5 @@
 ---
-description: Editorial revision pass. Checks grammar and spelling, punctuation against the book's style guide, event timeline, per-character details (age, appearance, names, relationships), and continuity of details introduced in one chapter and reused in another (objects, places, dates, numbers, wording). Run on a single chapter after integrate, or on the whole book before manuscript-final. Proposes every fix — never applies without confirmation.
+description: Editorial revision pass. Checks grammar and spelling, punctuation and writing rules from style-rules.md, event timeline, per-character details (age, appearance, names, relationships), and continuity of details introduced in one chapter and reused in another (objects, places, dates, numbers, wording). Run on a single chapter after integrate, or on the whole book before manuscript-final. Proposes every fix — never applies without confirmation.
 ---
 
 # Skill: Revise
@@ -9,7 +9,7 @@ description: Editorial revision pass. Checks grammar and spelling, punctuation a
 Usage:
 - `/ghost-writer:revise [file]` — revise one chapter (and check it against everything written before it)
 - `/ghost-writer:revise --all` — revise the whole book
-- `/ghost-writer:revise [file|--all] --only grammar,punctuation,timeline,characters,continuity` — run only some checks
+- `/ghost-writer:revise [file|--all] --only grammar,rules,timeline,characters,continuity` — run only some checks
 
 This is not demolition (arguments) and not character-check (psychology). It is the **copy-editor and continuity-editor pass**: the errors that make a reader stop and think "wait, that's wrong."
 
@@ -17,7 +17,7 @@ This is not demolition (arguments) and not character-check (psychology). It is t
 
 ## Before Starting
 
-Read `book.config.json` first (`language`, `style_guide`, `longform_mode`). Then immediately say:
+Read `book.config.json` (`language`, `longform_mode`) and `style-rules.md`. Then immediately say:
 
 > Starting revision — [chapter / whole book], checks: [list]. Reading...
 
@@ -29,10 +29,10 @@ Then read:
 4. The chapter(s) to revise — **full text** (copy-editing cannot work from summaries)
 5. For continuity checks on a single chapter: the summaries of earlier chapters; drill into full text of an earlier chapter only when a detail needs to be verified against its first mention
 
-If `style_guide` is missing from `book.config.json` or still holds placeholder values (starting with "e.g."), ask **one** question:
-> There's no punctuation style guide yet. Do you want me to (A) infer it from the chapters already written, or (B) use the standard conventions for [language]?
+If `style-rules.md` is missing or its **Punctuation Conventions** still hold placeholders (`[e.g. …]`), ask **one** question:
+> There are no punctuation conventions yet. Do you want me to (A) infer them from the chapters already written, or (B) use the standard conventions for [language]?
 
-If A: infer the dominant convention for each rule, show it, and save it to `book.config.json → style_guide` after confirmation. If B: save the language defaults (see table below).
+If A: run the `infer` logic of `/ghost-writer:rules`. If B: fill the table with the language defaults (see table below). Save after confirmation.
 
 ---
 
@@ -49,8 +49,10 @@ Flag:
 
 Do **not** flag deliberate choices: dialect, a character's voice, stylistic fragments, entries in `author_voice.signature_phrases`. If unsure, mark as `[possibly intentional]`.
 
-### 2. Punctuation vs. style guide
-Compare every punctuation mark against `book.config.json → style_guide`. Flag every deviation and every **inconsistency within the book** (even if both forms are correct, mixing them is an error):
+### 2. Punctuation and writing rules
+Check the text against `style-rules.md`:
+- **Writing Rules** (`R1`, `R2`…): every violation, citing the rule ID. Use the ✅/❌ examples to interpret the rule; respect its scope (a rule on thoughts does not apply to dialogue).
+- **Punctuation Conventions**: every deviation and every **inconsistency within the book** (even if both forms are correct, mixing them is an error):
 - Dialogue marks (`«»` vs `""` vs `—`) and where punctuation goes relative to them
 - Dashes (em dash `—` vs en dash `–` vs hyphen `-`; spaced or not)
 - Ellipsis (`…` single character vs `...`; space before/after)
@@ -108,10 +110,11 @@ Issues found: [N]   (grammar [n] · punctuation [n] · timeline [n] · character
 |---|---|---|---|---|---|
 | G1 | 3 | §4 | "...perchè non..." | "...perché non..." | accent |
 
-2. PUNCTUATION (style guide: [short summary])
+2. PUNCTUATION AND RULES
 | # | Ch. | Paragraph | Text | Fix | Rule |
 |---|---|---|---|---|---|
 | P1 | 3 | §7 | "Vieni..." | "Vieni…" | ellipsis: single character |
+| P2 | 3 | §9 | "Lo sapeva: perché…" | "Lo sapeva, perché…" | R1 |
 
 ─────────────────────────────
 3. TIMELINE
@@ -161,7 +164,7 @@ Ask:
    - `## Timeline` — add or correct every event found (canonical version only)
    - `## Continuity Ledger` — add every detail checked, with its canonical value and first-mention chapter
 2. Update `characters/[name].md → Facts` with canonical physical and biographical data (create the section if missing)
-3. If the style guide was inferred or changed, save it to `book.config.json → style_guide`
+3. If the conventions were inferred, save them to `style-rules.md`. If the author fixed the same kind of thing 3+ times and no rule covers it, propose a new rule (`/ghost-writer:rules add`)
 4. In each revised chapter's frontmatter, set `revised: [date]`
 5. Tell the author:
 
@@ -171,7 +174,7 @@ Ask:
 
 ## Style Guide Defaults by Language
 
-Used only when the author chooses (B) and no `style_guide` exists.
+Used only when the author chooses (B) and `style-rules.md` has no conventions yet.
 
 | Rule | it | en | es | fr | de | pt |
 |---|---|---|---|---|---|---|

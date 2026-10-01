@@ -14,6 +14,7 @@ description: Translate the author's responses to demolition into precise text mo
 - Always check for cascading effects after each change.
 - The author's words take precedence over your formalization.
 - Track version numbers. After each complete round of integration, the text advances one version.
+- Every new or rewritten sentence must respect `style-rules.md` (writing rules and punctuation conventions).
 
 ---
 
