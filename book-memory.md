@@ -65,6 +65,26 @@ Profiled characters. See individual files in `characters/` for full psychology.
 
 ---
 
+## Timeline
+
+Chronology of events in story / narrative order. Maintained by `revise`. Every new chapter must fit this sequence.
+
+| When (date or relative) | Event | Characters | Chapter |
+|---|---|---|---|
+| [e.g. spring 1998] | [event] | [names] | Ch. X |
+
+---
+
+## Continuity Ledger
+
+Specific details introduced once and reused later (objects, places, numbers, quoted text, minor names, figures). The first mention is canonical unless the author decides otherwise. Maintained by `write` and `revise`.
+
+| Detail | Canonical value | First mention | Also in |
+|---|---|---|---|
+| [e.g. Marco's car] | [e.g. red 1987 Fiat Panda] | Ch. X §N | Ch. Y |
+
+---
+
 ## Tone Calibration
 
 Notes on tone drift or corrections applied during integration.

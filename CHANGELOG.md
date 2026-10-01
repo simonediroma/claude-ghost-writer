@@ -1,5 +1,21 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- **`/ghost-writer:revise`** — editorial revision pass: grammar and spelling, punctuation against the book's style guide, event timeline, per-character factual details, and continuity of details reused across chapters. Works on one chapter or the whole book (`--all`), with `--only` to select checks. Grammar/punctuation fixes can be applied in bulk; timeline/character/continuity issues are always resolved one at a time.
+- **`style-rules.md`** — punctuation conventions + the author's writing rules (with right/wrong examples and scope). Read by `write`, `integrate` and checked by `revise`.
+- **`/ghost-writer:rules`** — add, list, edit, remove and infer rules in natural language.
+- **`/ghost-writer:corrections`** — re-reading workflow away from the computer: review PDF with paragraph IDs in the margin (`review_pdf.py export`), import of highlights/comments from the annotated PDF (`review_pdf.py import`), parsing of free-form notes, dictation and photos of marked-up pages. Queue in `corrections.md`; general notes become rules.
+- **`## Timeline`** and **`## Continuity Ledger`** in `book-memory.md` — populated by `write`, `integrate` and `revise`.
+
+### Changed
+
+- `finish` runs `revise --all` before `manuscript-final`.
+- `write` and `integrate` respect `style-rules.md`.
+- `check` expects 30 skills.
+
 ## [1.1.0] — 2026-06-06
 
 ### Added

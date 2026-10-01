@@ -95,6 +95,19 @@ The atomic commands (below) remain available for authors who want to control the
 | Command | When |
 |---|---|
 | `/ghost-writer:consistency-check` | Every 3-4 completed chapters |
+| `/ghost-writer:revise [file]` | After integrate — grammar, punctuation vs style guide, timeline, character details, cross-chapter continuity |
+| `/ghost-writer:revise --all` | Before `manuscript-final` — full editorial pass on the whole book |
+| `/ghost-writer:rules [add "..."]` | Any time — store a writing rule (e.g. "never use a colon before a subordinate clause") in `style-rules.md` |
+| `/ghost-writer:corrections print` | Before re-reading — review PDF with paragraph IDs in the margin |
+| `/ghost-writer:corrections import [pdf]` | After re-reading — imports highlights/comments, notes or photos and applies them |
+
+### Re-reading away from the computer
+
+1. `/ghost-writer:corrections print` → `manuscript/review-[date].pdf`, every paragraph numbered (`3.12` = chapter 3, paragraph 12).
+2. Read it on a tablet, phone or on paper and annotate the easiest way: highlights + comments in any PDF app, notes/dictation with the paragraph ID (`3.12 perchè → perché`), or photos of the marked-up printed pages.
+3. `/ghost-writer:corrections import annotated.pdf` (or paste the notes / send the photos). Everything lands in `corrections.md`; typos are applied in one go, the rest one at a time. Notes like "always…" / "never…" become rules in `style-rules.md`.
+
+Requires `pip install reportlab pymupdf`.
 | `/ghost-writer:character-interview [name]` | Optional — before writing scenes with key characters |
 | `/ghost-writer:character-check [name] [file]` | Optional — after writing scenes with profiled characters |
 
@@ -137,6 +150,7 @@ demolish-persona editor         → structural diagnosis
 demolish-persona target-reader  → does it work for the intended reader?
 demolish-persona hostile-reader → does the argument hold under pressure?
 integrate                       → incorporates all responses, one change at a time
+revise [file]                   → grammar, punctuation, timeline, character details, continuity
   → chapter complete ✅
 
 EVERY 3-4 CHAPTERS
@@ -154,6 +168,7 @@ CLOSING (once, at the end)
 ─────────────────────────────────────
 write-opening         → introduction — written last
 write-closing         → conclusion — resolves open promises
+revise --all          → full editorial pass before assembly
 manuscript-final      → arc audit + optional process note + assembled manuscript
 ```
 
@@ -211,6 +226,8 @@ Files the plugin reads and writes automatically. You don't need to edit these ma
 | File | Purpose | Updated by |
 |---|---|---|
 | `book.config.json` | Project metadata, voice profile, preset digest | setup-book, wizard, retune |
+| `style-rules.md` | Punctuation conventions and the author's writing rules | write, integrate, revise, rules, corrections |
+| `corrections.md` | Queue of corrections from re-reading sessions | corrections |
 | `book-memory.md` | Defined terms, promises, claims, chapter log | write, integrate, consistency-check |
 | `outline.md` | Chapter list with statuses | write, chapter, longform-upgrade |
 | `voice-sample.md` | 3 paragraphs extracted from the last written chapter — style reference | write, integrate (silently) |

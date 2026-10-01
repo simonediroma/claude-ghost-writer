@@ -32,7 +32,8 @@ Quick-Write is appropriate when the author already has a clear idea, wants a fas
 4. If this chapter features profiled characters, read their files in `characters/`
 5. Read `outline.md` — identify the requested section and its central claim
 6. **Style alignment**: if `voice-sample.md` exists and is populated, read it. If it does not exist or contains only the placeholder text, read one existing chapter from `chapters/` instead.
-7. Confirm that `ask-before-writing` has been completed for this section
+7. Read `style-rules.md` (if present) — every rule and punctuation convention applies to the new text
+8. Confirm that `ask-before-writing` has been completed for this section
 
 When writing, use terms **exactly** as defined in memory. Do not introduce new definitions for already-defined terms. Do not use examples already listed as if they're new.
 
@@ -83,6 +84,7 @@ Update `outline.md` — change the section status to `draft`.
 Update memory:
 - If `longform_mode: true` → update `memory/part-[current].md` with new terms, promises, examples
 - If `longform_mode: false` → update `book-memory.md` directly
+- In both cases, add new datable events to `## Timeline` and new concrete details (objects, places, numbers, physical traits, quoted text) to `## Continuity Ledger` — these feed `/ghost-writer:revise`
 
 **Silent voice update**: After saving the chapter file, silently extract and write to `voice-sample.md`:
 1. The opening paragraph of the chapter
