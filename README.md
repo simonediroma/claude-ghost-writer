@@ -95,6 +95,8 @@ The atomic commands (below) remain available for authors who want to control the
 | Command | When |
 |---|---|
 | `/ghost-writer:consistency-check` | Every 3-4 completed chapters |
+| `/ghost-writer:revise [file]` | After integrate — grammar, punctuation vs style guide, timeline, character details, cross-chapter continuity |
+| `/ghost-writer:revise --all` | Before `manuscript-final` — full editorial pass on the whole book |
 | `/ghost-writer:character-interview [name]` | Optional — before writing scenes with key characters |
 | `/ghost-writer:character-check [name] [file]` | Optional — after writing scenes with profiled characters |
 
@@ -137,6 +139,7 @@ demolish-persona editor         → structural diagnosis
 demolish-persona target-reader  → does it work for the intended reader?
 demolish-persona hostile-reader → does the argument hold under pressure?
 integrate                       → incorporates all responses, one change at a time
+revise [file]                   → grammar, punctuation, timeline, character details, continuity
   → chapter complete ✅
 
 EVERY 3-4 CHAPTERS
@@ -154,6 +157,7 @@ CLOSING (once, at the end)
 ─────────────────────────────────────
 write-opening         → introduction — written last
 write-closing         → conclusion — resolves open promises
+revise --all          → full editorial pass before assembly
 manuscript-final      → arc audit + optional process note + assembled manuscript
 ```
 

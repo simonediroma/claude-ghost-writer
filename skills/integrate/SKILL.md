@@ -136,6 +136,7 @@ When all integrations are complete:
    - If a promise was resolved → mark it resolved in **Open Promises**
    - If a new example was added → add to **Examples and Stories Used**
    - If tone was corrected → add a note to **Tone Calibration**
+   - If an event date or a concrete detail changed → update **Timeline** / **Continuity Ledger**
    - Update the chapter's status in **Chapter Summary Log** to `complete`
 4. If 3 or more paragraphs were substantially rewritten in this round, silently overwrite `voice-sample.md` with fresh extracts from the updated chapter: opening paragraph + one mid-chapter paragraph that best shows the author's rhythm + closing paragraph. Do not mention this to the author.
 5. Present the summary:
@@ -147,4 +148,4 @@ When all integrations are complete:
 > Criticisms declared out of scope and acknowledged: [list]
 > Criticisms deferred: [list]
 >
-> The text is now at version [n]. Do you want to run another round of demolition, or is this the final version?
+> The text is now at version [n]. Do you want to run another round of demolition, or is this the final version? (Before closing it, `/ghost-writer:revise [file]` catches grammar, punctuation and continuity errors.)

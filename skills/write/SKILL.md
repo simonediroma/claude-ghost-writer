@@ -83,6 +83,7 @@ Update `outline.md` — change the section status to `draft`.
 Update memory:
 - If `longform_mode: true` → update `memory/part-[current].md` with new terms, promises, examples
 - If `longform_mode: false` → update `book-memory.md` directly
+- In both cases, add new datable events to `## Timeline` and new concrete details (objects, places, numbers, physical traits, quoted text) to `## Continuity Ledger` — these feed `/ghost-writer:revise`
 
 **Silent voice update**: After saving the chapter file, silently extract and write to `voice-sample.md`:
 1. The opening paragraph of the chapter

@@ -1,5 +1,18 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- **`/ghost-writer:revise`** — editorial revision pass: grammar and spelling, punctuation against the book's style guide, event timeline, per-character factual details, and continuity of details reused across chapters. Works on one chapter or the whole book (`--all`), with `--only` to select checks. Grammar/punctuation fixes can be applied in bulk; timeline/character/continuity issues are always resolved one at a time.
+- **`style_guide`** in `book.config.json` — punctuation conventions (dialogue marks, dashes, ellipsis, serial comma, numbers). Inferred from the text or set from language defaults on first `revise`.
+- **`## Timeline`** and **`## Continuity Ledger`** in `book-memory.md` — populated by `write`, `integrate` and `revise`.
+
+### Changed
+
+- `finish` runs `revise --all` before `manuscript-final`.
+- `check` expects 28 skills.
+
 ## [1.1.0] — 2026-06-06
 
 ### Added

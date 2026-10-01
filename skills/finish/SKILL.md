@@ -136,7 +136,7 @@ Wait for confirmation.
 Tell the author:
 > Final step: I'll read the complete manuscript and check the arc, then assemble everything into a single file.
 
-Run the full `manuscript-final` skill, including:
+First run `/ghost-writer:revise --all` (grammar, punctuation, timeline, character details, continuity) and resolve CRITICAL issues. Then run the full `manuscript-final` skill, including:
 - Arc audit (opening–closing correspondence, promise audit, term consistency, tone arc)
 - Optional process note
 - Manuscript assembly
