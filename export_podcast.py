@@ -9,7 +9,7 @@ Usage:
   python3 export_podcast.py sample VOICE [...]     # download voice(s), render a short sample
   python3 export_podcast.py build [scripts...]     # render episodes (default: all scripts)
   python3 export_podcast.py feed                   # write podcast/feed.xml (RSS)
-  python3 export_podcast.py jingle [--style S] [--seconds N] [--seed N]
+  python3 export_podcast.py jingle [--style S] [--seconds N] [--seed N] [--drums synth|kit|none]
                                                    # compose an intro jingle (podcast/music/)
 
 Script tags (one per line):
@@ -493,9 +493,39 @@ def echo(x, delay, feedback, repeats=5):
             out[d * k:] += x[:-d * k] * feedback ** k
     return out
 
-def compose_grime(seconds=7.0, seed=0):
-    """140 bpm grime beat under a sci-fi whistle lead (half-time snare, square bass, hat rolls)."""
+def load_sample(path):
+    """Decode any audio file to mono float at JINGLE_RATE via ffmpeg."""
+    raw = subprocess.run(
+        ["ffmpeg", "-v", "error", "-i", str(path), "-f", "s16le", "-ac", "1", "-ar", str(JINGLE_RATE), "-"],
+        check=True, capture_output=True,
+    ).stdout
+    audio = np.frombuffer(raw, dtype=np.int16).astype(np.float64)
+    return audio / (np.max(np.abs(audio)) or 1)
+
+def load_kit(kit_dir):
+    """Real drum samples: kick.*, snare.*, hat.* in kit_dir. Missing ones fall back to synth."""
+    kit = {}
+    for name in ("kick", "snare", "hat"):
+        found = sorted(Path(kit_dir).glob(f"{name}.*"))
+        if found:
+            kit[name] = load_sample(found[0])
+    return kit
+
+def compose_grime(seconds=7.0, seed=0, drum_mode="synth", kit_dir=None):
+    """140 bpm grime beat under a sci-fi whistle lead (half-time snare, square bass, hat rolls).
+    drum_mode: "synth", "kit" (samples from kit_dir) or "none"."""
     rng = np.random.default_rng(seed)
+    kit = load_kit(kit_dir) if drum_mode == "kit" and kit_dir else {}
+    if drum_mode == "kit" and not kit:
+        raise SystemExit(f"No drum samples found in {kit_dir} — add kick.wav, snare.wav, hat.wav")
+
+    def hit(name, seconds_long, gain=1.0):
+        if drum_mode == "none":
+            return np.zeros(1)
+        if name in kit:
+            return kit[name][:int(seconds_long * 2 * JINGLE_RATE)] * gain * (0.5 if name == "hat" else 1)
+        n = int(seconds_long * JINGLE_RATE)
+        return {"kick": lambda: kick(n), "snare": lambda: snare(n, rng), "hat": lambda: hat(n, rng)}[name]() * gain
     root = 40 + int(rng.integers(0, 4))           # E2..G2
     beat = 60.0 / 140
     bar = beat * 4
@@ -542,18 +572,18 @@ def compose_grime(seconds=7.0, seed=0):
         for step in bass_pattern:
             place(bass, square_bass(midi_hz(note(deg, 0)), int(s16 * 2.5 * JINGLE_RATE)), start + step * s16)
         for step in (0, 10):
-            place(drums, kick(int(0.35 * JINGLE_RATE)), start + step * s16)
-        place(drums, snare(int(0.3 * JINGLE_RATE), rng), start + 8 * s16)
+            place(drums, hit("kick", 0.35), start + step * s16)
+        place(drums, hit("snare", 0.3), start + 8 * s16)
         roll = b % 2 == 0 or b == bars - 1
         for step in range(0, 16, 2):
             if roll and step >= 12:
                 for k in range(3):                 # triplet hat roll
-                    place(drums, hat(int(0.06 * JINGLE_RATE), rng), start + (step + k * 2 / 3) * s16)
+                    place(drums, hit("hat", 0.06), start + (step + k * 2 / 3) * s16)
             else:
-                place(drums, hat(int(0.08 * JINGLE_RATE), rng), start + step * s16)
+                place(drums, hit("hat", 0.08), start + step * s16)
     # Final hit on the downbeat after the last bar
-    place(drums, kick(int(0.5 * JINGLE_RATE)), bars * bar)
-    place(drums, snare(int(0.4 * JINGLE_RATE), rng) * 0.7, bars * bar)
+    place(drums, hit("kick", 0.5), bars * bar)
+    place(drums, hit("snare", 0.4, 0.7), bars * bar)
     place(bass, square_bass(midi_hz(note(0, 0)), int(1.2 * JINGLE_RATE)), bars * bar)
 
     mix = 0.30 * lead + 0.07 * reverb(pad) + 0.40 * bass + 0.55 * drums
@@ -562,7 +592,7 @@ def compose_grime(seconds=7.0, seed=0):
     mix = mix / (np.max(np.abs(mix)) or 1) * 0.75
     return (mix * 32767).astype(np.int16)
 
-def jingle(project_dir, style=None, seconds=7.0, seed=None):
+def jingle(project_dir, style=None, seconds=7.0, seed=None, drums="synth"):
     project_dir = Path(project_dir)
     config = load_config(project_dir)
     style = style or PRESET_STYLES.get(config.get("preset", ""), "warm")
@@ -570,10 +600,12 @@ def jingle(project_dir, style=None, seconds=7.0, seed=None):
         raise SystemExit(f"Unknown style '{style}'. Available: {', '.join(JINGLE_STYLES)}, grime")
     if seed is None:
         seed = sum(config.get("title", "").encode()) % 10000
-    audio = compose_grime(seconds, seed) if style == "grime" else compose_jingle(style, seconds, seed)
+    kit_dir = project_dir / "podcast" / "music" / "kit"
+    audio = compose_grime(seconds, seed, drums, kit_dir) if style == "grime" else compose_jingle(style, seconds, seed)
     out_dir = project_dir / "podcast" / "music"
     out_dir.mkdir(parents=True, exist_ok=True)
-    out = out_dir / f"jingle-{style}-{seed}.wav"
+    suffix = f"-{drums}" if style == "grime" and drums != "synth" else ""
+    out = out_dir / f"jingle-{style}-{seed}{suffix}.wav"
     with wave.open(str(out), "wb") as w:
         w.setnchannels(1)
         w.setsampwidth(2)
@@ -647,6 +679,6 @@ if __name__ == "__main__":
     elif cmd == "jingle":
         opts = dict(zip(rest[::2], rest[1::2]))
         jingle(".", opts.get("--style"), float(opts.get("--seconds", 7)),
-               int(opts["--seed"]) if "--seed" in opts else None)
+               int(opts["--seed"]) if "--seed" in opts else None, opts.get("--drums", "synth"))
     else:
         print(__doc__)

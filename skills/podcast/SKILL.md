@@ -69,6 +69,9 @@ Extra style `grime`: a 140 bpm grime beat (half-time snare, eskibeat square bass
 ```bash
 python3 export_podcast.py jingle --style grime --seed 2 --seconds 9
 ```
+If the author dislikes the synthesized drums, there are two alternatives. The same seed keeps the same melody and bass in both:
+- `--drums none`: whistle, pad and bass only.
+- `--drums kit`: real drum samples from `podcast/music/kit/` (`kick.*`, `snare.*`, `hat.*`, any audio format). A missing piece falls back to the synth. Suggest CC0 one-shots from Freesound (license filter: Creative Commons 0) or the author's own samples. Never download them on the author's behalf.
 Output: `podcast/music/jingle-[style]-[seed].wav`. The author listens and asks for "another one" (new seed) or "more cheerful" (new style) until they like it.
 
 **B. AI-generated music (ACE-Step, Apache-2.0, open source, local).** Requires a GPU with about 8 GB of VRAM, or an Apple Silicon Mac. Do not install it for the author. If they already have it, or want to install it themselves (https://github.com/ace-step/ACE-Step), write the prompt for them from `book.config.json` (genre, tone, target reader, premise):
