@@ -73,6 +73,7 @@ python3 export_podcast.py jingle --style grime --seed 2 --seconds 9
 ```bash
 python3 export_podcast.py jingle --style grime-loop --seed 1            # 8 bars ≈ 13.7 s
 python3 export_podcast.py jingle --style grime-loop --seed 1 --bars 16
+python3 export_podcast.py jingle --style grime-loop --seed 1 --bpm 150   # faster (default 140)
 ```
 For continuous play, deliver the **WAV**. MP3 adds encoder padding and leaves a tiny gap at each repeat. When the loop is used as `intro_music`, the episode fades it out under the voice automatically. The author's own `kick.*`, `snare.*` and `hat.*` in `podcast/music/kit/` replace the VCSL ones.
 
