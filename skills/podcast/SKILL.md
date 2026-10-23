@@ -9,6 +9,7 @@ description: Turn the book into a narrated podcast — one episode per chapter. 
 Usage:
 - `/ghost-writer:podcast` — full flow (voice → plan → scripts → audio), resumes where it left off
 - `/ghost-writer:podcast voice` — choose or change the narrator voice and character voices
+- `/ghost-writer:podcast jingle` — compose or change the intro jingle (step 1c)
 - `/ghost-writer:podcast script [chapter]` — adapt one chapter into an episode script
 - `/ghost-writer:podcast build [episode]` — render audio for one or all approved scripts
 - `/ghost-writer:podcast feed` — generate `podcast/feed.xml` for Spotify / Apple Podcasts
@@ -55,8 +56,26 @@ If the book has dialogue and profiled characters in `characters/`, ask whether t
 ```
 Default is no character voices: the narrator reads everything, like a classic audiobook.
 
-### 1c. Music (optional)
-Intro and outro music go in `podcast.intro_music` and `podcast.outro_music` as a path to an audio file. Only use music the author owns or that is CC0 / royalty-free (for example the Free Music Archive or Pixabay Music). Never download music on the author's behalf without asking.
+### 1c. Intro jingle (optional)
+Ask whether the author wants an intro jingle. The voice starts over the jingle's tail; `intro_overlap` sets how many seconds of overlap, default 1.5. Offer three options:
+
+**A. Composed jingle (default, offline, no license issues).** The script composes an original 6–9 second sting with no samples. The style comes from the preset: essay and biography → `warm`, manual → `upbeat`, fiction → `mysterious`, fable and children's book → `playful`. The seed is derived from the title, so each book gets its own jingle and the same seed always gives the same result.
+```bash
+python3 export_podcast.py jingle                          # style from preset
+python3 export_podcast.py jingle --style upbeat --seed 7  # another variation
+python3 export_podcast.py jingle --seconds 5              # shorter
+```
+Output: `podcast/music/jingle-[style]-[seed].wav`. The author listens and asks for "another one" (new seed) or "more cheerful" (new style) until they like it.
+
+**B. AI-generated music (ACE-Step, Apache-2.0, open source, local).** Requires a GPU with about 8 GB of VRAM, or an Apple Silicon Mac. Do not install it for the author. If they already have it, or want to install it themselves (https://github.com/ace-step/ACE-Step), write the prompt for them from `book.config.json` (genre, tone, target reader, premise):
+- **Tags**: comma-separated genre, instruments, mood and BPM, for example `cinematic, piano, soft strings, warm, hopeful, 85 bpm, instrumental, podcast intro`.
+- **Lyrics**: `[instrumental]`.
+- **Duration**: 10–15 seconds, so the author can trim it.
+After generation, the file goes in `podcast/music/`. Do not suggest MusicGen: its weights are non-commercial (CC-BY-NC).
+
+**C. The author's own file**, or CC0 music (for example Freesound with the CC0 filter). Never download music on the author's behalf without asking.
+
+Save the path in `podcast.intro_music`. For the outro, reuse the same file or leave it `null`.
 
 ---
 
@@ -153,6 +172,7 @@ Ask for `podcast.base_url`, the public folder where the MP3s will be hosted. Fre
   "voices": {},
   "intro_music": null,
   "outro_music": null,
+  "intro_overlap": 1.5,
   "bitrate": "96k",
   "base_url": ""
 }

@@ -9,6 +9,8 @@ Usage:
   python3 export_podcast.py sample VOICE [...]     # download voice(s), render a short sample
   python3 export_podcast.py build [scripts...]     # render episodes (default: all scripts)
   python3 export_podcast.py feed                   # write podcast/feed.xml (RSS)
+  python3 export_podcast.py jingle [--style S] [--seconds N] [--seed N]
+                                                   # compose an intro jingle (podcast/music/)
 
 Script tags (one per line):
   [pause 2]            silence, in seconds
@@ -51,6 +53,7 @@ DEFAULT_PODCAST = {
     "voices": {},             # extra voices: {"NAME": {"voice": "...", "speaker": null, "speed": 1.0}}
     "intro_music": None,      # path to an audio file (CC0 / own music)
     "outro_music": None,
+    "intro_overlap": 1.5,     # seconds the voice starts before the intro music ends
     "bitrate": "96k",
     "base_url": "",           # public URL where the MP3s will be hosted (for feed.xml)
 }
@@ -243,27 +246,51 @@ def write_wav(path, audio):
         w.setframerate(SAMPLE_RATE)
         w.writeframes(audio.tobytes())
 
+def audio_duration(path):
+    out = subprocess.run(
+        ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(path)],
+        check=True, capture_output=True, text=True,
+    )
+    return float(out.stdout.strip())
+
 def encode_mp3(project_dir, wav_path, mp3_path, settings, meta):
     if not shutil.which("ffmpeg"):
         raise SystemExit("ffmpeg not found — install it (apt install ffmpeg / brew install ffmpeg)")
-    inputs, labels = [], []
+    music = {}
     for key in ("intro_music", "outro_music"):
-        if settings.get(key) and not (Path(project_dir) / settings[key]).exists():
-            raise SystemExit(f"{key} not found: {settings[key]}")
-    order = [settings.get("intro_music"), str(wav_path), settings.get("outro_music")]
-    for src in order:
-        if src:
-            src_path = src if src == str(wav_path) else str(Path(project_dir) / src)
-            inputs += ["-i", src_path]
-    n = len(inputs) // 2
-    filters = "".join(f"[{i}:a]aresample=44100,aformat=channel_layouts=mono[a{i}];" for i in range(n))
-    filters += "".join(f"[a{i}]" for i in range(n)) + f"concat=n={n}:v=0:a=1[out]"
+        if settings.get(key):
+            path = Path(project_dir) / settings[key]
+            if not path.exists():
+                raise SystemExit(f"{key} not found: {settings[key]}")
+            music[key] = path
+
+    inputs, filters, n = [], [], 0
+    def add_input(path):
+        nonlocal n
+        inputs.extend(["-i", str(path)])
+        filters.append(f"[{n}:a]aresample=44100,aformat=channel_layouts=mono[a{n}]")
+        n += 1
+        return f"[a{n - 1}]"
+
+    voice = add_input(wav_path)
+    if "intro_music" in music:
+        intro = add_input(music["intro_music"])
+        delay = max(audio_duration(music["intro_music"]) - float(settings["intro_overlap"]), 0)
+        filters.append(f"{voice}adelay={int(delay * 1000)}[vd]")
+        filters.append(f"{intro}[vd]amix=inputs=2:duration=longest:normalize=0[iv]")
+        voice = "[iv]"
+    if "outro_music" in music:
+        outro = add_input(music["outro_music"])
+        filters.append(f"{voice}{outro}concat=n=2:v=0:a=1[out]")
+    else:
+        filters.append(f"{voice}anull[out]")
+
     tags = []
     for k, v in meta.items():
         if v:
             tags += ["-metadata", f"{k}={v}"]
     subprocess.run(
-        ["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", filters,
+        ["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(filters),
          "-map", "[out]", "-codec:a", "libmp3lame", "-b:a", settings["bitrate"], *tags, str(mp3_path)],
         check=True,
     )
@@ -323,6 +350,134 @@ def sample(project_dir, voice_ids, text=None):
         encode_mp3(project_dir, wav_path, out_dir / f"{name}.mp3", {**cfg, "intro_music": None, "outro_music": None}, {})
         wav_path.unlink()
         print(f"🎧 {out_dir / (name + '.mp3')}")
+
+
+# ─── Jingle ───────────────────────────────────────────────────────────────────
+# Composed from scratch with numpy: no samples, no licenses, same seed = same jingle.
+
+JINGLE_STYLES = {
+    #             scale    chords (scale degrees)  bpm  drums
+    "warm":       ("major", [0, 5, 3, 4],          88,  False),
+    "upbeat":     ("major", [0, 4, 5, 3],          116, True),
+    "mysterious": ("minor", [0, 5, 2, 6],          70,  False),
+    "playful":    ("major", [0, 3, 4, 0],          128, True),
+}
+PRESET_STYLES = {
+    "essay": "warm", "manual": "upbeat", "fiction": "mysterious",
+    "biography": "warm", "fable": "playful", "childrens-book": "playful",
+}
+SCALES = {"major": [0, 2, 4, 5, 7, 9, 11], "minor": [0, 2, 3, 5, 7, 8, 10]}
+JINGLE_RATE = 44100
+
+def midi_hz(note):
+    return 440.0 * 2 ** ((note - 69) / 12)
+
+def envelope(n, attack, release):
+    env = np.ones(n)
+    a, r = min(int(attack * JINGLE_RATE), n), min(int(release * JINGLE_RATE), n)
+    if a:
+        env[:a] = np.linspace(0, 1, a)
+    if r:
+        env[-r:] *= np.linspace(1, 0, r)
+    return env
+
+def pad_tone(freq, n):
+    t = np.arange(n) / JINGLE_RATE
+    tone = sum(np.sin(2 * np.pi * freq * k * d * t) / k ** 1.5 for k in range(1, 6) for d in (0.997, 1.003))
+    return tone * envelope(n, 0.25, 0.6)
+
+def bell_tone(freq, n):
+    t = np.arange(n) / JINGLE_RATE
+    tone = np.sin(2 * np.pi * freq * t) + 0.35 * np.sin(2 * np.pi * freq * 2.76 * t) * np.exp(-t * 9)
+    return tone * np.exp(-t * 3.5) * envelope(n, 0.004, 0.05)
+
+def kick(n):
+    t = np.arange(n) / JINGLE_RATE
+    return np.sin(2 * np.pi * (45 + 90 * np.exp(-t * 30)) * t) * np.exp(-t * 12)
+
+def hat(n, rng):
+    t = np.arange(n) / JINGLE_RATE
+    noise = rng.standard_normal(n)
+    noise = np.diff(noise, prepend=0)   # crude high-pass
+    return noise * np.exp(-t * 60) * 0.15
+
+def reverb(x):
+    out = x.copy()
+    for delay, gain in ((0.031, 0.35), (0.047, 0.3), (0.071, 0.25), (0.113, 0.2), (0.167, 0.15)):
+        d = int(delay * JINGLE_RATE)
+        y = np.zeros_like(x)
+        for k in range(1, 5):
+            if d * k < x.size:
+                y[d * k:] += x[:-d * k] * gain ** k
+        out += y
+    return out
+
+def place(track, sound, start):
+    s = int(start * JINGLE_RATE)
+    end = min(s + sound.size, track.size)
+    if s < end:
+        track[s:end] += sound[:end - s]
+
+def compose_jingle(style="warm", seconds=7.0, seed=0):
+    scale_name, progression, bpm, drums = JINGLE_STYLES[style]
+    rng = np.random.default_rng(seed)
+    scale = SCALES[scale_name]
+    root = 57 + int(rng.integers(0, 7))          # A3..D#4
+    beat = 60.0 / bpm
+    tail = 2.5
+    chord_len = max((seconds - tail) / len(progression), beat * 2)
+    total = int((chord_len * len(progression) + tail) * JINGLE_RATE)
+
+    def degree_note(deg, octave=0):
+        return root + scale[deg % 7] + 12 * (deg // 7 + octave)
+
+    pad, bass, bells, perc = (np.zeros(total) for _ in range(4))
+    contour = rng.permutation([0, 1, 2, 1, 2, 0, 2, 1])
+    for i, deg in enumerate(progression):
+        start = i * chord_len
+        last = i == len(progression) - 1
+        length = chord_len + (tail if last else 0.3)
+        n = int(length * JINGLE_RATE)
+        chord = [degree_note(deg), degree_note(deg + 2), degree_note(deg + 4)]
+        for note in chord:
+            place(pad, pad_tone(midi_hz(note), n), start)
+        place(bass, np.sin(2 * np.pi * midi_hz(chord[0] - 12) * np.arange(n) / JINGLE_RATE) * envelope(n, 0.02, 0.4), start)
+        steps = 1 if last else int(chord_len / (beat / 2))
+        for s in range(steps):
+            note = chord[contour[(i * 3 + s) % len(contour)]] + 12
+            if last:
+                note = degree_note(0, 2)
+            place(bells, bell_tone(midi_hz(note), int(1.5 * JINGLE_RATE)), start + s * beat / 2)
+        if drums and not last:
+            for b in range(int(chord_len / beat)):
+                place(perc, kick(int(0.4 * JINGLE_RATE)), start + b * beat)
+                place(perc, hat(int(0.1 * JINGLE_RATE), rng), start + b * beat + beat / 2)
+
+    mix = 0.18 * pad + 0.35 * bass + 0.30 * bells + 0.5 * perc
+    mix = reverb(mix)
+    mix *= envelope(total, 0.05, tail)
+    mix = mix / (np.max(np.abs(mix)) or 1) * 0.7
+    return (mix * 32767).astype(np.int16)
+
+def jingle(project_dir, style=None, seconds=7.0, seed=None):
+    project_dir = Path(project_dir)
+    config = load_config(project_dir)
+    style = style or PRESET_STYLES.get(config.get("preset", ""), "warm")
+    if style not in JINGLE_STYLES:
+        raise SystemExit(f"Unknown style '{style}'. Available: {', '.join(JINGLE_STYLES)}")
+    if seed is None:
+        seed = sum(config.get("title", "").encode()) % 10000
+    audio = compose_jingle(style, seconds, seed)
+    out_dir = project_dir / "podcast" / "music"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out = out_dir / f"jingle-{style}-{seed}.wav"
+    with wave.open(str(out), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(JINGLE_RATE)
+        w.writeframes(audio.tobytes())
+    print(f"🎵 {out}  ({audio.size / JINGLE_RATE:.1f} s, style={style}, seed={seed})")
+    return out
 
 
 # ─── RSS feed ─────────────────────────────────────────────────────────────────
@@ -386,5 +541,9 @@ if __name__ == "__main__":
         build(".", rest)
     elif cmd == "feed":
         feed(".")
+    elif cmd == "jingle":
+        opts = dict(zip(rest[::2], rest[1::2]))
+        jingle(".", opts.get("--style"), float(opts.get("--seconds", 7)),
+               int(opts["--seed"]) if "--seed" in opts else None)
     else:
         print(__doc__)

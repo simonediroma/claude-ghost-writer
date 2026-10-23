@@ -36,6 +36,7 @@
     "voices": {},
     "intro_music": null,
     "outro_music": null,
+    "intro_overlap": 1.5,
     "bitrate": "96k",
     "base_url": ""
   }
