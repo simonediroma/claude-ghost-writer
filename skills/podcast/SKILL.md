@@ -69,6 +69,13 @@ Extra style `grime`: a 140 bpm grime beat (half-time snare, eskibeat square bass
 ```bash
 python3 export_podcast.py jingle --style grime --seed 2 --seconds 9
 ```
+**Seamless loop with real instruments (`grime-loop`).** Use this style when the author wants a beat that works on continuous repeat, like a hip hop or grime instrumental. Only the whistle lead is synthesized. Drums, clap, hi-hats, cymbals, siren, ratchet, piano chords and piano bass are real recordings from the **VCSL** (Versilian Community Sample Library, CC0, https://github.com/sgossner/VCSL). They are downloaded on first use into `podcast/music/kit/vcsl/` (~25 MB). Reverb and echo tails wrap around to the start, so the loop has no gap or fade at the seam. The same seed keeps the same key, melody and bass pattern as `grime`.
+```bash
+python3 export_podcast.py jingle --style grime-loop --seed 1            # 8 bars ≈ 13.7 s
+python3 export_podcast.py jingle --style grime-loop --seed 1 --bars 16
+```
+For continuous play, deliver the **WAV**. MP3 adds encoder padding and leaves a tiny gap at each repeat. When the loop is used as `intro_music`, the episode fades it out under the voice automatically. The author's own `kick.*`, `snare.*` and `hat.*` in `podcast/music/kit/` replace the VCSL ones.
+
 If the author dislikes the synthesized drums, there are two alternatives. The same seed keeps the same melody and bass in both:
 - `--drums none`: whistle, pad and bass only.
 - `--drums kit`: real drum samples from `podcast/music/kit/` (`kick.*`, `snare.*`, `hat.*`, any audio format). A missing piece falls back to the synth. Suggest CC0 one-shots from Freesound (license filter: Creative Commons 0) or the author's own samples. Never download them on the author's behalf.

@@ -10,6 +10,7 @@ Usage:
   python3 export_podcast.py build [scripts...]     # render episodes (default: all scripts)
   python3 export_podcast.py feed                   # write podcast/feed.xml (RSS)
   python3 export_podcast.py jingle [--style S] [--seconds N] [--seed N] [--drums synth|kit|none]
+                                   [--bars N]      # --style grime-loop: seamless beat, real samples
                                                    # compose an intro jingle (podcast/music/)
 
 Script tags (one per line):
@@ -276,6 +277,9 @@ def encode_mp3(project_dir, wav_path, mp3_path, settings, meta):
     if "intro_music" in music:
         intro = add_input(music["intro_music"])
         delay = max(audio_duration(music["intro_music"]) - float(settings["intro_overlap"]), 0)
+        fade = float(settings["intro_overlap"]) + 0.5
+        chain, label = filters[-1].rsplit("[", 1)
+        filters[-1] = f"{chain},afade=t=out:st={max(delay - 0.5, 0):.2f}:d={fade:.2f}[{label}"
         filters.append(f"{voice}adelay={int(delay * 1000)}[vd]")
         filters.append(f"{intro}[vd]amix=inputs=2:duration=longest:normalize=0[iv]")
         voice = "[iv]"
@@ -592,16 +596,173 @@ def compose_grime(seconds=7.0, seed=0, drum_mode="synth", kit_dir=None):
     mix = mix / (np.max(np.abs(mix)) or 1) * 0.75
     return (mix * 32767).astype(np.int16)
 
-def jingle(project_dir, style=None, seconds=7.0, seed=None, drums="synth"):
+# ─── Grime loop (real recorded samples) ───────────────────────────────────────
+# Everything except the whistle lead is a real recording from the Versilian
+# Community Sample Library (VCSL, CC0 — https://github.com/sgossner/VCSL),
+# downloaded on first use into podcast/music/kit/vcsl/. The loop is seamless:
+# reverb and echo tails wrap around to the start, so it can play on repeat.
+
+VCSL_BASE = "https://raw.githubusercontent.com/sgossner/VCSL/master/"
+VCSL_KIT = {
+    "kick":   "Membranophones/Struck Membranophones/Bass Drum 1/BDrumNew_hit_v7_rr1_Sum.wav",
+    "snare":  "Membranophones/Struck Membranophones/Snare Drum, Modern 1/Snare2_HitSN_v7_rr1_Mid.wav",
+    "clap":   "Idiophones/Struck Idiophones/Claps/Clap_rr2.wav",
+    "hat":    "Idiophones/Struck Idiophones/Hi-Hat Cymbal/HiHat_HitC_v2_rr1_Mid.wav",
+    "openhat": "Idiophones/Struck Idiophones/Hi-Hat Cymbal/HiHat_HitO_rr1_Mid.wav",
+    "crash":  "Idiophones/Struck Idiophones/Suspended Cymbal 1/susCymb1_hit_f1.wav",
+    "swell":  "Idiophones/Struck Idiophones/Suspended Cymbal 1/susCymb1_cresc_2s.wav",
+    "siren":  "Aerophones/Free Aerophones/Siren/Main_SirenWhistle-005.wav",
+    "ratchet": "Idiophones/Struck Idiophones/Ratchet/Ratchet1_Crank_rr1_Mid.wav",
+}
+PIANO_NOTES = ["C", "D", "E", "F#", "G#", "A#"]   # Steinway B is sampled every whole tone
+NOTE_PC = {"C": 0, "D": 2, "E": 4, "F#": 6, "G#": 8, "A#": 10}
+
+_samples = {}
+
+def vcsl_sample(project_dir, rel_path):
+    from urllib.parse import quote
+    if rel_path in _samples:
+        return _samples[rel_path]
+    local = Path(project_dir) / "podcast" / "music" / "kit" / "vcsl" / rel_path
+    if not local.exists():
+        local.parent.mkdir(parents=True, exist_ok=True)
+        print(f"Downloading {rel_path.split('/')[-1]} (VCSL, CC0)...")
+        with urlopen(VCSL_BASE + quote(rel_path)) as r:
+            local.write_bytes(r.read())
+    _samples[rel_path] = load_sample(local)
+    return _samples[rel_path]
+
+def pitch_shift(audio, semitones):
+    if semitones == 0:
+        return audio
+    ratio = 2 ** (semitones / 12)
+    x = np.arange(0, audio.size - 1, ratio)
+    return np.interp(x, np.arange(audio.size), audio)
+
+def piano(project_dir, midi, sustain=True, velocity=3):
+    """Real Steinway note: nearest sampled note, shifted by at most one semitone."""
+    best = min(((n, o) for n in PIANO_NOTES for o in range(0, 8)),
+               key=lambda no: abs((no[1] + 1) * 12 + NOTE_PC[no[0]] - midi))
+    sampled = (best[1] + 1) * 12 + NOTE_PC[best[0]]
+    kind = "Sus" if sustain else "NoSus"
+    path = (f"Chordophones/Zithers/Grand Piano, Steinway B/{kind}/"
+            f"JHPiano_{kind}_Close_{best[0]}{best[1]}_vl{velocity}_rr1.wav")
+    return pitch_shift(vcsl_sample(project_dir, path), midi - sampled)
+
+def trim(audio, seconds, fade=0.04):
+    n = min(int(seconds * JINGLE_RATE), audio.size)
+    return audio[:n] * envelope(n, 0.0, fade)
+
+def compose_grime_loop(project_dir, seed=0, bars=8):
+    """Seamless 140 bpm grime loop: real drums, piano and FX under the whistle lead."""
+    rng = np.random.default_rng(seed)
+    root = 40 + int(rng.integers(0, 4))           # same draws as compose_grime: same key and melody
+    motif_index = int(rng.integers(0, 2))
+    pattern_index = int(rng.integers(0, 3))
+    beat = 60.0 / 140
+    bar = beat * 4
+    s16 = beat / 4
+    loop_len = int(bars * bar * JINGLE_RATE)
+    total = loop_len + int(4 * JINGLE_RATE)       # room for tails, wrapped at the end
+    phrygian = [0, 1, 3, 5, 7, 8, 10]
+
+    def note(deg, octave):
+        return root + phrygian[deg % 7] + 12 * (deg // 7 + octave)
+
+    # User samples in podcast/music/kit/ (kick.*, snare.*, hat.*) override the VCSL ones
+    user_kit = load_kit(Path(project_dir) / "podcast" / "music" / "kit")
+    kit = {name: user_kit.get(name) if name in user_kit else vcsl_sample(project_dir, path)
+           for name, path in VCSL_KIT.items()}
+    kit["kick"] = trim(kit["kick"], 0.45, 0.15)
+    kit["snare"] = trim(kit["snare"], 0.35, 0.12)
+    kit["clap"] = trim(kit["clap"], 0.3, 0.1)
+    kit["hat"] = trim(kit["hat"], 0.09, 0.04)
+    kit["openhat"] = trim(kit["openhat"], 0.35, 0.15)
+    kit["crash"] = trim(kit["crash"], 3.5, 1.5)
+    kit["ratchet"] = trim(kit["ratchet"], 0.6, 0.1)
+    swell = kit["swell"][:int(2.2 * JINGLE_RATE)]   # crescendo cut at its peak, lands on the bar
+    swell = swell * envelope(swell.size, 0.3, 0.01)
+
+    lead, keys, bass, drums, fx = (np.zeros(total) for _ in range(5))
+
+    # Whistle lead (unchanged from the grime jingle), repeated every 4 bars: the mantra
+    motifs = [
+        [(4, 4), (7, 10), (9, 2), (8, 4), (7, 8), (5, 4), (8, 8), (7, 8), (1, 12)],
+        [(7, 6), (4, 2), (8, 8), (7, 4), (9, 4), (8, 12), (5, 4), (8, 4), (7, 16)],
+    ]
+    for phrase_start in range(0, bars, 4):
+        pos, prev = phrase_start * bar, None
+        for deg, length in motifs[motif_index]:
+            if pos >= min(phrase_start + 4, bars) * bar:
+                break
+            freq = midi_hz(note(deg, 2))
+            n = int(length * s16 * JINGLE_RATE)
+            place(lead, whistle_tone(freq, n, prev), pos)
+            pos, prev = pos + length * s16, freq
+    lead = echo(lead, beat * 0.75, 0.38)
+
+    progression = [0, 1, 0, 6]
+    bass_patterns = [[0, 3, 6, 10, 11], [0, 3, 7, 10, 14], [0, 2, 6, 8, 11, 14]]
+    for b in range(bars):
+        start = b * bar
+        deg = progression[b % 4]
+        # Piano: dark chord on the one, quieter stab on the "and" of 2
+        chord = [note(deg, 1), note(deg + 2, 1), note(deg + 4, 1)]
+        for midi in chord:
+            place(keys, trim(piano(project_dir, midi), bar, 0.2), start)
+            place(keys, trim(piano(project_dir, midi + 12, sustain=False, velocity=2), 0.25, 0.1) * 0.5, start + 6 * s16)
+        # Piano bass: low octaves on the grime pattern
+        for step in bass_patterns[pattern_index]:
+            low = trim(piano(project_dir, note(deg, 0) - 12, sustain=False, velocity=4), s16 * 2.5, 0.05)
+            mid = trim(piano(project_dir, note(deg, 0), sustain=False, velocity=4), s16 * 2.5, 0.05)
+            place(bass, low + 0.6 * mid[:low.size] if mid.size >= low.size else low, start + step * s16)
+        # Drums
+        kicks = [0, 10] + ([14] if b % 4 == 3 else [])
+        for step in kicks:
+            place(drums, kit["kick"], start + step * s16)
+        place(drums, kit["snare"] + 0.7 * np.pad(kit["clap"], (0, max(0, kit["snare"].size - kit["clap"].size)))[:kit["snare"].size],
+              start + 8 * s16)
+        for step in range(0, 16, 2):
+            if b % 2 == 1 and step >= 12:
+                for k in range(3):
+                    place(drums, kit["hat"] * 0.8, start + (step + k * 2 / 3) * s16)
+            elif b % 2 == 0 and step == 14:
+                place(drums, kit["openhat"] * 0.6, start + step * s16)
+            else:
+                place(drums, kit["hat"] * (1.0 if step % 4 == 2 else 0.7), start + step * s16)
+
+    # FX: crash on the one, cymbal swell into bar 5, siren and ratchet on the last bar
+    place(fx, kit["crash"] * 0.5, 0)
+    if bars >= 8:
+        place(fx, swell * 0.6, 4 * bar - swell.size / JINGLE_RATE)
+    place(fx, kit["siren"] * 0.35, (bars - 1) * bar + 2 * s16)
+    place(fx, kit["ratchet"] * 0.7, (bars - 1) * bar + 12 * s16)
+
+    mix = 0.30 * lead + 0.35 * keys + 0.45 * bass + 0.60 * drums + 0.40 * fx
+    looped = mix[:loop_len].copy()
+    tail = mix[loop_len:]
+    looped[:tail.size] += tail[:loop_len]          # wrap tails: seamless on repeat
+    looped = np.tanh(looped / (np.max(np.abs(looped)) or 1) * 1.4)
+    looped = looped / (np.max(np.abs(looped)) or 1) * 0.85
+    return (looped * 32767).astype(np.int16)
+
+
+def jingle(project_dir, style=None, seconds=7.0, seed=None, drums="synth", bars=8):
     project_dir = Path(project_dir)
     config = load_config(project_dir)
     style = style or PRESET_STYLES.get(config.get("preset", ""), "warm")
-    if style not in JINGLE_STYLES and style != "grime":
-        raise SystemExit(f"Unknown style '{style}'. Available: {', '.join(JINGLE_STYLES)}, grime")
+    extra = ("grime", "grime-loop")
+    if style not in JINGLE_STYLES and style not in extra:
+        raise SystemExit(f"Unknown style '{style}'. Available: {', '.join(list(JINGLE_STYLES) + list(extra))}")
     if seed is None:
         seed = sum(config.get("title", "").encode()) % 10000
     kit_dir = project_dir / "podcast" / "music" / "kit"
-    audio = compose_grime(seconds, seed, drums, kit_dir) if style == "grime" else compose_jingle(style, seconds, seed)
+    if style == "grime-loop":
+        audio = compose_grime_loop(project_dir, seed, bars)
+    elif style == "grime":
+        audio = compose_grime(seconds, seed, drums, kit_dir)
+    else:
+        audio = compose_jingle(style, seconds, seed)
     out_dir = project_dir / "podcast" / "music"
     out_dir.mkdir(parents=True, exist_ok=True)
     suffix = f"-{drums}" if style == "grime" and drums != "synth" else ""
@@ -679,6 +840,7 @@ if __name__ == "__main__":
     elif cmd == "jingle":
         opts = dict(zip(rest[::2], rest[1::2]))
         jingle(".", opts.get("--style"), float(opts.get("--seconds", 7)),
-               int(opts["--seed"]) if "--seed" in opts else None, opts.get("--drums", "synth"))
+               int(opts["--seed"]) if "--seed" in opts else None, opts.get("--drums", "synth"),
+               int(opts.get("--bars", 8)))
     else:
         print(__doc__)
