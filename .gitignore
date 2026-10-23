@@ -20,3 +20,8 @@ Thumbs.db
 
 # Generated PDF exports (optional — remove if you want to version them)
 # manuscript/*.pdf
+
+# Podcast — downloaded Piper voices (large) and rendered audio
+podcast/voices/
+podcast/samples/
+# podcast/episodes/

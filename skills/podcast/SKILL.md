@@ -1,0 +1,166 @@
+---
+description: Turn the book into a narrated podcast — one episode per chapter. Picks and tunes the narrator voice with audio samples, adapts each chapter into a script written for the ear (author approves every script), then renders MP3 episodes and an RSS feed. 100% free and open source — Piper TTS (offline) + ffmpeg. No API keys, no paid services.
+---
+
+# Skill: Podcast
+
+> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
+
+Usage:
+- `/ghost-writer:podcast` — full flow (voice → plan → scripts → audio), resumes where it left off
+- `/ghost-writer:podcast voice` — choose or change the narrator voice and character voices
+- `/ghost-writer:podcast script [chapter]` — adapt one chapter into an episode script
+- `/ghost-writer:podcast build [episode]` — render audio for one or all approved scripts
+- `/ghost-writer:podcast feed` — generate `podcast/feed.xml` for Spotify / Apple Podcasts
+
+Format: **narrated**. One narrator reads the book, with light adaptation for listening. The chapters in `chapters/` are never modified.
+
+---
+
+## Prerequisites
+
+Check both, and if something is missing give the install command and stop:
+```bash
+python3 -c "import piper, numpy"   # pip install piper-tts numpy
+ffmpeg -version                     # apt install ffmpeg · brew install ffmpeg · winget install ffmpeg
+```
+Source text: `manuscript/[title]-final.md` if it exists (split by `# ` headings), otherwise the chapters in `chapters/` in outline order. If a chapter is still `draft`, warn the author once: the podcast is best made from integrated text.
+
+---
+
+## Step 1 — Voice
+
+Run this on the first use, if `book.config.json → podcast.voice` is empty, or on `/ghost-writer:podcast voice`.
+
+### 1a. Narrator
+1. List the voices available for the book's language:
+   ```bash
+   python3 export_podcast.py voices it
+   ```
+   Recommend 2 or 3 of them, preferring `medium` or `high` quality. Defaults by language: `it_IT-paola-medium`, `en_US-lessac-medium`, `es_ES-davefx-medium`, `fr_FR-siwis-medium`, `de_DE-thorsten-medium`, `pt_BR-faber-medium`. For a multi-speaker voice, use `VOICE:ID` to pick a speaker (for example `en_US-libritts_r-medium:42`).
+2. Render a sample of each voice from a real passage of the book (2 or 3 sentences from the first chapter, so the author hears their own prose):
+   ```bash
+   python3 export_podcast.py sample it_IT-paola-medium it_IT-riccardo-x_low --text "…passage…"
+   ```
+   Output: `podcast/samples/[voice].mp3`. Ask the author to listen and pick one.
+3. Tune the voice with the author, rendering a new sample after each change:
+   - **Speed** (`speed`): `1.0` is natural, `0.9` is slower and suits narrative, `1.1` is faster and suits manuals.
+   - **Pauses** (`sentence_pause`, `paragraph_pause`, in seconds): longer pauses give a calmer, more literary feel.
+4. Save the choices to `book.config.json → podcast`.
+
+### 1b. Character voices (optional; suggest only for the fiction, fable, children's-book and biography presets)
+If the book has dialogue and profiled characters in `characters/`, ask whether the main characters should have their own voice. For each one, render a sample with a line of that character's dialogue, then save it:
+```json
+"voices": { "MARIO": { "voice": "it_IT-riccardo-x_low", "speed": 1.05 } }
+```
+Default is no character voices: the narrator reads everything, like a classic audiobook.
+
+### 1c. Music (optional)
+Intro and outro music go in `podcast.intro_music` and `podcast.outro_music` as a path to an audio file. Only use music the author owns or that is CC0 / royalty-free (for example the Free Music Archive or Pixabay Music). Never download music on the author's behalf without asking.
+
+---
+
+## Step 2 — Episode plan
+
+Propose one episode per chapter. Merge very short chapters (under ~800 words) and split very long ones (over ~6,000 words, roughly 40 minutes), using a scene or section break as the split point. Show the plan:
+
+```
+PODCAST PLAN — [title]
+  Ep 1  Introduzione                 ~1,900 words · ~13 min
+  Ep 2  Cap. 1 — [title]             ~3,400 words · ~23 min
+  …
+```
+Estimate about 150 words per minute at `speed` 1.0. Wait for the author's confirmation, then save the plan to `podcast/plan.md` with a status per episode (`todo`, `script`, `approved`, `rendered`).
+
+---
+
+## Step 3 — Script (one episode at a time)
+
+Write `podcast/scripts/episode-NN.md`:
+
+```markdown
+---
+episode: 2
+title: "Capitolo 1 — [title]"
+description: "[1-2 sentences for the podcast app, no spoilers]"
+source: chapters/01-slug.md
+status: script
+---
+[Opening: 1-2 sentences. Book title, episode number, chapter title. From episode 2 on, add one sentence recalling where the previous episode left off.]
+
+[pause 1]
+
+# [Chapter title]
+
+[Adapted text]
+
+[pause 1.5]
+
+[Closing: 1 sentence anticipating the next episode, with no spoilers.]
+```
+
+### Adaptation rules (narrated format: stay close to the text)
+The author's voice comes first: keep their sentences, rhythm and vocabulary. Only change what does not work for the ear:
+- **Visual structure**: turn lists into spoken sentences ("ci sono tre ragioni. La prima…"). Describe a table in words or drop it. Put footnotes inline or drop them.
+- **Visual references**: rewrite "vedi sopra", "nella figura", "nella tabella seguente" or drop them.
+- **Pronunciation**: spell out numbers, dates, symbols and abbreviations when the TTS could misread them ("€ 1.500" → "millecinquecento euro", "ecc." → "eccetera", "cap. 3" → "capitolo tre"). Spell out acronyms if they should be read letter by letter.
+- **Sentences that are too long**: a sentence over ~45 words may be split at a natural point. Never change its meaning.
+- **Dialogue**: with character voices, put `[voice NAME]` before the line and `[narrator]` after it. The attribution ("disse Mario") stays with the narrator.
+- **Pauses**: `[pause 1]` at scene breaks, `[pause 2]` at major turns.
+- Apply `style-rules.md` only to the text you add (opening, closing, rewritten lists).
+
+### Approval
+Show the author:
+1. The opening and closing lines.
+2. A compact list of every change from the original (`3.4 elenco → frase`, `5.2 "€ 1.500" → "millecinquecento euro"`). This is the list of changes, not the whole script.
+
+When the author approves, set `status: approved` in the script and update `podcast/plan.md`. Nothing goes to audio before approval.
+
+---
+
+## Step 4 — Audio
+
+```bash
+python3 export_podcast.py build                   # all scripts
+python3 export_podcast.py build episode-02.md     # one episode
+```
+Output: `podcast/episodes/episode-NN.mp3`, mono at 96 kbps, which is the standard for spoken-word podcasts, with ID3 tags (title, book, author, track). The first run downloads the Piper voices into `podcast/voices/` (~60 MB each). Rendering then works offline.
+
+Before rendering, check that every `[voice NAME]` used in the scripts is defined in `podcast.voices`. After rendering, report the duration of each episode and suggest listening to the first 2 minutes of episode 1 before publishing.
+
+When the author reports a word that is mispronounced, fix the spelling in the script and re-render only that episode. Do not change the chapter. Write the fix to the `## Pronunciation` section of `podcast/plan.md`, so later scripts apply it automatically.
+
+---
+
+## Step 5 — Feed (optional)
+
+```bash
+python3 export_podcast.py feed
+```
+Ask for `podcast.base_url`, the public folder where the MP3s will be hosted. Free options: GitHub Releases, the Internet Archive, or the author's own site. The skill generates `podcast/feed.xml`, ready to submit to Spotify for Creators, Apple Podcasts and other directories. Remind the author to add a 3000×3000 cover image in their hosting or directory.
+
+---
+
+## Config reference (`book.config.json → podcast`)
+
+```json
+"podcast": {
+  "voice": "it_IT-paola-medium",
+  "speaker": null,
+  "speed": 0.95,
+  "sentence_pause": 0.35,
+  "paragraph_pause": 0.9,
+  "voices": {},
+  "intro_music": null,
+  "outro_music": null,
+  "bitrate": "96k",
+  "base_url": ""
+}
+```
+
+---
+
+## Closing
+
+> Podcast ready: [N] episodes, [total] minutes, in `podcast/episodes/`.
+> Next: listen to episode 1, then `/ghost-writer:podcast feed` when you're ready to publish.
