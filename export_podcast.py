@@ -463,14 +463,14 @@ def compose_jingle(style="warm", seconds=7.0, seed=0):
     mix = mix / (np.max(np.abs(mix)) or 1) * 0.7
     return (mix * 32767).astype(np.int16)
 
-def whistle_tone(freq, n, glide_from=None):
-    """Eerie whistle: sine with delayed vibrato and an optional slide into the note."""
+def whistle_tone(freq, n, glide_from=None, vibrato_depth=0.012, glide=0.09):
+    """Whistle: sine with delayed vibrato and an optional slide into the note."""
     t = np.arange(n) / JINGLE_RATE
     f = np.full(n, freq)
     if glide_from:
-        g = min(int(0.09 * JINGLE_RATE), n)
+        g = min(int(glide * JINGLE_RATE), n)
         f[:g] = np.linspace(glide_from, freq, g)
-    vibrato = 1 + 0.012 * np.sin(2 * np.pi * 5.5 * t) * np.clip(t / 0.4, 0, 1)
+    vibrato = 1 + vibrato_depth * np.sin(2 * np.pi * 5.5 * t) * np.clip(t / 0.4, 0, 1)
     phase = 2 * np.pi * np.cumsum(f * vibrato) / JINGLE_RATE
     tone = np.sin(phase) + 0.08 * np.sin(2 * phase)
     return tone * envelope(n, 0.06, min(0.25, n / JINGLE_RATE / 2))
@@ -610,8 +610,6 @@ VCSL_KIT = {
     "hat":    "Idiophones/Struck Idiophones/Hi-Hat Cymbal/HiHat_HitC_v2_rr1_Mid.wav",
     "openhat": "Idiophones/Struck Idiophones/Hi-Hat Cymbal/HiHat_HitO_rr1_Mid.wav",
     "crash":  "Idiophones/Struck Idiophones/Suspended Cymbal 1/susCymb1_hit_f1.wav",
-    "swell":  "Idiophones/Struck Idiophones/Suspended Cymbal 1/susCymb1_cresc_2s.wav",
-    "siren":  "Aerophones/Free Aerophones/Siren/Main_SirenWhistle-005.wav",
     "ratchet": "Idiophones/Struck Idiophones/Ratchet/Ratchet1_Crank_rr1_Mid.wav",
 }
 PIANO_NOTES = ["C", "D", "E", "F#", "G#", "A#"]   # Steinway B is sampled every whole tone
@@ -653,8 +651,25 @@ def trim(audio, seconds, fade=0.04):
     n = min(int(seconds * JINGLE_RATE), audio.size)
     return audio[:n] * envelope(n, 0.0, fade)
 
+def bitcrush(x, bits=8, hold=4):
+    """Digital lo-fi: fewer amplitude steps and a sample-and-hold downsample."""
+    peak = np.max(np.abs(x)) or 1
+    levels = 2 ** (bits - 1)
+    crushed = np.round(x / peak * levels) / levels * peak
+    return np.repeat(crushed[::hold], hold)[:x.size]
+
+def duck(x, key, depth=0.5, smooth=0.08):
+    """Lower x while key (the whistle) is playing — keeps the lead on top."""
+    k = int(smooth * JINGLE_RATE)
+    env = np.convolve(np.abs(key), np.ones(k) / k, mode="same")
+    env = env / (np.max(env) or 1)
+    return x * (1 - depth * np.clip(env * 2, 0, 1))
+
+def rms(x):
+    return np.sqrt(np.mean(x ** 2)) or 1
+
 def compose_grime_loop(project_dir, seed=0, bars=8):
-    """Seamless 140 bpm grime loop: real drums, piano and FX under the whistle lead."""
+    """Seamless 140 bpm grime loop: the whistle lead on top of real drums, piano and FX."""
     rng = np.random.default_rng(seed)
     root = 40 + int(rng.integers(0, 4))           # same draws as compose_grime: same key and melody
     motif_index = int(rng.integers(0, 2))
@@ -664,10 +679,10 @@ def compose_grime_loop(project_dir, seed=0, bars=8):
     s16 = beat / 4
     loop_len = int(bars * bar * JINGLE_RATE)
     total = loop_len + int(4 * JINGLE_RATE)       # room for tails, wrapped at the end
-    phrygian = [0, 1, 3, 5, 7, 8, 10]
+    dorian = [0, 2, 3, 5, 7, 9, 10]               # minor but not spooky: hip hop, not horror
 
     def note(deg, octave):
-        return root + phrygian[deg % 7] + 12 * (deg // 7 + octave)
+        return root + dorian[deg % 7] + 12 * (deg // 7 + octave)
 
     # User samples in podcast/music/kit/ (kick.*, snare.*, hat.*) override the VCSL ones
     user_kit = load_kit(Path(project_dir) / "podcast" / "music" / "kit")
@@ -680,8 +695,6 @@ def compose_grime_loop(project_dir, seed=0, bars=8):
     kit["openhat"] = trim(kit["openhat"], 0.35, 0.15)
     kit["crash"] = trim(kit["crash"], 3.5, 1.5)
     kit["ratchet"] = trim(kit["ratchet"], 0.6, 0.1)
-    swell = kit["swell"][:int(2.2 * JINGLE_RATE)]   # crescendo cut at its peak, lands on the bar
-    swell = swell * envelope(swell.size, 0.3, 0.01)
 
     lead, keys, bass, drums, fx = (np.zeros(total) for _ in range(5))
 
@@ -697,20 +710,20 @@ def compose_grime_loop(project_dir, seed=0, bars=8):
                 break
             freq = midi_hz(note(deg, 2))
             n = int(length * s16 * JINGLE_RATE)
-            place(lead, whistle_tone(freq, n, prev), pos)
+            place(lead, whistle_tone(freq, n, prev, vibrato_depth=0.003, glide=0.035), pos)
             pos, prev = pos + length * s16, freq
-    lead = echo(lead, beat * 0.75, 0.38)
+    # Digital delay: the echoes are bit-crushed, the dry whistle stays clean
+    lead = lead + bitcrush(echo(lead, beat * 0.75, 0.38) - lead, bits=8, hold=2) * 0.75
 
-    progression = [0, 1, 0, 6]
+    progression = [0, 3, 0, 6]                    # i - IV - i - bVII
     bass_patterns = [[0, 3, 6, 10, 11], [0, 3, 7, 10, 14], [0, 2, 6, 8, 11, 14]]
     for b in range(bars):
         start = b * bar
         deg = progression[b % 4]
-        # Piano: dark chord on the one, quieter stab on the "and" of 2
-        chord = [note(deg, 1), note(deg + 2, 1), note(deg + 4, 1)]
+        # Piano: 7th chord on the one, below the whistle's register
+        chord = [note(deg, 1), note(deg + 2, 1), note(deg + 4, 1), note(deg + 6, 1)]
         for midi in chord:
-            place(keys, trim(piano(project_dir, midi), bar, 0.2), start)
-            place(keys, trim(piano(project_dir, midi + 12, sustain=False, velocity=2), 0.25, 0.1) * 0.5, start + 6 * s16)
+            place(keys, trim(piano(project_dir, midi, velocity=2), bar, 0.2), start)
         # Piano bass: low octaves on the grime pattern
         for step in bass_patterns[pattern_index]:
             low = trim(piano(project_dir, note(deg, 0) - 12, sustain=False, velocity=4), s16 * 2.5, 0.05)
@@ -731,18 +744,18 @@ def compose_grime_loop(project_dir, seed=0, bars=8):
             else:
                 place(drums, kit["hat"] * (1.0 if step % 4 == 2 else 0.7), start + step * s16)
 
-    # FX: crash on the one, cymbal swell into bar 5, siren and ratchet on the last bar
-    place(fx, kit["crash"] * 0.5, 0)
-    if bars >= 8:
-        place(fx, swell * 0.6, 4 * bar - swell.size / JINGLE_RATE)
-    place(fx, kit["siren"] * 0.35, (bars - 1) * bar + 2 * s16)
-    place(fx, kit["ratchet"] * 0.7, (bars - 1) * bar + 12 * s16)
+    # FX: light crash on the one, ratchet on the last bar
+    place(fx, kit["crash"] * 0.3, 0)
+    place(fx, kit["ratchet"] * 0.5, (bars - 1) * bar + 12 * s16)
 
-    mix = 0.30 * lead + 0.35 * keys + 0.45 * bass + 0.60 * drums + 0.40 * fx
+    # Mix by loudness: whistle on top, everything else ducks under it
+    bed = (0.55 * duck(drums, lead, 0.35) / rms(drums) + 0.20 * duck(keys, lead, 0.6) / rms(keys) +
+           0.50 * duck(bass, lead, 0.3) / rms(bass) + 0.10 * fx / rms(fx))
+    mix = 1.0 * lead / rms(lead) + bed
     looped = mix[:loop_len].copy()
     tail = mix[loop_len:]
     looped[:tail.size] += tail[:loop_len]          # wrap tails: seamless on repeat
-    looped = np.tanh(looped / (np.max(np.abs(looped)) or 1) * 1.4)
+    looped = np.tanh(looped / (np.max(np.abs(looped)) or 1) * 1.2)
     looped = looped / (np.max(np.abs(looped)) or 1) * 0.85
     return (looped * 32767).astype(np.int16)
 
