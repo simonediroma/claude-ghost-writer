@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.0] — 2026-10-23
+
+### Added
+
+- **`/ghost-writer:podcast`** — turns the book into a narrated podcast, one episode per chapter. Narrator voice chosen from audio samples rendered from the book's own prose, tunable speed and pauses, optional per-character voices for dialogue. Each chapter is adapted into a script for the ear (lists, visual references, numbers and abbreviations) and approved by the author before rendering. Chapters are never modified.
+- **`export_podcast.py`** — `voices`, `sample`, `build`, `feed`. Free and open source only: Piper TTS (offline) + ffmpeg. MP3 episodes with ID3 tags, optional intro/outro music, RSS `feed.xml`.
+- **Intro jingle** — `export_podcast.py jingle` composes an original sting (numpy, no samples, no licenses) in 4 styles picked from the preset, plus `grime` (140 bpm, square bass, sci-fi whistle lead) and `grime-loop` (seamless 8-bar beat, real CC0 recordings from VCSL for drums, piano, cymbals and FX; only the whistle is synthesized and sits on top of the mix, with a digital bit-crushed delay; dorian, not horror); voice starts over the jingle's tail (`intro_overlap`). Optional AI route: prompt written for ACE-Step (Apache-2.0, local).
+- **`podcast`** section in `book.config.json`.
+
+### Changed
+
+- `check` expects 31 skills.
+
 ## [1.2.0] — 2026-10-10
 
 ### Added

@@ -119,6 +119,16 @@ Requires `pip install reportlab pymupdf`.
 | `/ghost-writer:write-closing` | Writes the conclusion — closes the arc |
 | `/ghost-writer:manuscript-final` | Arc audit + assembles submission-ready manuscript |
 
+### Podcast — optional, after the book is done
+
+| Command | What it does |
+|---|---|
+| `/ghost-writer:podcast` | Turns the book into a narrated podcast: voice choice with samples, one script per chapter adapted for the ear (you approve each one), MP3 episodes + RSS feed |
+| `/ghost-writer:podcast jingle` | Composes an original intro jingle offline (warm, upbeat, mysterious, playful, grime) or a seamless `grime-loop` beat made from real CC0 recordings |
+| `/ghost-writer:podcast voice` | Pick or retune the narrator voice (speed, pauses) and optional character voices |
+
+100% free and open source: [Piper](https://github.com/OHF-Voice/piper1-gpl) (offline TTS) + ffmpeg. Requires `pip install piper-tts numpy` and `ffmpeg`. Chapters are never modified — scripts live in `podcast/scripts/`.
+
 ### Utility
 
 | Command | What it does |
@@ -228,6 +238,7 @@ Files the plugin reads and writes automatically. You don't need to edit these ma
 | `book.config.json` | Project metadata, voice profile, preset digest | setup-book, wizard, retune |
 | `style-rules.md` | Punctuation conventions and the author's writing rules | write, integrate, revise, rules, corrections |
 | `corrections.md` | Queue of corrections from re-reading sessions | corrections |
+| `podcast/` | Episode plan, scripts, voices, MP3 episodes, `feed.xml` | podcast |
 | `book-memory.md` | Defined terms, promises, claims, chapter log | write, integrate, consistency-check |
 | `outline.md` | Chapter list with statuses | write, chapter, longform-upgrade |
 | `voice-sample.md` | 3 paragraphs extracted from the last written chapter — style reference | write, integrate (silently) |

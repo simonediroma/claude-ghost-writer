@@ -26,5 +26,18 @@
     "chapters_dir": "chapters/"
   },
   "preset_digest": null,
-  "writing_log": []
+  "writing_log": [],
+  "podcast": {
+    "voice": null,
+    "speaker": null,
+    "speed": 1.0,
+    "sentence_pause": 0.35,
+    "paragraph_pause": 0.9,
+    "voices": {},
+    "intro_music": null,
+    "outro_music": null,
+    "intro_overlap": 1.5,
+    "bitrate": "96k",
+    "base_url": ""
+  }
 }
