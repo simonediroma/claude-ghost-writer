@@ -65,6 +65,10 @@ python3 export_podcast.py jingle                          # style from preset
 python3 export_podcast.py jingle --style upbeat --seed 7  # another variation
 python3 export_podcast.py jingle --seconds 5              # shorter
 ```
+Extra style `grime`: a 140 bpm grime beat (half-time snare, eskibeat square bass, triplet hat rolls) under an eerie sci-fi whistle with vibrato and echo. The lead melody is original. Never reproduce a copyrighted theme, even if the author asks for "the X-Files one": take inspiration from the mood only.
+```bash
+python3 export_podcast.py jingle --style grime --seed 2 --seconds 9
+```
 Output: `podcast/music/jingle-[style]-[seed].wav`. The author listens and asks for "another one" (new seed) or "more cheerful" (new style) until they like it.
 
 **B. AI-generated music (ACE-Step, Apache-2.0, open source, local).** Requires a GPU with about 8 GB of VRAM, or an Apple Silicon Mac. Do not install it for the author. If they already have it, or want to install it themselves (https://github.com/ace-step/ACE-Step), write the prompt for them from `book.config.json` (genre, tone, target reader, premise):

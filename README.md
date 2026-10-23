@@ -124,7 +124,7 @@ Requires `pip install reportlab pymupdf`.
 | Command | What it does |
 |---|---|
 | `/ghost-writer:podcast` | Turns the book into a narrated podcast: voice choice with samples, one script per chapter adapted for the ear (you approve each one), MP3 episodes + RSS feed |
-| `/ghost-writer:podcast jingle` | Composes an original intro jingle offline (warm, upbeat, mysterious, playful) |
+| `/ghost-writer:podcast jingle` | Composes an original intro jingle offline (warm, upbeat, mysterious, playful, grime) |
 | `/ghost-writer:podcast voice` | Pick or retune the narrator voice (speed, pauses) and optional character voices |
 
 100% free and open source: [Piper](https://github.com/OHF-Voice/piper1-gpl) (offline TTS) + ffmpeg. Requires `pip install piper-tts numpy` and `ffmpeg`. Chapters are never modified — scripts live in `podcast/scripts/`.

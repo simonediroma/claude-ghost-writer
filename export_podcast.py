@@ -459,15 +459,118 @@ def compose_jingle(style="warm", seconds=7.0, seed=0):
     mix = mix / (np.max(np.abs(mix)) or 1) * 0.7
     return (mix * 32767).astype(np.int16)
 
+def whistle_tone(freq, n, glide_from=None):
+    """Eerie whistle: sine with delayed vibrato and an optional slide into the note."""
+    t = np.arange(n) / JINGLE_RATE
+    f = np.full(n, freq)
+    if glide_from:
+        g = min(int(0.09 * JINGLE_RATE), n)
+        f[:g] = np.linspace(glide_from, freq, g)
+    vibrato = 1 + 0.012 * np.sin(2 * np.pi * 5.5 * t) * np.clip(t / 0.4, 0, 1)
+    phase = 2 * np.pi * np.cumsum(f * vibrato) / JINGLE_RATE
+    tone = np.sin(phase) + 0.08 * np.sin(2 * phase)
+    return tone * envelope(n, 0.06, min(0.25, n / JINGLE_RATE / 2))
+
+def square_bass(freq, n):
+    """Eskibeat-style square sub with a short downward pitch drop."""
+    t = np.arange(n) / JINGLE_RATE
+    f = freq * (1 + 0.5 * np.exp(-t * 40))
+    phase = 2 * np.pi * np.cumsum(f) / JINGLE_RATE
+    square = np.sign(np.sin(phase)) * 0.45 + np.sin(phase) * 0.55
+    return square * np.exp(-t * 4.5) * envelope(n, 0.003, 0.03)
+
+def snare(n, rng):
+    t = np.arange(n) / JINGLE_RATE
+    body = np.sin(2 * np.pi * 185 * t) * np.exp(-t * 25)
+    noise = np.diff(rng.standard_normal(n), prepend=0) * np.exp(-t * 18) * 0.35
+    return body * 0.6 + noise
+
+def echo(x, delay, feedback, repeats=5):
+    out = x.copy()
+    d = int(delay * JINGLE_RATE)
+    for k in range(1, repeats + 1):
+        if d * k < x.size:
+            out[d * k:] += x[:-d * k] * feedback ** k
+    return out
+
+def compose_grime(seconds=7.0, seed=0):
+    """140 bpm grime beat under a sci-fi whistle lead (half-time snare, square bass, hat rolls)."""
+    rng = np.random.default_rng(seed)
+    root = 40 + int(rng.integers(0, 4))           # E2..G2
+    beat = 60.0 / 140
+    bar = beat * 4
+    s16 = beat / 4
+    bars = max(3, int(round((seconds - 2) / bar)))
+    tail = 2.2
+    total = int((bars * bar + tail) * JINGLE_RATE)
+    phrygian = [0, 1, 3, 5, 7, 8, 10]
+
+    def note(deg, octave):
+        return root + phrygian[deg % 7] + 12 * (deg // 7 + octave)
+
+    lead, pad, bass, drums = (np.zeros(total) for _ in range(4))
+
+    # Lead: two original motifs, (degree, length in 16ths); slides between notes
+    motifs = [
+        [(4, 4), (7, 10), (9, 2), (8, 4), (7, 8), (5, 4), (8, 8), (7, 8), (1, 12)],
+        [(7, 6), (4, 2), (8, 8), (7, 4), (9, 4), (8, 12), (5, 4), (8, 4), (7, 16)],
+    ]
+    pos, prev = 0.0, None
+    for deg, length in motifs[int(rng.integers(0, len(motifs)))]:
+        if pos >= bars * bar:
+            break
+        freq = midi_hz(note(deg, 2))
+        n = int(length * s16 * JINGLE_RATE)
+        place(lead, whistle_tone(freq, n, prev), pos)
+        pos, prev = pos + length * s16, freq
+    lead = echo(lead, beat * 0.75, 0.38)
+
+    # Pad: dark i - bII - i - bVII voicing, one chord per bar
+    progression = [0, 1, 0, 6]
+    for b in range(bars):
+        deg = progression[b % 4]
+        n = int((bar + (tail if b == bars - 1 else 0.1)) * JINGLE_RATE)
+        for d in (deg, deg + 2, deg + 4):
+            place(pad, pad_tone(midi_hz(note(d, 1)), n), b * bar)
+
+    # Beat drops after the first bar
+    bass_patterns = [[0, 3, 6, 10, 11], [0, 3, 7, 10, 14], [0, 2, 6, 8, 11, 14]]
+    bass_pattern = bass_patterns[int(rng.integers(0, len(bass_patterns)))]
+    for b in range(1, bars):
+        start = b * bar
+        deg = progression[b % 4]
+        for step in bass_pattern:
+            place(bass, square_bass(midi_hz(note(deg, 0)), int(s16 * 2.5 * JINGLE_RATE)), start + step * s16)
+        for step in (0, 10):
+            place(drums, kick(int(0.35 * JINGLE_RATE)), start + step * s16)
+        place(drums, snare(int(0.3 * JINGLE_RATE), rng), start + 8 * s16)
+        roll = b % 2 == 0 or b == bars - 1
+        for step in range(0, 16, 2):
+            if roll and step >= 12:
+                for k in range(3):                 # triplet hat roll
+                    place(drums, hat(int(0.06 * JINGLE_RATE), rng), start + (step + k * 2 / 3) * s16)
+            else:
+                place(drums, hat(int(0.08 * JINGLE_RATE), rng), start + step * s16)
+    # Final hit on the downbeat after the last bar
+    place(drums, kick(int(0.5 * JINGLE_RATE)), bars * bar)
+    place(drums, snare(int(0.4 * JINGLE_RATE), rng) * 0.7, bars * bar)
+    place(bass, square_bass(midi_hz(note(0, 0)), int(1.2 * JINGLE_RATE)), bars * bar)
+
+    mix = 0.30 * lead + 0.07 * reverb(pad) + 0.40 * bass + 0.55 * drums
+    mix *= envelope(total, 0.02, tail * 0.8)
+    mix = np.tanh(mix / (np.max(np.abs(mix)) or 1) * 1.6)   # light saturation
+    mix = mix / (np.max(np.abs(mix)) or 1) * 0.75
+    return (mix * 32767).astype(np.int16)
+
 def jingle(project_dir, style=None, seconds=7.0, seed=None):
     project_dir = Path(project_dir)
     config = load_config(project_dir)
     style = style or PRESET_STYLES.get(config.get("preset", ""), "warm")
-    if style not in JINGLE_STYLES:
-        raise SystemExit(f"Unknown style '{style}'. Available: {', '.join(JINGLE_STYLES)}")
+    if style not in JINGLE_STYLES and style != "grime":
+        raise SystemExit(f"Unknown style '{style}'. Available: {', '.join(JINGLE_STYLES)}, grime")
     if seed is None:
         seed = sum(config.get("title", "").encode()) % 10000
-    audio = compose_jingle(style, seconds, seed)
+    audio = compose_grime(seconds, seed) if style == "grime" else compose_jingle(style, seconds, seed)
     out_dir = project_dir / "podcast" / "music"
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / f"jingle-{style}-{seed}.wav"
