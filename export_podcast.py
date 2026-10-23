@@ -10,7 +10,8 @@ Usage:
   python3 export_podcast.py build [scripts...]     # render episodes (default: all scripts)
   python3 export_podcast.py feed                   # write podcast/feed.xml (RSS)
   python3 export_podcast.py jingle [--style S] [--seconds N] [--seed N] [--drums synth|kit|none]
-                                   [--bars N] [--bpm N]  # --style grime-loop: seamless beat, real samples
+                                   [--bars N] [--bpm N] [--bed 0.4]  # --style grime-loop: seamless beat,
+                                                   # real samples; --bed = instruments level
                                                    # compose an intro jingle (podcast/music/)
 
 Script tags (one per line):
@@ -668,7 +669,7 @@ def duck(x, key, depth=0.5, smooth=0.08):
 def rms(x):
     return np.sqrt(np.mean(x ** 2)) or 1
 
-def compose_grime_loop(project_dir, seed=0, bars=8, bpm=140):
+def compose_grime_loop(project_dir, seed=0, bars=8, bpm=140, bed_level=1.0):
     """Seamless 140 bpm grime loop: the whistle lead on top of real drums, piano and FX."""
     rng = np.random.default_rng(seed)
     root = 40 + int(rng.integers(0, 4))           # same draws as compose_grime: same key and melody
@@ -751,7 +752,7 @@ def compose_grime_loop(project_dir, seed=0, bars=8, bpm=140):
     # Mix by loudness: whistle on top, everything else ducks under it
     bed = (0.55 * duck(drums, lead, 0.35) / rms(drums) + 0.20 * duck(keys, lead, 0.6) / rms(keys) +
            0.50 * duck(bass, lead, 0.3) / rms(bass) + 0.10 * fx / rms(fx))
-    mix = 1.0 * lead / rms(lead) + bed
+    mix = 1.0 * lead / rms(lead) + bed_level * bed   # bed_level 0.4 ≈ instruments in the background
     looped = mix[:loop_len].copy()
     tail = mix[loop_len:]
     looped[:tail.size] += tail[:loop_len]          # wrap tails: seamless on repeat
@@ -760,7 +761,7 @@ def compose_grime_loop(project_dir, seed=0, bars=8, bpm=140):
     return (looped * 32767).astype(np.int16)
 
 
-def jingle(project_dir, style=None, seconds=7.0, seed=None, drums="synth", bars=8, bpm=140):
+def jingle(project_dir, style=None, seconds=7.0, seed=None, drums="synth", bars=8, bpm=140, bed_level=1.0):
     project_dir = Path(project_dir)
     config = load_config(project_dir)
     style = style or PRESET_STYLES.get(config.get("preset", ""), "warm")
@@ -771,7 +772,7 @@ def jingle(project_dir, style=None, seconds=7.0, seed=None, drums="synth", bars=
         seed = sum(config.get("title", "").encode()) % 10000
     kit_dir = project_dir / "podcast" / "music" / "kit"
     if style == "grime-loop":
-        audio = compose_grime_loop(project_dir, seed, bars, bpm)
+        audio = compose_grime_loop(project_dir, seed, bars, bpm, bed_level)
     elif style == "grime":
         audio = compose_grime(seconds, seed, drums, kit_dir)
     else:
@@ -779,8 +780,8 @@ def jingle(project_dir, style=None, seconds=7.0, seed=None, drums="synth", bars=
     out_dir = project_dir / "podcast" / "music"
     out_dir.mkdir(parents=True, exist_ok=True)
     suffix = f"-{drums}" if style == "grime" and drums != "synth" else ""
-    if style == "grime-loop" and bpm != 140:
-        suffix = f"-{bpm}bpm"
+    if style == "grime-loop":
+        suffix = (f"-{bpm}bpm" if bpm != 140 else "") + (f"-bed{bed_level:g}" if bed_level != 1.0 else "")
     out = out_dir / f"jingle-{style}-{seed}{suffix}.wav"
     with wave.open(str(out), "wb") as w:
         w.setnchannels(1)
@@ -856,6 +857,6 @@ if __name__ == "__main__":
         opts = dict(zip(rest[::2], rest[1::2]))
         jingle(".", opts.get("--style"), float(opts.get("--seconds", 7)),
                int(opts["--seed"]) if "--seed" in opts else None, opts.get("--drums", "synth"),
-               int(opts.get("--bars", 8)), int(opts.get("--bpm", 140)))
+               int(opts.get("--bars", 8)), int(opts.get("--bpm", 140)), float(opts.get("--bed", 1.0)))
     else:
         print(__doc__)
