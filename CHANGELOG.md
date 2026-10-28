@@ -4,7 +4,7 @@
 
 ### Added
 
-- `grime-loop`: `--bassline` adds a 4-bar bass riff with its own level (stays audible with a low `--bed`), `--bass-sound piano|organ` picks a real Steinway or pipe-organ pedal bass (VCSL). `--bass-style dub` plays a sparse dub/steppers bass instead of the grime riff.
+- `grime-loop`: `--bassline` adds a 4-bar bass riff with its own level (stays audible with a low `--bed`), `--bass-sound piano|organ` picks a real Steinway or pipe-organ pedal bass (VCSL). `--bass-style dub` plays a sparse dub/steppers bass instead of the grime riff. `--bass-sound electric` uses a real electric bass (Karoryfer Growlybass, CC0) with light overdrive; `--bass-style punk` drives it in straight eighths.
 
 ## [1.3.0] — 2026-10-23
 

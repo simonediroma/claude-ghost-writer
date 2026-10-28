@@ -12,7 +12,8 @@ Usage:
   python3 export_podcast.py jingle [--style S] [--seconds N] [--seed N] [--drums synth|kit|none]
                                    [--bars N] [--bpm N] [--bed 0.4]  # --style grime-loop: seamless beat,
                                                    # real samples; --bed = instruments level
-                                   [--bassline 0.5] [--bass-sound piano|organ] [--bass-style grime|dub]
+                                   [--bassline 0.5] [--bass-sound piano|organ|electric]
+                                   [--bass-style grime|dub|punk]
                                                    # compose an intro jingle (podcast/music/)
 
 Script tags (one per line):
@@ -676,6 +677,46 @@ DUB_BASSLINE = [
     [(0, 0, 6), (8, 4, 3), (12, 7, 2), (14, 4, 2)],
     [(0, 0, 6), (8, 4, 2), (10, 3, 2), (12, 2, 2), (14, 1, 2)],
 ]
+# Punk: straight picked eighths on the root, a push at the end of each bar, walk-down on bar 4
+PUNK_BASSLINE = [
+    [(s, r, 2) for s, r in zip(range(0, 16, 2), [0, 0, 0, 0, 0, 0, 2, 4])],
+    [(s, r, 2) for s, r in zip(range(0, 16, 2), [0, 0, 0, 0, 0, 0, 4, 2])],
+    [(s, r, 2) for s, r in zip(range(0, 16, 2), [0, 0, 0, 0, 7, 7, 4, 4])],
+    [(s, r, 2) for s, r in zip(range(0, 16, 2), [0, 0, 0, 0, 4, 3, 2, 1])],
+]
+BASS_STYLES = {"grime": BASSLINE, "dub": DUB_BASSLINE, "punk": PUNK_BASSLINE}
+
+# Electric bass: Karoryfer Growlybass (Squier Jazz Bass, recorded direct, CC0)
+# https://github.com/sfzinstruments/karoryfer.growlybass — downloaded on first use.
+GROWLY_BASE = "https://raw.githubusercontent.com/sfzinstruments/karoryfer.growlybass/master/"
+GROWLY_NOTES = {"db2": 37, "e2": 40, "gb2": 42, "a2": 45, "c3": 48, "eb3": 51, "gb3": 54,
+                "a3": 57, "c4": 60, "eb4": 63, "gb4": 66, "a4": 69}   # file names; they sound an octave lower
+
+def electric_bass(project_dir, midi, rr=1):
+    """Real picked electric bass note, nearest sample shifted by at most one semitone."""
+    # on a tie prefer the sample above: shifting down sounds more natural (and the low E string runs sharp)
+    name = min(GROWLY_NOTES, key=lambda n: (abs(GROWLY_NOTES[n] - 12 - midi), GROWLY_NOTES[n] - 12 < midi))
+    rel_path = f"sustain/{name}_ff_rr{rr}.wav"
+    key = "growly/" + rel_path
+    if key not in _samples:
+        local = Path(project_dir) / "podcast" / "music" / "kit" / "growlybass" / rel_path
+        if not local.exists():
+            local.parent.mkdir(parents=True, exist_ok=True)
+            print(f"Downloading {rel_path} (Growlybass, CC0)...")
+            with urlopen(GROWLY_BASE + rel_path) as r:
+                local.write_bytes(r.read())
+        _samples[key] = load_sample(local)
+    return pitch_shift(_samples[key], midi - (GROWLY_NOTES[name] - 12))
+
+def amp_drive(x, drive=3.0, tone=0.15):
+    """Amp-style overdrive on a real recording: soft clipping plus a one-pole low-pass to tame fizz."""
+    y = np.tanh(drive * x / (np.max(np.abs(x)) or 1)) / np.tanh(drive)
+    out = np.empty_like(y)
+    acc = 0.0
+    for i, v in enumerate(y):
+        acc += tone * (v - acc)
+        out[i] = acc
+    return out
 
 def trim(audio, seconds, fade=0.04):
     n = min(int(seconds * JINGLE_RATE), audio.size)
@@ -757,10 +798,12 @@ def compose_grime_loop(project_dir, seed=0, bars=8, bpm=140, bed_level=1.0, bass
             place(keys, trim(piano(project_dir, midi, velocity=2), bar, 0.2), start)
         if bassline:
             # Bass riff: replaces the fixed bass pattern, with its own level above the bed
-            for step, rel, length in (DUB_BASSLINE if bass_style == "dub" else BASSLINE)[b % 4]:
+            for i, (step, rel, length) in enumerate(BASS_STYLES[bass_style][b % 4]):
                 midi = note(deg + rel, 0) - 12
                 hit_len = s16 * length * 0.9
-                if bass_sound == "organ":
+                if bass_sound == "electric":
+                    tone = trim(electric_bass(project_dir, midi, rr=1 + (b * 8 + i) % 4), hit_len, 0.03)
+                elif bass_sound == "organ":
                     tone = trim(organ(project_dir, midi), hit_len, 0.04)
                 else:
                     low = trim(piano(project_dir, midi, sustain=False, velocity=4), hit_len, 0.04)
@@ -796,6 +839,8 @@ def compose_grime_loop(project_dir, seed=0, bars=8, bpm=140, bed_level=1.0, bass
            0.50 * duck(bass, lead, 0.3) / rms(bass) + 0.10 * fx / rms(fx))
     mix = 1.0 * lead / rms(lead) + bed_level * bed   # bed_level 0.4 ≈ instruments in the background
     if bassline:
+        if bass_sound == "electric":
+            riff = amp_drive(riff)
         mix += bassline * duck(riff, lead, 0.25) / rms(riff)
     looped = mix[:loop_len].copy()
     tail = mix[loop_len:]
@@ -828,7 +873,7 @@ def jingle(project_dir, style=None, seconds=7.0, seed=None, drums="synth", bars=
     if style == "grime-loop":
         suffix = (f"-{bpm}bpm" if bpm != 140 else "") + (f"-bed{bed_level:g}" if bed_level != 1.0 else "")
         if bassline:
-            suffix += f"-bass-{bass_sound}{bassline:g}" + ("-dub" if bass_style == "dub" else "")
+            suffix += f"-bass-{bass_sound}{bassline:g}" + (f"-{bass_style}" if bass_style != "grime" else "")
     out = out_dir / f"jingle-{style}-{seed}{suffix}.wav"
     with wave.open(str(out), "wb") as w:
         w.setnchannels(1)
