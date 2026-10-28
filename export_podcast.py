@@ -12,7 +12,7 @@ Usage:
   python3 export_podcast.py jingle [--style S] [--seconds N] [--seed N] [--drums synth|kit|none]
                                    [--bars N] [--bpm N] [--bed 0.4]  # --style grime-loop: seamless beat,
                                                    # real samples; --bed = instruments level
-                                   [--bassline 0.5] [--bass-sound piano|organ]   # bass riff + its level
+                                   [--bassline 0.5] [--bass-sound piano|organ] [--bass-style grime|dub]
                                                    # compose an intro jingle (podcast/music/)
 
 Script tags (one per line):
@@ -669,6 +669,13 @@ BASSLINE = [
     [(0, 0, 3), (3, 0, 1), (6, 7, 2), (8, 4, 2), (11, 2, 1), (12, 4, 2), (14, 7, 2)],
     [(0, 0, 3), (3, 0, 1), (6, 4, 2), (8, 4, 2), (10, 3, 2), (12, 2, 2), (14, 1, 2)],
 ]
+# Dub/steppers style: long round notes, lots of space, root and fifth, pickups into the next bar
+DUB_BASSLINE = [
+    [(0, 0, 6), (8, 4, 3), (12, 7, 2), (14, 6, 2)],
+    [(0, 0, 6), (8, 4, 3), (12, 2, 4)],
+    [(0, 0, 6), (8, 4, 3), (12, 7, 2), (14, 4, 2)],
+    [(0, 0, 6), (8, 4, 2), (10, 3, 2), (12, 2, 2), (14, 1, 2)],
+]
 
 def trim(audio, seconds, fade=0.04):
     n = min(int(seconds * JINGLE_RATE), audio.size)
@@ -691,7 +698,8 @@ def duck(x, key, depth=0.5, smooth=0.08):
 def rms(x):
     return np.sqrt(np.mean(x ** 2)) or 1
 
-def compose_grime_loop(project_dir, seed=0, bars=8, bpm=140, bed_level=1.0, bassline=0.0, bass_sound="piano"):
+def compose_grime_loop(project_dir, seed=0, bars=8, bpm=140, bed_level=1.0, bassline=0.0, bass_sound="piano",
+                       bass_style="grime"):
     """Seamless 140 bpm grime loop: the whistle lead on top of real drums, piano and FX."""
     rng = np.random.default_rng(seed)
     root = 40 + int(rng.integers(0, 4))           # same draws as compose_grime: same key and melody
@@ -749,7 +757,7 @@ def compose_grime_loop(project_dir, seed=0, bars=8, bpm=140, bed_level=1.0, bass
             place(keys, trim(piano(project_dir, midi, velocity=2), bar, 0.2), start)
         if bassline:
             # Bass riff: replaces the fixed bass pattern, with its own level above the bed
-            for step, rel, length in BASSLINE[b % 4]:
+            for step, rel, length in (DUB_BASSLINE if bass_style == "dub" else BASSLINE)[b % 4]:
                 midi = note(deg + rel, 0) - 12
                 hit_len = s16 * length * 0.9
                 if bass_sound == "organ":
@@ -798,7 +806,7 @@ def compose_grime_loop(project_dir, seed=0, bars=8, bpm=140, bed_level=1.0, bass
 
 
 def jingle(project_dir, style=None, seconds=7.0, seed=None, drums="synth", bars=8, bpm=140, bed_level=1.0,
-           bassline=0.0, bass_sound="piano"):
+           bassline=0.0, bass_sound="piano", bass_style="grime"):
     project_dir = Path(project_dir)
     config = load_config(project_dir)
     style = style or PRESET_STYLES.get(config.get("preset", ""), "warm")
@@ -809,7 +817,7 @@ def jingle(project_dir, style=None, seconds=7.0, seed=None, drums="synth", bars=
         seed = sum(config.get("title", "").encode()) % 10000
     kit_dir = project_dir / "podcast" / "music" / "kit"
     if style == "grime-loop":
-        audio = compose_grime_loop(project_dir, seed, bars, bpm, bed_level, bassline, bass_sound)
+        audio = compose_grime_loop(project_dir, seed, bars, bpm, bed_level, bassline, bass_sound, bass_style)
     elif style == "grime":
         audio = compose_grime(seconds, seed, drums, kit_dir)
     else:
@@ -820,7 +828,7 @@ def jingle(project_dir, style=None, seconds=7.0, seed=None, drums="synth", bars=
     if style == "grime-loop":
         suffix = (f"-{bpm}bpm" if bpm != 140 else "") + (f"-bed{bed_level:g}" if bed_level != 1.0 else "")
         if bassline:
-            suffix += f"-bass-{bass_sound}{bassline:g}"
+            suffix += f"-bass-{bass_sound}{bassline:g}" + ("-dub" if bass_style == "dub" else "")
     out = out_dir / f"jingle-{style}-{seed}{suffix}.wav"
     with wave.open(str(out), "wb") as w:
         w.setnchannels(1)
@@ -897,6 +905,6 @@ if __name__ == "__main__":
         jingle(".", opts.get("--style"), float(opts.get("--seconds", 7)),
                int(opts["--seed"]) if "--seed" in opts else None, opts.get("--drums", "synth"),
                int(opts.get("--bars", 8)), int(opts.get("--bpm", 140)), float(opts.get("--bed", 1.0)),
-               float(opts.get("--bassline", 0)), opts.get("--bass-sound", "piano"))
+               float(opts.get("--bassline", 0)), opts.get("--bass-sound", "piano"), opts.get("--bass-style", "grime"))
     else:
         print(__doc__)
