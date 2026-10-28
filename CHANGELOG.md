@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `grime-loop`: `--bassline` adds a 4-bar bass riff with its own level (stays audible with a low `--bed`), `--bass-sound piano|organ` picks a real Steinway or pipe-organ pedal bass (VCSL).
+
 ## [1.3.0] — 2026-10-23
 
 ### Added

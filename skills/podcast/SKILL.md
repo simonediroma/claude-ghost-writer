@@ -75,7 +75,11 @@ python3 export_podcast.py jingle --style grime-loop --seed 1            # 8 bars
 python3 export_podcast.py jingle --style grime-loop --seed 1 --bars 16
 python3 export_podcast.py jingle --style grime-loop --seed 1 --bpm 150   # faster (default 140)
 python3 export_podcast.py jingle --style grime-loop --seed 1 --bpm 150 --bed 0.4   # instruments in the background (1.0 = default, 0.25 = barely there)
+python3 export_podcast.py jingle --style grime-loop --seed 1 --bpm 150 --bed 0.25 --bassline 0.5   # add a bass riff with its own level
+python3 export_podcast.py jingle --style grime-loop --seed 1 --bpm 150 --bed 0.25 --bassline 0.5 --bass-sound organ
 ```
+`--bassline` adds a 4-bar bass riff that follows the chords and walks down to the root at the end of the loop. It replaces the fixed bass pattern and has its own level, so it stays audible even when `--bed` is low (0.5 sits about 6 dB under the whistle). `--bass-sound` picks the instrument: `piano` (Steinway low register, punchy, default) or `organ` (pipe organ pedal, deeper and more sustained). Both are real VCSL recordings; for the organ samples VCSL encourages crediting Simon Dalzell / Ivy Audio.
+
 For continuous play, deliver the **WAV**. MP3 adds encoder padding and leaves a tiny gap at each repeat. When the loop is used as `intro_music`, the episode fades it out under the voice automatically. The author's own `kick.*`, `snare.*` and `hat.*` in `podcast/music/kit/` replace the VCSL ones.
 
 If the author dislikes the synthesized drums, there are two alternatives. The same seed keeps the same melody and bass in both:
