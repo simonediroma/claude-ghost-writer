@@ -26,3 +26,7 @@ podcast/voices/
 podcast/samples/
 # podcast/episodes/
 podcast/music/kit/vcsl/
+
+# Python bytecode
+__pycache__/
+*.pyc
