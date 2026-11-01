@@ -80,7 +80,7 @@ Plugin structure
 
 Plugin manifest
   ✅ Name: ghost-writer
-  ✅ Version: 1.3.0
+  ✅ Version: 1.4.0
   ⚠️  Author: still set to "Your Name" — update before publishing
 
 Project configuration
