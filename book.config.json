@@ -25,6 +25,8 @@
     "outline_file": "outline.md",
     "chapters_dir": "chapters/"
   },
+  "longform_threshold": 10,
+  "style_rules": [],
   "preset_digest": null,
   "writing_log": [],
   "podcast": {
