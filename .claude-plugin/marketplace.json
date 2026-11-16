@@ -1,20 +1,16 @@
 {
-  "name": "simonediroma-ghost-writer",
+  "name": "mweintr-rama",
   "owner": {
-    "name": "Simone Di Roma",
-    "email": "simone.razzano@gmail.com"
+    "name": "Michael Weintraub"
   },
   "plugins": [
     {
-      "name": "ghost-writer",
-      "source": {
-        "source": "github",
-        "repo": "simonediroma/claude-ghost-writer"
-      },
-      "version": "1.6.0",
-      "description": "Collaborative ghost writing assistant for books and long-form writing. Full onboarding, structured writing cycle, hostile critique, and integration. Supports 6 genre presets, 5 reader personas, long-form mode, and session resume.",
+      "name": "rama",
+      "source": "./",
+      "version": "0.1.0",
+      "description": "Ghost-writing workflow for novels: config, beats, compose, check, compile, plus editorial tools adapted from ghost-writer.",
       "category": "productivity",
-      "keywords": ["writing", "book", "ghost-writer", "fiction", "essay", "fable", "childrens-book", "biography"]
+      "keywords": ["writing", "novel", "fiction", "ghost-writer"]
     }
   ]
 }

@@ -1,146 +1,175 @@
 ---
-description: Quick installation and setup check. Run this first after installing the plugin to verify everything works. Takes about 60 seconds. No content is created or modified. Also useful any time something feels broken.
+name: check
+description: Make a RAMA chapter tip-top. Checks style-guide compliance (every rule and the revision checklist), outline and beats compliance, continuity against the rest of the book and the story bible, timeline, character facts, period accuracy, and copy-editing. Writes a ranked report, then goes through the fixes one at a time, applying each only with the author's OK. Usage /rama:check 5, /rama:check 5-7, or /rama:check all.
 ---
 
-# Skill: Check
+# RAMA: Check
 
-> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
+The editorial pass that runs after `compose`. It finds everything that would
+make a careful reader, editor or copy-editor stop. Then it fixes each problem
+with the author's approval.
 
-Quick verification that the plugin is installed correctly and the project is ready to use.
+Before starting, read `references/project-files.md` and `references/survey.md`.
 
-Nothing is created or modified. This is read-only.
+## Arguments
 
----
+- `/rama:check 5`: one chapter, checked against everything before it.
+- `/rama:check 5-7`: a range, checked as a unit and against what comes before it.
+- `/rama:check all`: the whole manuscript as it stands.
+- Optional `--only style,outline,continuity,timeline,characters,accuracy,copy`
+  to run some passes only.
 
-## What it checks
+No argument: check the most recently composed chapter, and say which.
 
-Run all checks silently, then present results in one block.
+## Step 1: Read
 
-### 1. Plugin structure
-Verify these files and directories exist:
+Say right away: `Checking <scope>: <passes>. Reading…`
 
-| Path | Required |
-|---|---|
-| `.claude-plugin/plugin.json` | ✅ required |
-| `book.config.json` | ✅ required |
-| `outline.md` | ✅ required |
-| `book-memory.md` | ✅ required |
-| `demolition-history.md` | ✅ required |
-| `skills/` directory | ✅ required |
-| `presets/` directory | ✅ required |
-| `personas/` directory | ✅ required |
-| `chapters/` directory | ✅ required |
-| `sessions/` directory | ✅ required |
-| `characters/` directory | ⚪ optional |
-| `memory/` directory | ⚪ optional (long-form only) |
+1. **Style guide**: in full. Build the working checklist from its Revision
+   Checklist, plus every rule elsewhere in the guide that the checklist
+   doesn't already cover (banned constructions, quotas, POV limits, orthography,
+   dialogue punctuation, chapter-head form, section-break rules). Give each
+   item an ID by section, e.g. `IX.3` or `XIX-Prose-5`, so findings can cite
+   it.
+2. **RAMA Log**: Decisions (these override the outline and bible), the
+   Continuity Ledger, Open Threads and Check History.
+3. **Outline**: entries for the chapters in scope, plus the Tracking tables.
+4. **Beats**: entries for the chapters in scope.
+5. **Story bible**: characters, places, timeline and rules the chapters touch.
+6. **Manuscript**: the chapters in scope **in full**. For continuity on a
+   single chapter or a range, search the earlier chapters for every name,
+   object, place, date and number the chapters in scope use, and read those
+   passages. Don't rely on memory or summaries. For `all`, read everything.
 
-### 2. Plugin manifest
-Read `.claude-plugin/plugin.json`. Check:
-- `name` is set and not the default
-- `version` is present
-- `author.name` is not empty or "Your Name"
+Check the latest `<Title> — Check Report.md` (if present) for findings the
+author marked **intentional**. Don't raise those again.
 
-### 3. Project configuration
-Read `book.config.json`. Check:
-- `title` is set and not "Your Book Title"
-- `language` is set to a valid value
-- `preset` is set (essay / fiction / manual / biography)
-- `author_voice.tone` is not empty or default placeholder
+## Step 2: The passes
 
-### 4. Preset file
-Based on `preset` value, verify the corresponding file exists:
-- `presets/essay.md`
-- `presets/fiction.md`
-- `presets/manual.md`
-- `presets/biography.md`
+Locate every finding as `ch.para`, following `project-files.md → Paragraph
+IDs`. Quote the exact text: the shortest span that shows the problem.
 
-### 5. Onboarding status
-Check `book.config.json` for:
-- `author_profile` present → onboarding session 1 complete
-- `book_profile` present → onboarding session 2 complete
-- `author_voice.tone` not empty/default → onboarding session 3 complete
+**1. Style guide (`S`).** Every checklist item and rule, line by line. Count
+what the guide quantifies (e.g. em dashes per 1,000 words of narration,
+addresses to the reader per chapter) and report the count against the limit.
+Flag banned words and constructions every time they occur, not just once.
+Check the chapter heading against the guide's chapter-head form and the
+scene-break mark against its rule.
 
-### 6. Skills count
-Count `.md` files in `skills/` subdirectories. Expected: 33.
+**2. Outline and beats (`O`).** Every beat for the chapter is present and in
+order. The *Ends on* image closes the chapter. Tracking rows are honored (the
+moon phase, who holds the key, which evasions are kept). Flag beats that are
+missing, out of order or contradicted, and outline promises the chapter should
+have kept. A Decision in the RAMA Log overrides the outline. Don't flag text
+that follows a Decision.
 
-### 7. Book graph
-- `graph.py` exists in the project root
-- `python3 -c "import yaml"` succeeds — otherwise ⚠️ *PyYAML missing: the graph is skipped until `pip install pyyaml`* (warning, not blocking)
-- `presets/[preset].md` has a `## graph adaptations` section with a `graph-types` block — otherwise ⚪ the default types are used
-- If `graph/` exists: `python3 graph.py validate` (read-only) and `python3 graph.py check`. Report errors, chapters waiting for a sync (they will be synced by the next session-start), suspended chapters
-- If `graph/` does not exist: ⚪ *not created yet — it is born when the first chapter is complete*
+**3. Continuity (`K`).** Every concrete detail in scope that also appears
+elsewhere (objects, places, layouts, distances, names and spellings, quoted
+words recalled later, numbers, rules of the world) must match its first
+mention and the Ledger. Name the first mention as canonical unless a Decision
+says otherwise.
 
-### 8. Website
-- If `site.yaml` exists: `python3 build_site.py --check` (read-only). Report warnings (missing cover, download file, featured ids, empty `podcast.base_url`)
-- If not: ⚪ *no website yet — `/ghost-writer:site` when you want one*
+**4. Timeline (`T`).** Dates, seasons, weekdays, moon and tide where the book
+tracks them, ages, durations ("three days later"), and the order of events.
+Flag impossible sequences, characters in two places at once, and weather or
+daylight that doesn't fit the date.
 
-### 9. Quick smoke test
-Generate one sentence in the author's voice (from `book.config.json → author_voice`) about the book's topic (from `book_profile → premise`). This proves the voice profile is readable and usable.
+**5. Characters (`C`).** Facts (age, look, relationships, forms of address)
+against the bible, `characters/` profiles and earlier chapters. Also voice and
+behavior: does each character speak and act as established? Flag knowledge
+a character shouldn't have yet, and anything the POV rules say the narrator
+cannot know.
 
----
+**6. Accuracy (`A`).** For historical or technical books: anachronistic
+words, objects, idioms and psychology; terminology the guide says to get right;
+real places and events. Mark items you can't verify as `verify`. Don't guess.
+If the `fact-check` skill is available, offer to hand the `verify` items to it.
 
-## Output format
+**7. Copy (`G`).** Spelling (in the book's chosen variant and orthography),
+typos, repeated words, agreement, tense slips, pronoun reference, and
+punctuation consistency (quotes, dashes, ellipses, serial comma, numbers).
+Don't flag what the style guide deliberately mandates (period spellings,
+dialect).
 
-```
-GHOST WRITER — INSTALLATION CHECK
-──────────────────────────────────────
+**8. Craft (`P`).** Things not covered by a rule that still weaken the
+chapter: a scene that restates the previous one, an echoed word in close
+range, a paragraph that explains what the scene already showed, a slack
+opening, an ending that softens the closing image, and AI tells (not-X-but-Y,
+reflexive triads, aphoristic closers, abstract emotional summary).
 
-Plugin structure
-  ✅ All required files present
-  ⚪ characters/ — not present (optional, create when needed)
+## Step 3: The report
 
-Plugin manifest
-  ✅ Name: ghost-writer
-  ✅ Version: 1.6.0
-  ⚠️  Author: still set to "Your Name" — update before publishing
+Grade each finding:
+- **Critical**: a reader will notice and lose trust (a continuity break, a POV
+  violation, a beat that contradicts the plot, a banned construction the guide
+  puts in bold).
+- **Major**: noticeable on a careful read, or a clear rule violation.
+- **Minor**: copy-editor level, or a matter of polish.
 
-Project configuration
-  ✅ Title: [book title]
-  ✅ Language: [language]
-  ✅ Preset: [preset]
-  ⚠️  author_voice.tone: still set to placeholder — run /ghost-writer:setup-voice
+Write the report to `<Title> — Check Report.md` (it replaces the previous
+one) and show it in chat:
 
-Onboarding status
-  ✅ Session 1 — Author profile: complete
-  ✅ Session 2 — Book profile: complete
-  ⚠️  Session 3 — Voice profile: incomplete — run /ghost-writer:setup-voice
+```markdown
+# Check Report: Chapters 5–7 · 2026-11-20
+Passes: style, outline, continuity, timeline, characters, accuracy, copy, craft
+Findings: 14 (Critical 2 · Major 5 · Minor 7)
+Counts: em dashes ch5 3/3.6 · ch6 5/3.9 ✗ · addresses to reader ch5 1 · ch6 0 · ch7 1
 
-Skills
-  ✅ 33 skills found
-
-Book graph
-  ✅ graph.py + PyYAML available
-  ✅ graph/: [N] chapters analyzed, [M] cards valid — up to date
-  ⚪ graph/ not created yet (born when the first chapter is complete)
-
-Website
-  ✅ site.yaml valid — docs/index.html: [sections]
-  ⚪ no website yet (/ghost-writer:site)
-
-Voice smoke test
-  ✅ "[one sentence generated in the author's voice about the book's topic]"
-
-──────────────────────────────────────
-STATUS: [READY / READY WITH WARNINGS / NOT READY]
-
-[If READY]:
-Everything looks good. Run `/ghost-writer:session-start` to begin.
-
-[If READY WITH WARNINGS]:
-The plugin works but some configuration is incomplete. Fix the warnings above when convenient — they won't block you from writing.
-Next step: [most important action based on warnings]
-
-[If NOT READY]:
-Something is missing. Fix the errors above before writing.
-Next step: [most critical fix]
+| ID | Sev | Where | Text | Problem | Proposed fix | Status |
+|---|---|---|---|---|---|---|
+| K1 | Critical | 6.14 | "the shed's landward door" | Ch 4.9 (first mention) and the Ledger put the door to seaward | "the shed's seaward door" | open |
+| S1 | Major | 5.22 | "rather than wait" | Banned: "rather than" (IX) | "and did not wait" | open |
 ```
 
----
+Then a three-line summary: the worst problem, the main pattern (if the same
+rule broke several times), and whether the chapters are clear to compile.
 
-## Status logic
+If a pass finds nothing, say `No <pass> findings.` in the report.
 
-**READY** — all required files present, `book.config.json` has real values, at least session 1 onboarding complete, smoke test passed.
+## Step 4: Fix, with the author's OK
 
-**READY WITH WARNINGS** — plugin works but: author name still default, voice profile incomplete, or `plugin.json` not yet personalized for publishing.
+Ask in a survey: **Go through fixes one at a time (Recommended) / Apply all
+Minor copy and punctuation fixes at once, then the rest one at a time / Stop
+here; I'll fix them myself.**
 
-**NOT READY** — required files missing, `book.config.json` still has placeholder values, or smoke test failed.
+Then for each finding, in order of severity:
+
+```
+K1 · Critical · 6.14
+Current:  …she went out by the shed's landward door and…
+Proposed: …she went out by the shed's seaward door and…
+Why: Ch 4.9 and the Ledger put the door to seaward.
+```
+
+Ask: **Apply / Apply with my change / Keep as is (intentional) / Skip for now.**
+
+- Change only the quoted span and what it needs to read cleanly. Never
+  rewrite around a fix, and never change voice.
+- Every replacement text must itself pass the style guide.
+- After each fix, check for knock-on effects (the same detail elsewhere, a
+  later reference to it). Raise any you find as a new finding next in the
+  queue.
+- Update the finding's Status in the report: `fixed`, `intentional`, or
+  `skipped`.
+- **Intentional** items that set a precedent (a deliberate exception to a
+  rule) go in the RAMA Log under Decisions, so later checks respect them.
+
+The author can stop at any time. The report keeps the queue, and the next
+`/rama:check` run offers to resume open findings first.
+
+## Step 5: Close
+
+1. Save the manuscript with the applied fixes. In a read-only claude.ai
+   Project, write the full updated manuscript, report and RAMA Log to outputs,
+   and say which Project files to replace.
+2. RAMA Log:
+   - Chapter Status → Last check `<date>` for each chapter.
+   - Continuity Ledger → canonical values settled during fixing.
+   - Check History → `<date> · check <scope> · <N> findings, <F> fixed, <I> intentional, <S> skipped.`
+3. If one rule broke three or more times, suggest one clarifying line for the
+   style guide (show it, and add it only on approval) and note the pattern for
+   `compose`.
+
+Finish with:
+
+> Check complete for <scope>: [F] fixed, [I] kept, [S] open. [Clear to compile. | Open items remain; see the Check Report.]

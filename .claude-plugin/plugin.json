@@ -1,29 +1,12 @@
 {
-  "name": "ghost-writer",
-  "description": "Collaborative ghost writing assistant for books and long-form writing. Full onboarding (author interview, book brainstorm, voice fingerprint) + structured writing cycle (concept dialogue, drafting, hostile critique, integration). Supports 6 genre presets, 5 reader personas, long-form mode, and session resume. Based on the quantum_fatalism writing method.",
-  "version": "1.6.0",
+  "name": "rama",
+  "description": "RAMA: a ghost-writing workflow for novels built from a synopsis, outline, style guide and story bible. config sets up and checks the project, beats plans a chapter, compose writes it to the style guide, check enforces style, outline and continuity, and compile builds .md/.docx/.epub with glyphs. Every question is asked as a three-option survey with a write-in. Includes adapted ghost-writer editorial tools (demolish, review, integrate, retune, freeflow, characters, corrections).",
+  "version": "0.1.0",
   "author": {
-    "name": "simone di roma",
-    "email": "simone.razzano@gmail.com"
+    "name": "Michael Weintraub"
   },
-  "homepage": "https://github.com/simonediroma/claude-ghost-writer",
-  "repository": "https://github.com/simonediroma/claude-ghost-writer",
+  "homepage": "https://github.com/mweintr/RAMA",
+  "repository": "https://github.com/mweintr/RAMA",
   "license": "MIT",
-  "keywords": [
-    "writing",
-    "ghost-writer",
-    "book",
-    "essay",
-    "fiction",
-    "long-form",
-    "creative-writing",
-    "childrens-book",
-    "fable",
-    "biography"
-  ],
-  "category": "productivity",
-  "shared_instructions": {
-    "language": "Read `book.config.json → language`. Write all output in that language. Author may write in any language; always reply in the configured one. Default: English.",
-    "note": "This rule is condensed inline in every SKILL.md. Update here when changing the canonical wording."
-  }
+  "keywords": ["writing", "ghost-writer", "novel", "fiction", "outline", "style-guide", "manuscript", "epub", "docx"]
 }

@@ -1,180 +1,102 @@
 ---
-description: Hostile critical analysis of written text. Use AFTER a draft exists. Systematically finds every structural weakness, logical flaw, undefined concept, internal contradiction, and problematic implication — one at a time. This is not feedback. It is demolition.
+name: demolish
+description: Hostile critical read of a drafted RAMA chapter. Finds its structural and dramatic weaknesses (unearned turns, thin motivation, slack scenes, plausibility gaps, cheats against the POV, promises the chapter breaks) and presents them one at a time for the author to answer. No fixes are offered during demolition; resolved responses go to /rama:integrate. Usage /rama:demolish 5, or /rama:demolish 5 --light for the three worst problems only.
 ---
 
-# Skill: Demolish the Text
+# RAMA: Demolish
 
-> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
+*Adapted from ghost-writer's `demolish` (MIT, Simone Di Roma), refocused for fiction.*
 
+Read `references/project-files.md` and `references/survey.md` first.
 
-**Rules (non-negotiable)**
+`check` asks whether the chapter obeys the rules. `demolish` asks whether
+it **works**. It reads as the toughest editor the book will meet.
+
+## Rules (non-negotiable)
+
 - One criticism at a time. Always.
 - Do not soften the criticism.
 - Do not offer solutions during demolition. Solutions come in integration.
-- Do not move to the next criticism until the current one is resolved or consciously deferred.
-- Attack specific claims, terms, implications — never "the text in general."
-- Goal: a stronger text, not a defeated author.
+- Do not move to the next criticism until the current one is resolved or deliberately deferred.
+- Attack specific passages, choices and implications, never "the chapter in general."
+- The goal is a stronger book, not a defeated author.
 
----
+## Phase 0: Read
 
-## Light Mode
+The chapter in full. Its beats and outline entry. The synopsis. The RAMA Log
+(Decisions, Ledger, Open Threads, and the `## Demolition Log` section if
+present). The chapters immediately before and after, if written.
 
-If the author invokes this skill with `--light`, activate Light Mode:
+If the RAMA Log's Demolition Log has entries for this chapter: don't raise
+`resolved` or `integrated` issues again; raise `deferred` ones first; skip
+`accepted` ones unless something new makes them critical. Say in one line
+what earlier cycles left.
 
-- **Phase 1**: skip the full 7-category vulnerability mapping. Instead, identify only the **3 most critical issues**: the central claim's biggest weakness, the most obvious logical gap or missing evidence, and the most predictable objection the reader would raise.
-- **Phase 2**: skip formal prioritization — the 3 issues are already ordered by severity.
-- **Phase 3–5**: run normally — one at a time, full author dialogue, log updates.
+## Phase 1: Map the weaknesses (internally)
 
-Light Mode is appropriate for: late-revision chapters you're largely confident about, chapters under time pressure, or a quick stress-test before a full `review`. Use standard mode for core chapters or anything uncertain.
+- **Causality**: does each turn follow from what came before, or does it
+  happen because the outline needs it? Coincidences that do plot work.
+- **Motivation**: does each character act from what they want, fear and
+  know at this point? Would they really do this here?
+- **Stakes and tension**: what is at risk in each scene? Scenes where nothing
+  changes. Tension released too early.
+- **POV and knowledge**: does the narrator claim what he couldn't know?
+  Does hindsight cost him anything, or is it free?
+- **Structure**: the opening (does it start in the right place?), scene
+  order, proportion (what's dramatized versus summarized), and the ending
+  (does it land on the image, or explain it?).
+- **Promises**: setups made here that the book can't pay off, and payoffs
+  the reader wasn't set up for.
+- **Plausibility**: period, procedure and physical logic (tides, distances,
+  how long things take).
+- **Theme**: is the chapter saying something the book argues against
+  elsewhere?
 
----
+## Phase 2: Prioritize
 
-## Phase 0 — Understand the Text
+Rank by damage to the reader's trust. Start with the worst. In `--light`
+mode, keep only the three worst.
 
-Read in this order:
-1. The full chapter text
-2. The `## Demolition Log` at the bottom of the chapter file
-3. `demolition-history.md` — **active sections only**: `## Summary`, `## Recurring Patterns`, `## Open Deferred Issues`, and `## Accepted Limitations`. Skip `## Archived Cycles` and the Full Log entries for chapters already marked `complete` in the outline — those are closed.
+## Phase 3: One at a time
 
-From `demolition-history.md`, check:
-- **Recurring Patterns**: has this type of vulnerability appeared in other chapters? If yes, flag it immediately as a pattern, not just a local issue.
-- **Open Deferred Issues**: are any deferred issues from previous chapters relevant to this chapter?
+State the problem precisely, with location and quote. Say why it matters:
+what it costs the reader. Then:
 
-If a Demolition Log exists in the chapter file:
-- List all issues already marked `resolved` or `integrated` — **do not raise these again**
-- List all issues marked `deferred` — raise these first before new ones
-- List all issues marked `accepted-limitation` — skip unless new context makes them critical
+> How do you answer this?
 
-Present a brief summary to the author:
-> This chapter has been through [N] previous demolition cycle(s). [N] issues resolved, [N] deferred, [N] accepted as limits.
-> Book-level patterns relevant to this chapter: [list or "none"].
-> I'll start with deferred issues, then move to new vulnerabilities.
+## Phase 4: Weigh the answer
 
-If no Demolition Log exists, this is the first cycle. Ask the author:
-1. What type of text is this? (essay, argument, narrative, manifesto, other)
-2. Who is the intended reader?
-3. What is the one claim you most want this text to be remembered for?
+A **strong** answer changes the chapter (or a plan for a later one), narrows
+what the chapter claims, gives a reason in the story that genuinely answers
+the point, or accepts the limit knowingly. A **weak** answer restates the
+intent ("what I meant was…"), changes the subject, or concedes without a
+change.
 
-Identify: the central claim, key terms and how they're used, the argumentative structure, claims that seem self-evident to the author but may not be to a reader.
+If weak: restate the problem and ask again. If the author is stuck, go step
+by step: rephrase it more simply; narrow it to the single passage; ask what
+feels true; then offer a survey **Change the scene / Change the setup
+earlier / Accept it as a known limit / write-in**, without filling in
+the content.
 
-Do not begin demolition until this analysis is complete.
-
----
-
-## Phase 1 — Map the Vulnerabilities
-
-Internally identify all potential weaknesses across these categories:
-
-**Logical structure**: Is the central claim falsifiable? Circular arguments? Non sequiturs? Does the argument prove what it claims to prove, or something adjacent?
-
-**Definitions**: Are central terms defined precisely or used loosely? Technical terms used correctly? Same term used differently in different parts? Metaphors used as arguments?
-
-**Implications**: Most uncomfortable logical consequences? Does the theory, applied consistently, lead to conclusions the author would reject? Harmful, unethical, or absurd implications?
-
-**Internal contradictions**: Does any part contradict another? Does the conclusion contradict any premise? Claims that cannot both be true?
-
-**Scope and edge cases**: Does the theory break at its boundaries? Known counterexamples not addressed? Scope clearly defined or overstated?
-
-**Missing foundations**: Central concepts introduced without definition? Claims without evidence? Assumptions obvious to the author but not to a reader?
-
-**External vulnerabilities**: Has this argument been made before and refuted? Existing literature that directly contradicts the central claim? Technical errors a specialist would find?
-
----
-
-## Phase 2 — Prioritize
-
-Select the most serious vulnerabilities. Rank by impact: which, if unaddressed, would most damage credibility with the intended reader?
-
-Start with the most serious. Do not present more than one at a time.
-
----
-
-## Phase 3 — Demolish One at a Time
-
-Present each criticism:
-
-**State the problem precisely.** Not "this section is unclear" but "you claim X in paragraph 3, but this is unfalsifiable because no possible observation could prove it wrong."
-
-**Explain why it matters.** What does this flaw cost the text? Who would use it against the argument, and how?
-
-**Do not offer the solution.** The author must find the response.
-
-Then ask:
-> How do you respond to this?
-
----
-
-## Phase 4 — Evaluate the Response
-
-When the author responds to a criticism, evaluate the response honestly before accepting it.
-
-**If the author says they don't know how to respond**, apply this escalating sequence — one step at a time:
-
-Step 1 — Rephrase:
-> Let me restate this differently: [simpler version]. Does the problem make sense this way?
-
-Step 2 — Narrow:
-> Forget the whole argument. Just this: do you think [the specific claim under attack] is true? Why?
-
-Step 3 — Find the intuition:
-> Ignore how to argue it. What do you *feel* is the right answer, even if you can't defend it yet?
-
-Step 4 — Offer escape hatches (author chooses and fills in):
-> Three options: (a) **Modify** the claim so this criticism no longer applies — how? (b) **Narrow** the scope so this case falls outside it — where's the boundary? (c) **Accept** this as a known limitation and move on. Which do you choose?
-
-Never fill in the content of any option. If still stuck after all four steps, defer:
-> We'll park this. It goes into the Demolition Log as deferred — sometimes the answer appears after writing more of the book.
-
-A **strong response** either:
-- Modifies the theory to address the flaw
-- Narrows the scope to exclude the problematic case
-- Provides a counter-argument that genuinely neutralizes the criticism
-- Acknowledges the limitation and declares it outside scope
-
-A **weak response**:
-- Restates the original claim without addressing the flaw
-- Changes the subject
-- Appeals to intention ("what I meant was...")
-- Concedes without integrating the concession
-
-If weak:
-> This doesn't address the criticism. The original problem remains: [restate it]. Try again, or pick one of the three options above.
+If still stuck, defer it.
 
 If strong:
-> This works. Here is what it adds to the theory: [summary]. Integrate now or continue the demolition first?
 
----
+> That works. It adds: [one line]. Next criticism, or integrate now?
 
-## Phase 5 — Continue Until Exhausted
+## Phase 5: Log
 
-Move through each vulnerability in order of severity. For each: present, wait, evaluate, accept or push back.
-
-Stop when: all major vulnerabilities addressed, author asks to stop, or author declares a known limitation.
-
-End with a summary, then update **both logs**:
-
-**1. Chapter Demolition Log** (bottom of the chapter file):
+When the author stops or the list is exhausted, add to the RAMA Log under
+`## Demolition Log` (create the section after Check History):
 
 ```markdown
-## Demolition Log
-
-### Cycle [N] — [date]
-
-| Issue | Category | Status | Resolution |
+### Chapter 5 · cycle 1 · 2026-11-21
+| Issue | Kind | Status | Resolution |
 |---|---|---|---|
-| [description] | [logical / term / implication / contradiction / scope / foundation / external] | resolved | [one line: how it was resolved] |
-| [description] | [category] | deferred | [one line: why deferred] |
-| [description] | [category] | accepted-limitation | [one line: declared out of scope because] |
+| Sharp's arrival at slack water is convenient | causality | resolved | Keziah sent for him in ch 4; plant a line there |
 ```
 
-**2. `demolition-history.md`** (book-level log):
-- Add this cycle's issues under the chapter's section in **Full Log**
-- Update the **Summary** counters
-- If any issue matches a pattern already seen in another chapter → add or update the entry in **Recurring Patterns**
-- If any issue was deferred → add to **Open Deferred Issues**
-- If any issue was accepted-limitation → add to **Accepted Limitations**
+Status is one of `resolved` / `deferred` / `accepted`. A resolution that
+changes the book also goes under Decisions.
 
-**Archive completed chapters**: After updating the Full Log, check `outline.md` for chapters with `status: complete`. If a chapter appears in the Full Log and all its issues are `integrated` or `accepted-limitation` (none deferred), move its entire Full Log section to `## Archived Cycles` at the bottom of `demolition-history.md`. This keeps the active log lean — only chapters still in progress stay in the Full Log.
-
-Then say:
-> Both logs updated. Run `/ghost-writer:integrate` to apply the resolved responses to the text.
+> Logged. Run `/rama:integrate 5` to apply the resolved answers to the text.

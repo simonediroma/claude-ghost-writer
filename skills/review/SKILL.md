@@ -1,212 +1,72 @@
 ---
-description: Full review macro. Runs demolition from all five reader personas in sequence — editor, target-reader, hostile-reader, domain-expert, out-of-target — then integrates all responses. Supports resume: if interrupted mid-review, picks up from the last completed persona.
+name: review
+description: Read a RAMA chapter as a specific kind of reader (editor, target reader, hostile reader, period or subject expert, someone outside the audience, or a custom persona) and report how that reader actually experiences it. Run one persona or all five in sequence. Usage /rama:review 5 editor, /rama:review 5 all, or /rama:review 5 [custom persona file].
 ---
 
-# Macro: Review
+# RAMA: Review
 
-> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
+*Adapted from ghost-writer's `review` and `demolish-persona` (MIT, Simone Di Roma).*
 
+Read `references/project-files.md` and `references/survey.md` first.
 
-Five reader perspectives on one chapter. Supports resume — if interrupted, picks up from the last completed persona.
+## Personas
 
----
+Persona files are in this skill's `personas/` folder. Custom personas can
+also live in the project's `personas/` folder. Read only the `## Quick Summary`
+of a persona file unless the author asks for a deep read, or this is the
+persona's first run on this book.
 
-## Session Check
+| Persona | For fiction, reads for |
+|---|---|
+| `editor` | structure, pacing, scene proportion, openings and endings, seams |
+| `target-reader` | absorption: where they lean in, where they skim, what they'll remember. Uses the target reader recorded in the RAMA Log (ask once and record it if missing) |
+| `hostile-reader` | plausibility, motivation, coincidence, POV cheats, sentiment the story hasn't earned |
+| `domain-expert` | the book's subject or period expert (for a 19th-century coastal book: a maritime historian). Checks anachronism, procedure, terminology |
+| `out-of-target` | a smart reader with none of the genre's habits. Is the book letting them in? |
 
-Read `sessions/review-[chapter-slug].md` if it exists.
+The persona files were written for non-fiction. For fiction, translate
+"argument" as **story logic** and "claim" as **what the chapter asks the
+reader to believe**.
 
-If open session exists:
-> You started a review of [chapter] but didn't finish. Last completed persona: [persona]. Resume, or start over?
+**Custom persona:** if the author describes one, build it with
+`personas/custom-template.md`, confirm it, and offer to save it to the
+project's `personas/` folder.
 
-If resuming → skip completed personas.
-If new → create `sessions/review-[chapter-slug].md`:
+## Run
 
-```markdown
-# Session: review — [chapter file]
+Read the chapter in full, its beats, the synopsis, the style guide's voice
+section, and the RAMA Log.
 
-> Created: [date]
-> Last updated: [date]
-> Status: open
+With `all`, run them in this order: editor → target-reader → hostile-reader
+→ domain-expert → out-of-target. Before each one, ask in a survey: **Next
+persona / Skip this one / Stop here.** Store progress in the RAMA Log
+(`Review in progress: ch 5, done: editor, target-reader`) so the next
+`/rama:review 5 all` picks up where this one stopped.
 
-## Target
-[chapter file]
-
-## Personas completed
-- [ ] editor
-- [ ] target-reader
-- [ ] hostile-reader
-- [ ] domain-expert
-- [ ] out-of-target
-
-## Current persona
-editor
-
-## Issues found
-[accumulated as personas complete]
-```
-
----
-
-## Setup
-
-Ask:
-> Which chapter do you want to review? [list available files]
-
-If never been through standard `demolish`:
-> No standard demolition yet. Persona reads work best after basic argument stress-testing. Run `/ghost-writer:demolish` first, or proceed anyway?
-
----
-
-## The Sequence
-
-Run each persona in order. After each completes, update session file — check off persona, note issues found, update current persona.
-
-**Persona 1 — Editor** → update session → say: "Editor done. Moving to target reader."
-**Persona 2 — Target Reader** → update session → say: "Target reader done. Now the skeptic."
-**Persona 3 — Hostile Reader** → update session → say: "Hostile reader done. Now the expert."
-**Persona 4 — Domain Expert** → update session → say: "Expert done. Last read: the outsider."
-**Persona 5 — Out of Target** → update session → mark all personas complete.
-
-At any point the author can stop. On next run of `/ghost-writer:review`, session is detected and resumed.
-
----
-
-## Consolidation and Integration
-
-Present consolidated issue list. Run `integrate` on confirmed issues.
-
-Mark session `status: complete`.
+Read fully in character. No meta-commentary while in character.
 
 ```
-REVIEW COMPLETE — [Chapter Title]
-─────────────────────────────────────
-Personas: editor ✅ target ✅ hostile ✅ expert ✅ outsider ✅
-Issues found: [N] | Resolved: [N] | Deferred: [N]
-Session: closed ✅
+PERSONA READ: [persona] on Chapter 5
+
+Opening reaction: [one sentence]
+What worked:
+- [passage, as ch.para] — [why, for this reader]
+What didn't:
+1. [passage] — [reaction]
+2. …
+Where I almost stopped: [passage or "nowhere"]
+What I'll remember: [or "nothing specific"]
+What I wanted and didn't get: [one line]
 ```
 
+Step out of character:
 
-This macro runs a complete multi-persona review of a chapter. Five different readers. One integration pass at the end.
+> That's the [persona] read. Which of these do you want to address?
 
-It takes longer than a standard demolition. Use it on chapters that carry significant weight — the opening chapter, the chapter with the hardest argument, any chapter you're not sure about.
+## After
 
----
+Log the issues the author takes up under `## Demolition Log` in the RAMA Log
+(kind: `persona:<name>`), with status `resolved`, `deferred` or `accepted`,
+exactly as `demolish` does. Then:
 
-## Setup
-
-Ask:
-> Which chapter do you want to review? [list available chapter files]
-
-Read the chapter file, its Demolition Log, and `demolition-history.md` to understand what has already been done.
-
-If the chapter has never been through standard `demolish`, say:
-> This chapter hasn't been through a standard demolition yet. The persona reads work best after the basic argument has been stress-tested. Do you want to run `/ghost-writer:demolish` first, or go straight to persona reads?
-
----
-
-## The Sequence
-
-Run the five personas in this order. Complete each fully — read, feedback, author responses — before moving to the next. Do not blend personas.
-
-**Persona 1 — Editor**
-Tell the author:
-> First read: the editor. They're looking at structure and prose, not argument. They don't care if you're right — they care if the chapter works.
-
-Run `demolish-persona` with `editor` persona. Collect all issues and author responses.
-
-When complete:
-> Editor done. Moving to your target reader.
-
----
-
-**Persona 2 — Target Reader**
-Tell the author:
-> Second read: your target reader. [one-line description from book.config.json]. They want this book to work. They'll tell us where it didn't.
-
-Run `demolish-persona` with `target-reader` persona.
-
-When complete:
-> Target reader done. Now the skeptic.
-
----
-
-**Persona 3 — Hostile Reader**
-Tell the author:
-> Third read: the hostile reader. They're looking for reasons not to believe you. Every unsupported assertion, every avoided objection — they find it.
-
-Run `demolish-persona` with `hostile-reader` persona.
-
-When complete:
-> Hostile reader done. Now the expert.
-
----
-
-**Persona 4 — Domain Expert**
-Tell the author:
-> Fourth read: the domain expert. They know this field. They notice what's missing, overclaimed, or borrowed without attribution.
-
-Run `demolish-persona` with `domain-expert` persona.
-
-When complete:
-> Expert done. Last read: the outsider.
-
----
-
-**Persona 5 — Out of Target**
-Tell the author:
-> Fifth read: someone completely outside your assumed audience. They reveal what the chapter assumes without knowing it.
-
-Run `demolish-persona` with `out-of-target` persona.
-
----
-
-## Consolidation
-
-After all five personas, present a consolidated issue list before integrating:
-
-```
-FULL REVIEW — [Chapter Title]
-─────────────────────────────────────
-Issues found across all 5 personas: [N total]
-
-CRITICAL (multiple personas flagged this)
-- [issue] — flagged by [editor, hostile-reader]
-
-SIGNIFICANT
-- [issue] — [persona]
-- [issue] — [persona]
-
-MINOR / EXPERT-ONLY
-- [issue] — [persona] — note: general reader may not notice
-```
-
-Ask:
-> Before we integrate: are there any issues here you want to discuss, or any you want to skip? Or shall we go through them all?
-
----
-
-## Integration
-
-Run the full `integrate` skill on all confirmed issues.
-
----
-
-## When Complete
-
-```
-REVIEW COMPLETE — [Chapter Title]
-─────────────────────────────────────
-Version: [N]
-Personas run: editor, target-reader, hostile-reader, domain-expert, out-of-target
-Issues found: [N] | Resolved: [N] | Deferred: [N] | Accepted: [N]
-─────────────────────────────────────
-```
-
-Then say:
-> This chapter has been through the full review cycle. Run `/ghost-writer:chapter` for the next chapter, or `/ghost-writer:consistency-check` if you have 3+ chapters complete.
-
----
-
-## Graph Sync
-
-Last step, after everything above (`integrate` may already have synced: a second run finds the graph up to date and prints nothing). If this skill set a chapter to `status: complete`, or changed the `version` of a chapter that is already `complete`, run the **Sync** procedure of `/ghost-writer:graph` (`skills/graph/SKILL.md → Sync`). No confirmation from the author: end with its one-line report. Drafts are never synced. If `graph.py` cannot run (PyYAML missing), say so in one line and continue.
+> Run `/rama:integrate 5` to apply them.

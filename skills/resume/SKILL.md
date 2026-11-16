@@ -1,95 +1,50 @@
 ---
-description: The one command to remember. Run this whenever you open the project and don't know where to start. Shows what you last did, what's waiting, and exactly what to do next — one clear recommendation. Nothing else.
+name: resume
+description: Where am I? Reads the RAMA Log, beats, manuscript and latest check report, and gives a short briefing on where the book stands, plus the single next step to take. Run whenever you open a RAMA project and don't remember where you left off. Usage /rama:resume.
 ---
 
-# Skill: Resume
+# RAMA: Resume
 
-> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
+*Adapted from ghost-writer's `resume` / `session-start` (MIT, Simone Di Roma).*
 
-One command. One answer. Where were you, and what do you do now.
+Read `references/project-files.md` first.
 
----
+## Read, lightly
 
-## What to read
+1. RAMA Log: in full.
+2. Beats file: headings only.
+3. Manuscript: chapter headings and word counts only.
+4. `<Title> — Check Report.md`: header and Status column only.
+5. `<Title> — Corrections.md` (if present): count the open rows.
+6. File modification times, to see what was touched last.
 
-Read quickly — this should feel instant:
-1. `book.config.json` — title, preset
-2. `outline.md` — chapter statuses at a glance
-3. `sessions/` — any open macro sessions
-4. The most recently modified file in `chapters/` — last thing touched
-5. `demolition-history.md → Summary` counters only — not the full log
+If no RAMA Log exists, the only recommendation is `/rama:config`.
 
-Do not read full chapter files. Do not read full memory files. This is a fast scan, not a deep read.
+## Brief
 
----
-
-## Output
-
-Keep it short. Three blocks, no more.
+Keep it to ten lines at most:
 
 ```
-📚 [Book Title]
-─────────────────────────────
+THE SHAPE OF THE SEA · 9 of 25 chapters drafted · 31,400 / 89,000 words
+Last touched: Chapter 9, composed 2026-11-18
+Beats ready, not composed: 10
+Check: chapters 1–8 checked; 9 not yet. 2 open findings (ch 7)
+Open threads due soon: the Cranmers' net-shed key (pays off ch 11)
+Decisions logged: 23
 
-LAST TIME
-[One sentence: the last concrete thing that happened]
-e.g. "You finished integrating Chapter 2 — it's now at v1.1."
-e.g. "You were mid-demolition on Chapter 3, one issue left open."
-e.g. "You ran the wizard and set up the project but haven't started writing yet."
-
-WAITING
-[One or two things that are pending — no more]
-e.g. "Chapter 3 demolition has one deferred issue."
-e.g. "Chapter 4 is drafted but hasn't been demolished yet."
-e.g. "3 chapters complete — consistency check overdue."
-[If nothing is waiting: "Nothing pending. Clean slate."]
-
-NEXT
-[One specific command to run — not a menu, one recommendation]
-→ /ghost-writer:chapter
-   "Pick up Chapter 3 demolition — the deferred issue on scope."
+→ Next: /rama:check 9
 ```
 
----
+## Choosing the one next step
 
-## The recommendation logic
+Take the first rule that applies:
 
-Choose the single most useful next action:
+1. A Check Report has open Critical findings → `/rama:check <scope>` (resume fixing).
+2. Open corrections in the queue → `/rama:corrections`.
+3. A chapter composed and never checked → `/rama:check <n>`.
+4. A chapter with beats and no draft → `/rama:compose <n>`.
+5. The next outline chapter has no beats → `/rama:beats <n>`.
+6. All chapters drafted and checked → `/rama:check all`, then `/rama:compile`.
 
-- Open macro session exists → resume it: `/ghost-writer:[macro]`
-- Chapter demolished, not integrated → `/ghost-writer:integrate`
-- Chapter drafted, not demolished → `/ghost-writer:demolish`
-- Chapter in ask-before-writing → `/ghost-writer:ask-before-writing`
-- All chapters complete, no intro → `/ghost-writer:finish`
-- 3+ chapters complete, no consistency check → `/ghost-writer:consistency-check`
-- No chapters started, project configured → `/ghost-writer:chapter`
-- Project not configured → `/ghost-writer:wizard`
-
-One recommendation. Always. Never a list of options.
-
----
-
-## Tone
-
-Warm and direct. Like a colleague who knows the project and has been waiting for you.
-
-Not a status report. Not a dashboard. A person saying: "Welcome back — here's where we are, here's what to do."
-
-If the project is just starting:
-> You're all set up. The best way to start is to pick the chapter you most want to write — not necessarily the first one.
-> → `/ghost-writer:chapter`
-
-If a lot has been done:
-> Good progress. [X chapters] done, [Y] in progress.
-> → [next action]
-
-Never say "I noticed" or "According to the files." Just say what's true.
-
----
-
-## Graph Check
-
-Safety net for chapters changed outside the writing cycle (for example edited by hand). Run `python3 graph.py check` silently:
-- **TO ANALYZE / TO RE-ANALYZE** listed → run the **Sync** procedure of `/ghost-writer:graph` before anything else, then continue; show only its one-line report.
-- **SUSPENDED** listed → mention it in one line: *"Graph: chapter N is back in progress — its cards stay at v[X] until it is complete again."*
-- Up to date, not created yet, or PyYAML missing → say nothing.
+Give one recommendation, then a single line naming one alternative if there
+is an obvious one. Don't change any files.

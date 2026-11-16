@@ -1,158 +1,72 @@
 ---
-description: Translate the author's responses to demolition into precise text modifications. Use AFTER demolish. Nothing is modified without the author's explicit approval. One integration at a time.
+name: integrate
+description: Turn the author's answers from /rama:demolish or /rama:review into precise changes to the manuscript. Presents each change as current text versus proposed text, applies nothing without explicit approval, and checks every change for knock-on effects across the book. Usage /rama:integrate 5.
 ---
 
-# Skill: Integrate Responses After Demolition
+# RAMA: Integrate
 
-> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
+*Adapted from ghost-writer's `integrate` (MIT, Simone Di Roma).*
 
+Read `references/project-files.md` and `references/survey.md` first.
 
-**Rules (non-negotiable)**
-- Never apply a change without explicit author confirmation.
+## Rules (non-negotiable)
+
+- Never apply a change without the author's explicit approval.
 - One integration at a time.
-- Keep changes minimal — address only what the response requires.
-- Always check for cascading effects after each change.
-- The author's words take precedence over your formalization.
-- Track version numbers. After each complete round of integration, the text advances one version.
-- Every new or rewritten sentence must respect `style-rules.md` (writing rules and punctuation conventions).
+- Minimal changes: only what the answer requires.
+- Check for knock-on effects after every change.
+- The author's words take precedence over your formalization of them.
+- Every new or rewritten sentence must pass the style guide. Reread the
+  banned constructions before drafting any replacement text.
 
----
+## Phase 0: Collect
 
-## Phase 0 — Collect the Material
+Read the RAMA Log's `## Demolition Log` for this chapter, and its Decisions.
+Collect the `resolved` items not yet `integrated`. Read the chapter in full,
+the style guide, and the passages in other chapters that the resolutions
+touch (a plant in an earlier chapter, say).
 
-Before beginning, you need:
-1. The current version of the text
-2. The list of criticisms from demolition
-3. The author's response to each criticism
-4. For each criticism: was it resolved, deferred, or declared out of scope?
+If an answer is ambiguous, ask before drafting.
 
-If anything is missing, ask before proceeding.
+## Phase 1: One at a time
 
-Organize into three categories:
-- **To integrate**: strong responses requiring text changes
-- **To declare**: out-of-scope criticisms to acknowledge explicitly in the text
-- **Deferred**: criticisms to address later
+1. Summarize the author's answer:
+   > Your answer to [issue] was: [summary]. Right?
+2. Say what the text needs and where (a new beat, a changed line, a plant
+   in an earlier chapter, a cut).
+3. Show the change:
 
----
+   ```
+   Chapter 5 · ¶14
+   Current:  > …
+   Proposed: > …
+   What changed and why: one sentence.
+   ```
 
-## Phase 1 — One Integration at a Time
+4. Ask: **Apply / Apply with my change / Not this one.** If the author edits
+   the text, restate the final version and confirm once more. Then apply.
 
-For each item in "to integrate":
+## Phase 2: Knock-on effects
 
-**Step 1: Summarize the response**
-> Your response to [criticism] was: [summary]. Is this an accurate reading?
+After each change, look for consequences: the same detail elsewhere, a
+later reference, an Open Thread, a beat in a chapter not yet written. Propose
+an adjustment for each. **Now / Later (log it as an Open Thread)**.
 
-Wait for confirmation.
+## Phase 3: Read through
 
-**Step 2: Identify the implication for the text**
+When all items are done, reread the chapter as a whole. If an integrated
+passage reads like a patch, offer to smooth the join without changing what
+it says, and wait for approval before doing it.
 
-Determine what the response requires:
-- A new definition
-- A new section or paragraph
-- A modification to an existing paragraph
-- A narrowing of a claim's scope
-- A clarification of a term
-- An explicit acknowledgment of a limitation
+## Phase 4: Record
 
-State explicitly:
-> To integrate this response, the text needs: [specific change]. This would go in [location]. Here is a draft: [proposed text].
+- Demolition Log: set each applied item to `integrated <date>`.
+- Continuity Ledger, Open Threads and Decisions: update for every changed fact.
+- Beats file: if the chapter's events changed, update its beats and mark
+  them `(Changed in integrate)`.
+- Chapter Status: update the word count.
 
-**Step 3: Present the draft**
+In a read-only claude.ai Project, write the full updated manuscript and RAMA
+Log to outputs, and say which Project files to replace.
 
-```
----
-Proposed change in [section/paragraph]:
-
-Current text:
-> [original passage]
-
-Proposed text:
-> [modified passage]
-
-What changed and why:
-[one sentence explanation]
----
-```
-
-Write the modification as minimally as possible. Change only what the response requires.
-
-**Step 4: Wait for feedback**
-> Does this capture what you wanted to say? Should anything be adjusted before I apply this change?
-
-Do not apply until the author explicitly confirms.
-
-If the author modifies the proposed text, restate the final version and confirm once more:
-> So the final version is: [text]. Confirmed?
-
-Only after confirmation, apply the change.
-
----
-
-## Phase 2 — Cascading Effects
-
-After each integration, check whether the change creates consistency problems:
-- Does this contradict anything else in the text?
-- Does this require a corresponding update to the introduction or conclusion?
-- Does this affect any term used elsewhere with a different meaning?
-
-If cascading effects exist:
-> This change also affects [other section], because [reason]. Proposed adjustment: [draft]. Do you want to address this now or later?
-
----
-
-## Phase 3 — Declarations
-
-For criticisms declared out of scope, the text should explicitly acknowledge its own limits. Readers who notice the gap will trust the text more if it has already addressed it honestly.
-
-For each declared limitation:
-> You declared [criticism] outside the scope of this theory. I suggest adding an explicit acknowledgment in [location]: [proposed text]. This will preempt the criticism from readers. Do you want to include it?
-
-The author may decline. Note it and move on.
-
----
-
-## Phase 4 — Final Review
-
-After all integrations, read the full modified text:
-- Does the text now address every resolved criticism?
-- Is the text internally consistent — no new contradictions introduced?
-- Do the changes flow naturally, or do they read as patches?
-- Is the tone consistent throughout?
-
-If a section reads as a patch:
-> The integration in [section] reads as slightly discontinuous with the surrounding text. Would you like me to smooth the transition while preserving the substance?
-
-Wait for confirmation before smoothing.
-
----
-
-## Phase 5 — Summary and Versioning
-
-When all integrations are complete:
-
-1. Increment the version number in the file's frontmatter. If the author declares this the final version, also set `status: complete` in the frontmatter
-2. Update the **Demolition Log** in the chapter file — for each issue now integrated, change status from `resolved` to `integrated` and add the version it was applied in
-3. Update `book-memory.md`:
-   - If a term was redefined → update its entry in **Defined Terms**
-   - If a promise was resolved → mark it resolved in **Open Promises**
-   - If a new example was added → add to **Examples and Stories Used**
-   - If tone was corrected → add a note to **Tone Calibration**
-   - If an event date or a concrete detail changed → update **Timeline** / **Continuity Ledger**
-   - Update the chapter's status in **Chapter Summary Log** to `complete`
-4. If 3 or more paragraphs were substantially rewritten in this round, silently overwrite `voice-sample.md` with fresh extracts from the updated chapter: opening paragraph + one mid-chapter paragraph that best shows the author's rhythm + closing paragraph. Do not mention this to the author.
-5. Present the summary:
-
-> Here is what changed in this round of integration:
-> - [Change 1]: [one line description]
-> - [Change 2]: [one line description]
->
-> Criticisms declared out of scope and acknowledged: [list]
-> Criticisms deferred: [list]
->
-> The text is now at version [n]. Do you want to run another round of demolition, or is this the final version? (Before closing it, `/ghost-writer:revise [file]` catches grammar, punctuation and continuity errors.)
-
----
-
-## Graph Sync
-
-Last step, after everything above. If this skill set a chapter to `status: complete`, or changed the `version` of a chapter that is already `complete`, run the **Sync** procedure of `/ghost-writer:graph` (`skills/graph/SKILL.md → Sync`). No confirmation from the author: end with its one-line report. Drafts are never synced. If `graph.py` cannot run (PyYAML missing), say so in one line and continue.
+> [N] changes applied to Chapter 5; [D] deferred. Run `/rama:check 5` before moving on.

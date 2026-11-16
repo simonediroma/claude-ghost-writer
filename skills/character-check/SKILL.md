@@ -1,11 +1,13 @@
 ---
-description: Optional. Verifies that a character behaves consistently with their profile in a written chapter or scene. Run after writing any chapter that features a profiled character. Flags behavioral drift, voice inconsistencies, and contradictions with the established psychology. Works alongside demolish — demolish attacks the argument, character-check attacks the character.
+name: character-check
+description: Optional. Checks that a character in a RAMA chapter behaves, speaks and knows things consistently with their profile in characters/, the story bible and their earlier scenes. Flags voice drift, behavior that contradicts them, and knowledge slips, then fixes drift with the author's approval. Complements /rama:check. Usage /rama:character-check 5 [Name].
 ---
 
-# Skill: Character Consistency Check
+# RAMA: Character Check
 
-> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
+*Adapted from ghost-writer's `character-check` (MIT, Simone Di Roma).*
 
+Read `references/project-files.md` and `references/survey.md` first. Ask "intentional or drift?" as a survey: **Drift: fix it / Intentional: log as an arc moment / Not sure: show me the earlier scenes**. Any rewrite must pass the style guide and is applied only with the author's OK. Cite locations as `ch.para`.
 
 Read the written chapter or scene and the character's profile. Find every place where the character on the page contradicts the character as defined.
 
@@ -17,11 +19,12 @@ This is not about whether the character is well-written in the abstract — it i
 
 1. Ask which character(s) to check and which chapter or scene to audit
 2. Read `characters/[character-name].md` — the full profile
-3. Read the specified chapter file in `chapters/`
-4. **If `graph/` exists**: `python3 graph.py find <character name>` and read that card — its `traits`, `state` chapter by chapter and relations are what the text already established about the character in earlier chapters, each with `cN:line` + quote. Use it instead of re-reading earlier chapters; flag behavior in this chapter that contradicts an earlier `state` or trait, citing both lines
+3. Read the specified chapter from the manuscript, plus the story bible entry for the character
+4. The RAMA Log: Decisions and Continuity Ledger entries about the character
+5. Earlier chapters: search the manuscript for the character and read their most recent scenes before this chapter
 
 If no profile exists for the character:
-> There's no profile for [character] yet. Run `/ghost-writer:character-interview [character-name]` first, or proceed without a profile (I'll flag what seems inconsistent based on the chapter alone).
+> There's no profile for [character] yet. Run `/rama:character-interview [character-name]` first, or proceed without a profile (I'll flag what seems inconsistent based on the chapter alone).
 
 ---
 
@@ -75,7 +78,7 @@ Issues found: [N]
 ─────────────────────────────
 SIGNIFICANT (changes how the reader perceives the character)
 
-1. VOICE DRIFT — p. [X] / paragraph [N]
+1. VOICE DRIFT — [ch.para]
    Line: "[the problematic line]"
    Profile says: [what the voice should sound like]
    Problem: [specific mismatch]

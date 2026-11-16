@@ -1,117 +1,97 @@
 ---
-description: Collect and apply the corrections the author makes while re-reading the book away from the computer. Generates a review PDF with paragraph IDs in the margin (3.12 = chapter 3, paragraph 12), imports highlights and comments from the annotated PDF, or parses free-form notes (phone notes, voice dictation, photos of marked-up printed pages). Everything goes into corrections.md, then gets applied one by one with confirmation.
+name: corrections
+description: Collect and apply the corrections the author makes while rereading a RAMA book away from the computer. Prints a review PDF with paragraph IDs in the margin (5.12 = chapter 5, paragraph 12), imports highlights and comments from the annotated PDF, or parses free-form notes (phone notes, dictation, photos of marked-up pages). Everything goes into the Corrections file and is applied one at a time with the author's OK. Usage /rama:corrections print [5-7], /rama:corrections import [annotated.pdf], /rama:corrections.
 ---
 
-# Skill: Corrections
+# RAMA: Corrections
 
-> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
+*Adapted from ghost-writer's `corrections` and `review_pdf.py` (MIT, Simone Di Roma).*
 
-Usage:
-- `/ghost-writer:corrections print [chapters]` — create the review PDF to read on the couch
-- `/ghost-writer:corrections import [annotated.pdf]` — import annotations from the PDF
-- `/ghost-writer:corrections` — process notes pasted in chat, a notes file, or photos; or resume the open queue in `corrections.md`
+Read `references/project-files.md` and `references/survey.md` first.
 
----
+The queue lives in `<Title> — Corrections.md` in the project folder.
+`review_pdf.py` (in this skill's folder) does the PDF work.
 
-## The Re-reading Workflow (explain once, the first time)
+## The rereading workflow (explain once, the first time)
 
-> 1. Run `/ghost-writer:corrections print` → you get `manuscript/review-[date].pdf`. Every paragraph has an ID in the margin.
-> 2. Read it wherever you want — tablet, phone or printed. Annotate however is easiest for you:
->    - **Tablet/phone PDF app** (Adobe Acrobat, Xodo, Preview, Drawboard, Foxit…): highlight or strike the text and add a comment. Then send me the annotated PDF.
->    - **Notes app or voice dictation**: write the paragraph ID + what to change. E.g. `3.12 perchè → perché` · `5.4 qui gli occhi sono verdi, prima erano blu` · `7.2 togli questa frase`. Then paste the notes here.
->    - **Paper**: mark the printed page with a pen and take a photo. Send me the photos — the IDs in the margin tell me where each mark is.
-> 3. Come back and run `/ghost-writer:corrections`. I put everything in `corrections.md` and we go through it.
-
----
+> 1. `/rama:corrections print` gives you `review/review-<date>.pdf`, with a paragraph ID in the margin of every paragraph.
+> 2. Read it anywhere and mark it up however is easiest:
+>    - **PDF app** (Acrobat, Preview, Xodo, GoodNotes…): highlight or strike, and add a comment. Send me the annotated PDF.
+>    - **Notes or dictation**: the ID plus the change, e.g. `5.12 grey not gray` · `6.3 the door was seaward in ch 4` · `7.2 cut this sentence`. Paste them here.
+>    - **Paper**: mark it with a pen and send photos. The IDs tell me where each mark is.
+> 3. Run `/rama:corrections` and we'll go through the queue.
 
 ## Print
 
-Run:
 ```bash
-python3 review_pdf.py export [chapter files]   # default: all chapters/
+python3 <this skill's folder>/review_pdf.py export "<Title>.md" [--chapters 5-7]
 ```
-Requires `reportlab` (`pip install reportlab`). It also writes `manuscript/review-map.json`, the snapshot of every paragraph at print time — used to locate notes even if the text changes afterwards.
 
-> Review PDF ready: `manuscript/review-[date].pdf` ([N] paragraphs, [P] pages).
+Needs `reportlab` (`pip install reportlab`). Writes the PDF and
+`review/review-map.json`, a snapshot of every paragraph at print time used to
+find passages even after later edits. Chapters are numbered in manuscript
+order. Text that opens a Part (before its first chapter) is numbered `P2.1`,
+`P2.2`, and so on.
 
----
+> Review PDF ready: `review/review-<date>.pdf` ([N] paragraphs).
+
+In claude.ai, run it on `/mnt/project/<Title>.md` with `--out /mnt/user-data/outputs`.
 
 ## Import
 
-### Annotated PDF
+**Annotated PDF:**
+
 ```bash
-python3 review_pdf.py import [annotated.pdf]
+python3 <this skill's folder>/review_pdf.py import <annotated.pdf> --corrections "<Title> — Corrections.md" --map review/review-map.json
 ```
-Requires `pymupdf` (`pip install pymupdf`). Extracts highlights, underlines, strike-outs, sticky notes, free-text comments and ink marks, with paragraph ID, highlighted text and comment, and appends them to `corrections.md` with status `open`. Ink (handwritten) marks have no text: render that page and read it.
 
-### Free-form notes (chat, file, dictation)
-Parse each note into one row of `corrections.md`. Accept any format: `3.12`, `cap 3 par 12`, `p. 45` (use the page → ID mapping of the PDF if available), or just a quote ("dove dice 'la Panda rossa'"). Dictation errors are expected: interpret, don't reject.
+Needs `pymupdf`. Ink marks have no text, so render the page and read it.
 
-### Photos of printed pages
-Read the image. For every mark (circled word, strike-through, margin note, insertion caret), read the paragraph ID beside it and transcribe the mark as a row. If a mark is unreadable, add it with note `unreadable — ask` and ask the author when you reach it.
+**Notes** (chat, a file, dictation): one row per note. Accept `5.12`,
+`ch 5 para 12`, a page number (via the map), or just a quoted phrase.
+Expect dictation errors: interpret the note, don't reject it.
 
----
+**Photos:** read each mark and the ID beside it. If a mark is unreadable, log
+it as `unreadable: ask`.
 
 ## Locate
 
-For each row, find the exact passage in the **current** chapter file:
-1. Search the quoted text in the chapter file named by the ID
-2. If not found, use `review-map.json` → the paragraph text at print time, then fuzzy-match it in the current file (the text may have been edited since printing)
-3. If still not found → `location unclear` — ask the author
+For each row: search the quoted text in the chapter named by the ID. If it's
+not found, take the paragraph text from `review-map.json` and fuzzy-match it
+in the current manuscript. If it's still not found, mark it `location unclear`
+and ask.
 
----
+## Classify and summarize
 
-## Classify
-
-Give each row a type:
-
-| Type | Example | Handling |
-|---|---|---|
-| `typo` | perchè → perché | batch-able |
-| `punctuation` | ... → … | batch-able |
-| `rewrite` | "riscrivi più asciutto" | one at a time — propose the new text |
-| `cut` / `insert` | "togli", "aggiungi che…" | one at a time |
-| `continuity` | "prima erano blu" | one at a time — check every chapter that mentions the detail, update `book-memory.md → Continuity Ledger` |
-| `rule` | "sempre «» per i pensieri", "mai i : prima di una subordinata" | propose saving to `style-rules.md` (via the `rules` logic) — then find and fix all violations, not just this one |
-| `question` | "è credibile?" | discuss — no automatic change |
-
-Then show the summary:
+| Type | Handling |
+|---|---|
+| `typo`, `punctuation` | can be applied as a batch |
+| `rewrite`, `cut`, `insert` | one at a time, with the proposed text shown |
+| `continuity` | one at a time; check every chapter that mentions the detail, then update the Continuity Ledger |
+| `style` | a new or clarified style rule. Propose the line for the style guide, then find **every** violation, not just this one |
+| `question` | discuss it; no automatic change |
 
 ```
-CORRECTIONS — [N] open
-  typo/punctuation: [n]  (can be applied in one go)
-  rewrite/cut/insert: [n]
-  continuity: [n]
-  new rules: [n]
-  questions: [n]
-  unclear location: [n]
+CORRECTIONS: 23 open
+  typo/punctuation 11 · rewrite/cut/insert 7 · continuity 2 · style 1 · questions 2
 ```
 
-Ask:
-> Apply the [n] typos and punctuation fixes in one go? (yes / show them first)
-
----
+Survey: **Apply the 11 typo/punctuation fixes at once / Show them first / One at a time.**
 
 ## Apply
 
-- Typos/punctuation: apply after confirmation, then list them grouped by chapter.
-- Everything else: **one at a time**. Show `ID — original → proposed`, wait for yes / change / skip.
-- Never change voice or rhythm beyond what the note asks.
-- After each item, set its status in `corrections.md`: `done`, `skipped`, `rule R[n]`, or `discussed`.
-- In each modified chapter, increment `version` in the frontmatter.
+- Everything except an approved batch goes one at a time:
+  `5.12 · original → proposed`, then **Apply / Change / Skip**.
+- Never change voice or rhythm beyond what the note asks. Replacement text
+  must pass the style guide.
+- Set each row's status: `done`, `skipped`, `style rule added`, or `discussed`.
 
----
+## Close
 
-## When Complete
+1. Move completed import blocks under `## Archive` (open rows stay on top).
+2. RAMA Log: Ledger for continuity fixes, Decisions for anything that
+   changes the book, and word counts.
+3. In a read-only claude.ai Project, write the full updated manuscript,
+   Corrections file and RAMA Log to outputs, and say which to replace.
 
-1. Move completed import blocks under a `## Archive` heading at the bottom of `corrections.md` (keep open rows on top)
-2. If any rule was added, offer: *"New rules saved. Run `/ghost-writer:revise --only rules` to check the whole book?"*
-3. Tell the author:
-
-> [N] corrections applied in [chapters]. [M] skipped, [K] open questions. When you want another round, run `/ghost-writer:corrections print` for a fresh PDF.
-
----
-
-## Graph Sync
-
-Last step, after everything above. If this skill set a chapter to `status: complete`, or changed the `version` of a chapter that is already `complete`, run the **Sync** procedure of `/ghost-writer:graph` (`skills/graph/SKILL.md → Sync`). No confirmation from the author: end with its one-line report. Drafts are never synced. If `graph.py` cannot run (PyYAML missing), say so in one line and continue.
+> [N] corrections applied across chapters [list]; [M] skipped; [K] open. Run `/rama:corrections print` for a fresh PDF.

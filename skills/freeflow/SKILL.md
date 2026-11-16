@@ -1,127 +1,77 @@
 ---
-description: Use when the author is blocked, doesn't know where to start, or has ideas that aren't organized yet. The author speaks or writes freely — stream of consciousness, voice notes transcribed, rough fragments, anything. The skill extracts structure, claims, and usable material from the raw output. No judgment, no interruption during the dump. Organization happens after.
+name: freeflow
+description: For when the author is stuck or has ideas that aren't organized yet. The author dumps everything (fragments, dictation, contradictions) about a chapter, a character or a problem. RAMA stays quiet until DONE, then reflects back the usable material and helps turn it into beats, a decision, or notes for the project files. Usage /rama:freeflow, or /rama:freeflow 7.
 ---
 
-# Skill: Freeflow
+# RAMA: Freeflow
 
-> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
+*Adapted from ghost-writer's `freeflow` (MIT, Simone Di Roma).*
 
-
-The author has something to say but can't find the form. This skill inverts the process: form comes last.
-
-The author talks or writes. You listen. Then you organize.
-
----
+Read `references/project-files.md` and `references/survey.md` first.
 
 ## Rules
 
-- Do not interrupt the author while they are dumping.
-- Do not ask clarifying questions before the dump is complete.
-- Do not evaluate quality during the dump. Everything is material.
-- Never tell the author what they meant. Only reflect back what you found and ask if it's right.
+- Don't interrupt the dump. Don't ask questions before it's complete.
+- Don't judge quality. Everything is material.
+- Never tell the author what they meant. Reflect back, and ask if it's right.
 
----
+## Phase 0: Set up
 
-## Phase 0 — Set Up the Dump
+> Talk to me about [Chapter 7 / this character / this problem]. Don't organize it. Fragments, dictation, contradictions, half-thoughts: all of it is useful. I'll stay quiet until you write **DONE**.
 
-Tell the author:
+Wait for DONE. If the author sends several messages, acknowledge each with
+only `…` until DONE.
 
-> Talk to me. Write whatever is in your head about [this chapter / this idea / this character / this problem]. Don't organize it. Don't worry about sentences. Voice notes transcribed, fragments, contradictions, half-finished thoughts — all of it is useful. I'll be quiet until you're done.
->
-> When you've said everything you have, write: **DONE**.
+## Phase 1: Process (internally)
 
-Then wait. Do not respond until you see DONE.
+Read the dump against the project files. Find:
 
----
+- **Events and turns**: things that happen or could happen.
+- **Images and objects**: concrete things with charge.
+- **Lines**: dialogue or narration the author already has.
+- **Energy**: where the language got vivid or urgent. Usually the best material.
+- **Questions**: what the author doesn't know yet.
+- **Conflicts**: with each other, or with the outline, bible or Decisions.
 
-## Phase 1 — Process the Dump
-
-When the author writes DONE, read the entire dump carefully. Do not respond yet.
-
-Internally identify:
-
-**Claims** — things the author asserted, even tentatively
-> "I think the point is that..." / "What I'm trying to say is..." / "The problem with X is..."
-
-**Images and metaphors** — concrete images, analogies, comparisons
-> "It's like when..." / "Imagine a..." / "The way I picture it..."
-
-**Stories and examples** — specific episodes, cases, people
-> "There was this time..." / "For example..." / "I remember..."
-
-**Questions the author raised** — things they don't know yet
-> "I don't know if..." / "The problem is I'm not sure about..." / "What I can't figure out..."
-
-**Energy markers** — passages where the author's language became more vivid, specific, or urgent. These are usually the best material.
-
-**Contradictions** — places where the author said opposite things. Don't resolve them — flag them.
-
----
-
-## Phase 2 — Reflect Back
-
-Present what you found, organized into sections. Keep the author's exact words wherever possible — do not rephrase into clean prose yet.
-
-Format:
+## Phase 2: Reflect back
 
 ```
-WHAT I FOUND IN YOUR DUMP
+WHAT I FOUND
 
-POSSIBLE CENTRAL CLAIM
-"[the author's words that seem closest to the main point]"
-→ Is this what you were trying to say?
+The heart of it (your words): "…"  → Is this it?
 
-STRONGEST MATERIAL
-- [image or metaphor] — this is vivid and specific
-- [story or example] — this grounds the argument
-- [passage with energy] — this is where you were most alive
+Strongest material
+- [image / event / line]: why it's alive
 
-QUESTIONS YOU RAISED (that still need answers)
-- [question 1]
-- [question 2]
+Lines worth keeping verbatim
+- "…"
 
-CONTRADICTIONS TO RESOLVE
-- You said [X] and also [Y]. These point in different directions.
+Conflicts
+- You said X and also Y.
+- This changes the outline: ch 7 has Harold silent here.
 
-FRAGMENTS THAT MIGHT BECOME SOMETHING
-- "[raw fragment]"
-- "[raw fragment]"
+Questions still open
+- …
 ```
 
-Then ask — one question at a time:
-> Is the central claim I identified close to what you meant, or did I miss it?
+Ask the first question only: is "the heart of it" right?
 
----
+## Phase 3: Shape
 
-## Phase 3 — Extract the Structure
+Settle the open questions and conflicts with a survey (three options built
+from the dump itself, plus a write-in). Then ask the author for the order:
 
-After the author confirms or corrects the central claim, ask:
+> What has to come first for the rest to make sense?
 
-> Given what you've said, what needs to come first for the reader to understand the rest?
+## Phase 4: Hand off
 
-Do not suggest an order. Let the author find it from the material you reflected back.
+Survey: **Turn this into beats for Chapter <n> (Recommended when a chapter is
+named) / Save as notes and decisions only / Draft a rough scene from it.**
 
-If the author is still stuck, offer the material as options:
-> You have three possible entry points: [A], [B], [C]. Which one feels like the beginning?
-
-Once the author identifies a sequence, reflect it back:
-> So the order would be: [1], [2], [3]. Does this feel right?
-
----
-
-## Phase 4 — Hand Off to Writing
-
-When the structure is confirmed, offer two paths:
-
-**Path A — Author writes**: 
-> You have the material and the order. Write the chapter using this as your map. Run `/ghost-writer:ask-before-writing` first if you want to sharpen the claims before writing.
-
-**Path B — Plugin writes first draft**:
-> I can write a first draft from this material using your voice profile. It will be rough — a scaffold, not a finished chapter. Do you want that?
-
-If Path B: write the draft using `book.config.json` voice profile + the material from the dump. Mark every section with `[FROM DUMP]` so the author knows what came directly from their words.
-
-Save the draft to `chapters/[NN]-[section-name].md` with status: `freeflow-draft`.
-
-Tell the author:
-> Draft saved. The sections marked [FROM DUMP] are directly from your words — don't let me talk you out of them. Run `/ghost-writer:demolish` when ready.
+- **Beats**: run the `beats` procedure with the dump as an extra source.
+  Tag beats that come from it `(From freeflow)`.
+- **Notes**: log Decisions in the RAMA Log, and propose any outline or bible
+  changes one at a time.
+- **Rough scene**: draft in the style guide's voice. Mark passages taken
+  straight from the dump `[FROM DUMP]`. Show it; never add it to the
+  manuscript without the author's OK.

@@ -1,23 +1,24 @@
 ---
-description: Optional. Deep interview to define a character's psychology, behavior, contradictions, and voice. Use for any character — real or fictional — whose consistency matters across chapters. Run once per character before writing scenes that feature them. Creates a character file in characters/ that all other skills will reference.
+name: character-interview
+description: Optional. Deep interview to build a character's psychology, behavior, contradictions and voice into a profile in characters/, which beats, compose, check and character-check all read. Uses what the story bible and manuscript already say, and asks only about the gaps. Run once per important character. Usage /rama:character-interview [Name].
 ---
 
-# Skill: Character Interview
+# RAMA: Character Interview
 
-> **Language**: `book.config.json → language`. Author may write in any language; always reply in the configured one. Default: English.
+*Adapted from ghost-writer's `character-interview` (MIT, Simone Di Roma).*
 
+Read `references/project-files.md` and `references/survey.md` first. Open questions (wound, voice samples) are asked one at a time, in the author's own words. Questions with natural alternatives (stress response, the tell, the limit) may be asked as surveys, with three options grounded in the book plus a write-in.
 
-This skill builds a precise psychological profile of a character through structured dialogue with the author. The goal is not a biography — it is a **behavioral map**: given any situation, how does this character think, react, and speak?
+The goal is not a biography. It is a **behavioral map**: given any situation, how does this character think, react and speak?
 
-Works for both fictional characters and real people being portrayed in narrative non-fiction or biography.
-
-One question at a time. Always. Do not cluster questions.
 
 ---
 
 ## Before Starting
 
-Check if a `characters/` directory exists. If not, create it.
+Read the story bible's entry for this character, every Decision about them, and (if the book is under way) the passages in the manuscript where they appear. **Don't ask what the files already answer.** Show the author what is already established, and ask only about the gaps.
+
+Check if a `characters/` directory exists in the project folder. If not, create it.
 Check if a file `characters/[character-name].md` already exists. If yes, ask:
 > A profile for [character] already exists. Do you want to update it or start from scratch?
 
@@ -155,11 +156,8 @@ Ask: > Does this feel like [character]? What's missing or wrong?
 
 After confirmation:
 1. Save to `characters/[character-name].md`
-2. Add an entry to `book-memory.md` under a new `## Characters` section if not present:
-
-```
-| [Name] | [role] | characters/[name].md |
-```
+2. Add `Characters: characters/[name].md` to the Files list in the RAMA Log's Project block.
+3. If the profile adds hard facts (age, relationships, appearance) the story bible lacks or contradicts, propose each change to the bible, one at a time.
 
 Then tell the author:
-> Profile saved. When you write scenes featuring [character], run `/ghost-writer:character-check [character-name]` to verify consistency before finalizing.
+> Profile saved. When you write scenes featuring [character], run `/rama:character-check <chapter> [character-name]` to verify consistency before finalizing.
