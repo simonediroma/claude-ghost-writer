@@ -11,11 +11,11 @@ Mechanical conventions. One value per row — mixing forms in the book is always
 
 | Element | Convention | Example |
 |---|---|---|
-| Dialogue | [e.g. «» caporali] | [«Vieni» disse.] |
-| Thoughts / inserted phrases | [e.g. "" alte] | [Pensò: "non ora".] |
-| Quotes inside quotes | [e.g. "" inside «»] | |
-| Dash | [e.g. — em dash, spaced] | [lui — disse — no] |
-| Ellipsis | [e.g. … single character] | [Vieni…] |
+| Dialogue | [e.g. "" double quotes] | ["Come here," she said.] |
+| Thoughts / inserted phrases | [e.g. italics] | [*Not now*, she thought.] |
+| Quotes inside quotes | [e.g. '' inside ""] | |
+| Dash | [e.g. — em dash, unspaced] | [he—she said—no] |
+| Ellipsis | [e.g. … single character] | [Come here…] |
 | Serial comma | [yes / no] | |
 | Numbers | [e.g. words up to ten, digits above] | |
 
@@ -27,4 +27,4 @@ Rules the author wants respected everywhere. Each has a right and a wrong exampl
 
 | ID | Rule | Scope | ✅ Right | ❌ Wrong | Source |
 |---|---|---|---|---|---|
-| R1 | [e.g. Never use ":" to introduce a subordinate clause] | [narration / dialogue / thoughts / all] | [Lo sapeva, perché l'aveva visto.] | [Lo sapeva: perché l'aveva visto.] | [author, 2026-10-01] |
+| R1 | [e.g. Never use ":" to introduce a subordinate clause] | [narration / dialogue / thoughts / all] | [She knew it, because she had seen it.] | [She knew it: because she had seen it.] | [author, 2026-10-01] |

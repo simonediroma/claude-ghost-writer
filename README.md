@@ -114,7 +114,7 @@ See [Book Graph](#book-graph) below. Requires `pip install pyyaml`.
 ### Re-reading away from the computer
 
 1. `/ghost-writer:corrections print` → `manuscript/review-[date].pdf`, every paragraph numbered (`3.12` = chapter 3, paragraph 12).
-2. Read it on a tablet, phone or on paper and annotate the easiest way: highlights + comments in any PDF app, notes/dictation with the paragraph ID (`3.12 perchè → perché`), or photos of the marked-up printed pages.
+2. Read it on a tablet, phone or on paper and annotate the easiest way: highlights + comments in any PDF app, notes/dictation with the paragraph ID (`3.12 recieve → receive`), or photos of the marked-up printed pages.
 3. `/ghost-writer:corrections import annotated.pdf` (or paste the notes / send the photos). Everything lands in `corrections.md`; typos are applied in one go, the rest one at a time. Notes like "always…" / "never…" become rules in `style-rules.md`.
 
 Requires `pip install reportlab pymupdf`.

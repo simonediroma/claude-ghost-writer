@@ -109,13 +109,13 @@ Issues found: [N]   (grammar [n] · punctuation [n] · timeline [n] · character
 1. GRAMMAR AND SPELLING
 | # | Ch. | Paragraph | Text | Fix | Note |
 |---|---|---|---|---|---|
-| G1 | 3 | §4 | "...perchè non..." | "...perché non..." | accent |
+| G1 | 3 | §4 | "...recieve the..." | "...receive the..." | spelling |
 
 2. PUNCTUATION AND RULES
 | # | Ch. | Paragraph | Text | Fix | Rule |
 |---|---|---|---|---|---|
-| P1 | 3 | §7 | "Vieni..." | "Vieni…" | ellipsis: single character |
-| P2 | 3 | §9 | "Lo sapeva: perché…" | "Lo sapeva, perché…" | R1 |
+| P1 | 3 | §7 | "Come here..." | "Come here…" | ellipsis: single character |
+| P2 | 3 | §9 | "She knew it: because…" | "She knew it, because…" | R1 |
 
 ─────────────────────────────
 3. TIMELINE

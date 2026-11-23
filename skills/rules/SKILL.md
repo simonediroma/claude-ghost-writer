@@ -34,7 +34,7 @@ If the new rule conflicts with an existing one, show both and ask which wins bef
 ## Inferring Conventions
 
 For each row of **Punctuation Conventions**, count the forms used in `chapters/` and propose the dominant one, with counts:
-> Dialogue: «» 142 times, "" 9 times → «». Confirm?
+> Dialogue: "" 142 times, '' 9 times → "". Confirm?
 
 Save after confirmation. If the book has no chapters yet, propose the defaults for `book.config.json → language` (see the table at the end of `skills/revise/SKILL.md`).
 

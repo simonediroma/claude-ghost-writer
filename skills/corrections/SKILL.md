@@ -18,7 +18,7 @@ Usage:
 > 1. Run `/ghost-writer:corrections print` → you get `manuscript/review-[date].pdf`. Every paragraph has an ID in the margin.
 > 2. Read it wherever you want — tablet, phone or printed. Annotate however is easiest for you:
 >    - **Tablet/phone PDF app** (Adobe Acrobat, Xodo, Preview, Drawboard, Foxit…): highlight or strike the text and add a comment. Then send me the annotated PDF.
->    - **Notes app or voice dictation**: write the paragraph ID + what to change. E.g. `3.12 perchè → perché` · `5.4 qui gli occhi sono verdi, prima erano blu` · `7.2 togli questa frase`. Then paste the notes here.
+>    - **Notes app or voice dictation**: write the paragraph ID + what to change. E.g. `3.12 recieve → receive` · `5.4 her eyes are green here, they were blue before` · `7.2 cut this sentence`. Then paste the notes here.
 >    - **Paper**: mark the printed page with a pen and take a photo. Send me the photos — the IDs in the margin tell me where each mark is.
 > 3. Come back and run `/ghost-writer:corrections`. I put everything in `corrections.md` and we go through it.
 
@@ -67,13 +67,13 @@ Give each row a type:
 
 | Type | Example | Handling |
 |---|---|---|
-| `typo` | perchè → perché | batch-able |
+| `typo` | recieve → receive | batch-able |
 | `punctuation` | ... → … | batch-able |
-| `rewrite` | "riscrivi più asciutto" | one at a time — propose the new text |
-| `cut` / `insert` | "togli", "aggiungi che…" | one at a time |
-| `continuity` | "prima erano blu" | one at a time — check every chapter that mentions the detail, update `book-memory.md → Continuity Ledger` |
-| `rule` | "sempre «» per i pensieri", "mai i : prima di una subordinata" | propose saving to `style-rules.md` (via the `rules` logic) — then find and fix all violations, not just this one |
-| `question` | "è credibile?" | discuss — no automatic change |
+| `rewrite` | "make it tighter" | one at a time — propose the new text |
+| `cut` / `insert` | "cut this", "add that…" | one at a time |
+| `continuity` | "they were blue before" | one at a time — check every chapter that mentions the detail, update `book-memory.md → Continuity Ledger` |
+| `rule` | "always italics for thoughts", "never a colon before a subordinate clause" | propose saving to `style-rules.md` (via the `rules` logic) — then find and fix all violations, not just this one |
+| `question` | "is this believable?" | discuss — no automatic change |
 
 Then show the summary:
 

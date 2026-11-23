@@ -142,18 +142,18 @@ status: script
 
 ### Adaptation rules (narrated format: stay close to the text)
 The author's voice comes first: keep their sentences, rhythm and vocabulary. Only change what does not work for the ear:
-- **Visual structure**: turn lists into spoken sentences ("ci sono tre ragioni. La prima…"). Describe a table in words or drop it. Put footnotes inline or drop them.
-- **Visual references**: rewrite "vedi sopra", "nella figura", "nella tabella seguente" or drop them.
-- **Pronunciation**: spell out numbers, dates, symbols and abbreviations when the TTS could misread them ("€ 1.500" → "millecinquecento euro", "ecc." → "eccetera", "cap. 3" → "capitolo tre"). Spell out acronyms if they should be read letter by letter.
+- **Visual structure**: turn lists into spoken sentences ("there are three reasons. The first…"). Describe a table in words or drop it. Put footnotes inline or drop them.
+- **Visual references**: rewrite "see above", "in the figure", "in the following table" or drop them.
+- **Pronunciation**: spell out numbers, dates, symbols and abbreviations when the TTS could misread them ("$1,500" → "fifteen hundred dollars", "etc." → "et cetera", "ch. 3" → "chapter three"). Spell out acronyms if they should be read letter by letter.
 - **Sentences that are too long**: a sentence over ~45 words may be split at a natural point. Never change its meaning.
-- **Dialogue**: with character voices, put `[voice NAME]` before the line and `[narrator]` after it. The attribution ("disse Mario") stays with the narrator.
+- **Dialogue**: with character voices, put `[voice NAME]` before the line and `[narrator]` after it. The attribution ("said Mario") stays with the narrator.
 - **Pauses**: `[pause 1]` at scene breaks, `[pause 2]` at major turns.
 - Apply `style-rules.md` only to the text you add (opening, closing, rewritten lists).
 
 ### Approval
 Show the author:
 1. The opening and closing lines.
-2. A compact list of every change from the original (`3.4 elenco → frase`, `5.2 "€ 1.500" → "millecinquecento euro"`). This is the list of changes, not the whole script.
+2. A compact list of every change from the original (`3.4 list → sentence`, `5.2 "$1,500" → "fifteen hundred dollars"`). This is the list of changes, not the whole script.
 
 When the author approves, set `status: approved` in the script and update `podcast/plan.md`. Nothing goes to audio before approval.
 
