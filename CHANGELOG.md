@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- All examples in skills, `style-rules.md` and the README are now in English (corrections, podcast, revise, rules). Italian remains only where it is a feature: the per-language style defaults in `revise` and the migration from the legacy `grafo/` format.
+
 ## [1.6.0] — 2026-11-15
 
 ### Added
