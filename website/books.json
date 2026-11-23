@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Quantum Fatalism",
+    "author": "Simone Di Roma",
+    "genre": "essay",
+    "language": "en",
+    "year": 2026,
+    "description": "A philosophical essay written in explicit collaboration between a human author and Claude. The book where the Ghost Writer method was born.",
+    "cover": "",
+    "links": [
+      { "label": "Read on GitHub", "url": "https://github.com/simonediroma/quantum_fatalism" }
+    ]
+  }
+]
