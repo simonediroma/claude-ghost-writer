@@ -20,6 +20,8 @@ Format: **narrated**. One narrator reads the book, with light adaptation for lis
 
 ## Prerequisites
 
+If `export_podcast.py` does not exist in the project root, generate it before any other step. The script wraps piper-tts and ffmpeg to implement these subcommands: `voices <lang>` (list available Piper voices), `sample <voice> [--text "…"]` (render a short sample), `jingle [--style …] [--seed N]` (synthesize an intro jingle), `build [episode.md]` (render approved scripts to MP3 with ID3 tags), `feed` (generate `podcast/feed.xml`). It reads voice and episode config from `book.config.json → podcast` and scripts from `podcast/scripts/`.
+
 Check both, and if something is missing give the install command and stop:
 ```bash
 python3 -c "import piper, numpy"   # pip install piper-tts numpy
@@ -205,4 +207,4 @@ Ask for `podcast.base_url`, the public folder where the MP3s will be hosted. Fre
 > Podcast ready: [N] episodes, [total] minutes, in `podcast/episodes/`.
 > Next: listen to episode 1, then `/ghost-writer:podcast feed` when you're ready to publish.
 
-If `site.yaml` exists, run `python3 build_site.py`: the new episodes go on the website (commit and push `docs/` to publish). Otherwise offer once: *"Want a website for the book with the episodes, the graph and a download? `/ghost-writer:site`"*
+If `site.yaml` exists, run `python3 build_site.py` (generate the script first if it doesn't exist — see `/ghost-writer:site`): the new episodes go on the website (commit and push `docs/` to publish). Otherwise offer once: *"Want a website for the book with the episodes, the graph and a download? `/ghost-writer:site`"*

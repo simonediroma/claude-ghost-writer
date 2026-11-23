@@ -28,8 +28,6 @@ Check that `manuscript/[title]-final.md` exists. If not:
 
 ## How to run
 
-This skill generates a Python script and executes it using the computer tool.
-
 Read from `book.config.json`:
 - `title` — book title
 - `author_voice` or `author_profile.name` — author name
@@ -38,7 +36,33 @@ Read from `book.config.json`:
 
 Read the manuscript file at `manuscript/[title]-final.md`.
 
-Then run the export script (see below).
+If `export_pdf.py` does not exist in the project root, write it now (see the full script below), then run:
+
+```bash
+pip install reportlab --quiet
+python3 export_pdf.py .
+```
+
+---
+
+## Script: export_pdf.py
+
+If the file doesn't exist, write the following content to `export_pdf.py` in the project root, then run the commands above.
+
+The script reads `book.config.json` and `manuscript/[title]-final.md`, generates a PDF with cover page, table of contents, and chapter layout using ReportLab, and saves it to `manuscript/[title]-final.pdf`.
+
+Key functions to implement:
+- `load_config(project_dir)` — reads `book.config.json`
+- `find_manuscript(project_dir, config)` — locates the final markdown file
+- `parse_manuscript(md_path)` — parses markdown into h1/h2/paragraph sections
+- `make_styles()` — ReportLab styles (cover_title, chapter_title, body, blockquote)
+- `BookDocument(BaseDocTemplate)` — custom page template with footer (title + page number)
+- `build_cover(config, styles)` — cover page with title, author, date
+- `build_toc(toc_entries, styles)` — table of contents
+- `build_chapters(sections, styles)` — body content
+- `export_pdf(project_dir)` — main entry point
+
+Generate the full working script and write it to `export_pdf.py`. Use A4 format, Times New Roman for body, 11pt, justified alignment.
 
 ---
 

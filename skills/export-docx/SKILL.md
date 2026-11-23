@@ -38,11 +38,24 @@ Read from `book.config.json`:
 
 Read the manuscript file at `manuscript/[title]-final.md`.
 
-Then run `export_docx.py` from the project root:
+If `export_docx.py` does not exist in the project root, generate it now (see Script section below), then run:
 
 ```bash
+pip install python-docx --quiet
 python3 export_docx.py .
 ```
+
+---
+
+## Script: export_docx.py
+
+If the file doesn't exist, generate a full Python script and write it to `export_docx.py`. The script must:
+
+- Read `book.config.json` for `title`, `author_profile.name` (or `author_voice`), `language`, `version`
+- Locate `manuscript/[title]-final.md`
+- Parse the markdown: `# ` headings become Heading 1, `## ` become Heading 2, paragraphs become Normal (body), `> ` blockquotes become Block Quote style
+- Build a DOCX using `python-docx`: cover page (title, author, word count), standard manuscript formatting (12pt Times New Roman, double-spaced, 1-inch margins)
+- Write the output to `manuscript/[title]-final.docx`
 
 ---
 

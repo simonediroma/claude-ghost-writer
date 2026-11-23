@@ -39,11 +39,24 @@ Read from `book.config.json`:
 
 Read the manuscript file at `manuscript/[title]-final.md`.
 
-Then run `export_epub.py` from the project root:
+If `export_epub.py` does not exist in the project root, generate it now (see Script section below), then run:
 
 ```bash
+pip install ebooklib --quiet
 python3 export_epub.py .
 ```
+
+---
+
+## Script: export_epub.py
+
+If the file doesn't exist, generate a full Python script and write it to `export_epub.py`. The script must:
+
+- Read `book.config.json` for `title`, `author_profile.name` (or `author_voice`), `language`, `version`
+- Locate `manuscript/[title]-final.md`
+- Parse the markdown: `# ` headings become chapters, `## ` become sections, paragraphs become body text, `> ` blockquotes are styled
+- Build an EPUB using `ebooklib`: set metadata (title, author, language, UUID), create a cover page, table of contents, one HTML file per chapter
+- Write the output to `manuscript/[title]-final.epub`
 
 ---
 

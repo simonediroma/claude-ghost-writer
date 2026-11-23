@@ -105,7 +105,7 @@ The procedure other skills run at the end. Also run it when called directly with
 6. Print its one-line report to the author, nothing more:
    > Graph synced (c4 v2.1): 3 new cards, 5 modified, 0 removed, 12 sources re-anchored · open questions: +2, 14 total.
 
-7. If `site.yaml` exists, run `python3 build_site.py` (the site's graph follows the cards) and add to the report: *Site rebuilt: commit and push `docs/` to publish it.*
+7. If `site.yaml` exists, run `python3 build_site.py` (generate the script first if it doesn't exist — see `/ghost-writer:site`) and add to the report: *Site rebuilt: commit and push `docs/` to publish it.*
 
 Never ask the author to confirm anything in the graph.
 
@@ -159,3 +159,5 @@ The old `grafo/` folder is not touched: delete it yourself once the new graph bu
 ## Requirements
 
 `graph.py` uses the Python standard library and PyYAML (`pip install pyyaml`). If PyYAML is missing the script says so and exits: tell the author the install command and skip the graph — never block the calling skill.
+
+If `graph.py` does not exist in the project root, generate it from scratch before running any graph command. The script must implement all subcommands referenced in this skill: `start`, `find`, `apply`, `commit`, `check`, `build`, `migrate`, `fill-quotes`. It reads YAML cards from `graph/cards/**/*.yaml`, maintains `graph/graph.json`, `graph/INDEX.md`, `graph/view/`, `graph/chapters.yaml`, and `graph/snapshots/`. Use only the Python standard library plus PyYAML.
