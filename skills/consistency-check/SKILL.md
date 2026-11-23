@@ -92,6 +92,17 @@ Flag any chapter that:
 - Assumes knowledge the book hasn't yet provided
 - Resolves tension prematurely (before it's been fully established)
 
+### 7. Character Consistency (fiction, fable, childrens-book presets only)
+Skip this section if `book.config.json → preset` is `essay`, `manual`, or `biography`.
+
+If a `characters/` directory exists and contains any profile files, read each profile. For each character with a profile:
+- Check chapters where the character appears (use the character's name to find relevant passages)
+- Flag any behavior that contradicts the established profile (motivation, speech pattern, knowledge, emotional response)
+- Flag if a character acts on knowledge they couldn't have at that point in the story
+
+If no `characters/` directory exists, note:
+> No character profiles found. Run `/ghost-writer:character-interview [name]` before key scenes to build profiles that make consistency checking possible.
+
 ---
 
 ## Output Format
@@ -104,6 +115,7 @@ After completing all checks, present a clean consolidated header:
 CONSISTENCY AUDIT — [Book Title]
 Chapters reviewed: [N]
 Issues found: [N]
+Character profiles checked: [N] (or: n/a — not a fiction preset)
 ```
 
 Then the findings you already surfaced, organized:

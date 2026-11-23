@@ -61,7 +61,7 @@ Check `book.config.json` for:
 - `author_voice.tone` not empty/default → onboarding session 3 complete
 
 ### 6. Skills count
-Count `.md` files in `skills/` subdirectories. Expected: 33.
+Count `.md` files in `skills/` subdirectories. Expected: 37.
 
 ### 7. Book graph
 - `graph.py` exists in the project root
@@ -91,7 +91,7 @@ Plugin structure
 
 Plugin manifest
   ✅ Name: ghost-writer
-  ✅ Version: 1.6.0
+  ✅ Version: 1.7.0
   ⚠️  Author: still set to "Your Name" — update before publishing
 
 Project configuration
@@ -106,7 +106,7 @@ Onboarding status
   ⚠️  Session 3 — Voice profile: incomplete — run /ghost-writer:setup-voice
 
 Skills
-  ✅ 33 skills found
+  ✅ 37 skills found
 
 Book graph
   ✅ graph.py + PyYAML available

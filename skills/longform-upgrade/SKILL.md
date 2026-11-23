@@ -15,9 +15,9 @@ After this upgrade, skills read the global index + current part instead of every
 
 ## When to Run
 
-**Automatic trigger**: `write` and `chapter` skills check the completed chapter count after each integration. When a 10th chapter is marked `complete`, they say:
+**Automatic trigger**: `write` and `chapter` skills check the completed chapter count after each integration. Read `book.config.json → longform_threshold` (default: 10) for the trigger count. When completed chapters reach that threshold, they say:
 
-> You now have 10 complete chapters. For books this long, I recommend activating long-form mode — it keeps context lean and makes consistency checks faster. Run `/ghost-writer:longform-upgrade`, or I can run it now. It takes about 5 minutes and doesn't change any content.
+> You now have [N] complete chapters. For books this long, I recommend activating long-form mode — it keeps context lean and makes consistency checks faster. Run `/ghost-writer:longform-upgrade`, or I can run it now. It takes about 5 minutes and doesn't change any content.
 
 **Manual**: the author can run this at any time.
 
