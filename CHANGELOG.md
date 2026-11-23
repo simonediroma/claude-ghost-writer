@@ -1,10 +1,22 @@
 # Changelog
 
-## [Unreleased]
+## [1.7.0] — 2026-11-23
+
+### Added
+
+- **`/ghost-writer:proofread`**, **`/ghost-writer:help`**, **`/ghost-writer:export-epub`**, **`/ghost-writer:export-docx`**.
+- `.claude-plugin/icon.png`: typewriter icon for the marketplace listing.
 
 ### Changed
 
+- **Marketplace compliance**: the Python scripts (`export_pdf.py`, `export_epub.py`, `export_docx.py`, `export_podcast.py`, `graph.py`, `build_site.py`, `review_pdf.py`), `tests/` and `site/page.html` are removed from the repository. The export, graph, podcast and site skills carry the script spec and Claude generates the script on first use.
+- `plugin.json`: only allowed fields, icon path added.
+- `consistency-check` adds a character check for fiction presets; `longform-upgrade` has a configurable threshold; `check` expects 37 skills and checks graph and website.
 - All examples in skills, `style-rules.md` and the README are now in English (corrections, podcast, revise, rules). Italian remains only where it is a feature: the per-language style defaults in `revise` and the migration from the legacy `grafo/` format.
+
+### Fixed
+
+- README: marketplace install command points to `simonediroma/claude-ghost-writer`.
 
 ## [1.6.0] — 2026-11-15
 
