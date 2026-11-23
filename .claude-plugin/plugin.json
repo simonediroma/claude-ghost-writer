@@ -2,6 +2,7 @@
   "name": "ghost-writer",
   "description": "Collaborative ghost writing assistant for books and long-form writing. Full onboarding (author interview, book brainstorm, voice fingerprint) + structured writing cycle (concept dialogue, drafting, hostile critique, integration). Supports 6 genre presets, 5 reader personas, long-form mode, and session resume. Based on the quantum_fatalism writing method.",
   "version": "1.7.0",
+  "icon": ".claude-plugin/icon.png",
   "author": {
     "name": "simone di roma",
     "email": "simone.razzano@gmail.com"
@@ -20,10 +21,5 @@
     "childrens-book",
     "fable",
     "biography"
-  ],
-  "category": "productivity",
-  "shared_instructions": {
-    "language": "Read `book.config.json → language`. Write all output in that language. Author may write in any language; always reply in the configured one. Default: English.",
-    "note": "This rule is condensed inline in every SKILL.md. Update here when changing the canonical wording."
-  }
+  ]
 }
