@@ -14,7 +14,7 @@ Two commands:
 
 ```bash
 # Step 1 — add the repo as marketplace
-/plugin marketplace add simonediroma/ghost-writer
+/plugin marketplace add simonediroma/claude-ghost-writer
 
 # Step 2 — install the plugin
 /plugin install ghost-writer@simonediroma-ghost-writer
