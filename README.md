@@ -2,6 +2,8 @@
 
 Collaborative ghost writing assistant for books and long-form writing projects.
 
+**Official website: [claudeghostwriter.com](https://www.claudeghostwriter.com)**
+
 Based on the writing method developed in [quantum_fatalism](https://github.com/simonediroma/quantum_fatalism) — a philosophical essay written in explicit collaboration between a human author and Claude.
 
 ---
