@@ -2,7 +2,7 @@
   "name": "ghost-writer",
   "displayName": "Ghost Writer for Claude",
   "description": "Collaborative ghost writer for books and long-form writing: onboarding, writing cycle, hostile critique, integration.",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "icon": "./.claude-plugin/icon.png",
   "author": {
     "name": "Simone Razzano",
