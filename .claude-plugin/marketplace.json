@@ -1,7 +1,8 @@
 {
   "name": "simonediroma-ghost-writer",
+  "description": "Claude Ghost Writer: collaborative ghost writing for books and long-form writing.",
   "owner": {
-    "name": "Simone Di Roma",
+    "name": "Simone Razzano",
     "email": "simone.razzano@gmail.com"
   },
   "plugins": [
@@ -12,9 +13,18 @@
         "repo": "simonediroma/claude-ghost-writer"
       },
       "version": "1.7.0",
-      "description": "Collaborative ghost writing assistant for books and long-form writing. Full onboarding, structured writing cycle, hostile critique, and integration. Supports 6 genre presets, 5 reader personas, long-form mode, and session resume.",
+      "description": "Collaborative ghost writer for books and long-form writing: onboarding, writing cycle, hostile critique, integration.",
       "category": "productivity",
-      "keywords": ["writing", "book", "ghost-writer", "fiction", "essay", "fable", "childrens-book", "biography"]
+      "keywords": [
+        "writing",
+        "book",
+        "ghost-writer",
+        "fiction",
+        "essay",
+        "fable",
+        "childrens-book",
+        "biography"
+      ]
     }
   ]
 }

@@ -1,14 +1,20 @@
 {
   "name": "ghost-writer",
-  "description": "Collaborative ghost writing assistant for books and long-form writing. Full onboarding (author interview, book brainstorm, voice fingerprint) + structured writing cycle (concept dialogue, drafting, hostile critique, integration). Supports 6 genre presets, 5 reader personas, long-form mode, and session resume. Based on the quantum_fatalism writing method.",
+  "displayName": "Claude Ghost Writer",
+  "description": "Collaborative ghost writer for books and long-form writing: onboarding, writing cycle, hostile critique, integration.",
   "version": "1.7.0",
-  "icon": ".claude-plugin/icon.png",
+  "icon": "./.claude-plugin/icon.png",
   "author": {
-    "name": "simone di roma",
-    "email": "simone.razzano@gmail.com"
+    "name": "Simone Razzano",
+    "email": "simone.razzano@gmail.com",
+    "url": "https://github.com/simonediroma"
   },
-  "homepage": "https://github.com/simonediroma/claude-ghost-writer",
+  "homepage": "https://www.claudeghostwriter.com",
   "repository": "https://github.com/simonediroma/claude-ghost-writer",
+  "documentationUrl": "https://github.com/simonediroma/claude-ghost-writer#readme",
+  "supportUrl": "https://github.com/simonediroma/claude-ghost-writer/issues",
+  "privacyPolicyUrl": "https://github.com/simonediroma/claude-ghost-writer/blob/main/PRIVACY.md",
+  "termsOfServiceUrl": "https://github.com/simonediroma/claude-ghost-writer/blob/main/TERMS.md",
   "license": "MIT",
   "keywords": [
     "writing",
