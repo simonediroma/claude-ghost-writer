@@ -77,6 +77,13 @@ EXPORT
 
 ─────────────────────────────────────────────────────────
 
+PUBLISH
+
+  /ghost-writer:site             Build the book's website for GitHub Pages
+  /ghost-writer:gallery          Submit the book to the gallery on claudeghostwriter.com
+
+─────────────────────────────────────────────────────────
+
 STATUS & UTILITIES
 
   /ghost-writer:session-start    Opening briefing: where you left off, what's pending

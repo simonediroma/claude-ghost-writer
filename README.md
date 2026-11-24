@@ -155,6 +155,12 @@ Requires `pip install reportlab pymupdf`.
 
 See [Book Website](#book-website) below.
 
+### Gallery — optional
+
+| Command | What it does |
+|---|---|
+| `/ghost-writer:gallery` | Submits the book to the gallery on [claudeghostwriter.com](https://www.claudeghostwriter.com/books/): drafts the entry with you (title, genres, description, links, cover), validates it, then opens a pull request on the website repository with the GitHub CLI — or a pre-filled issue without it |
+
 ---
 
 ## Complete Workflow
