@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0] — 2026-11-24
+
+### Added
+
+- **`/ghost-writer:gallery`** — submits the book to the gallery on claudeghostwriter.com: entry drafted with the author, validated against the site's rules, sent as a pull request (GitHub CLI) or a pre-filled issue. `check` expects 38 skills.
+- Directory listing metadata in `plugin.json`, `PRIVACY.md`, `TERMS.md`; listing renamed to "Ghost Writer for Claude".
+
 ## [1.7.0] — 2026-11-23
 
 ### Added

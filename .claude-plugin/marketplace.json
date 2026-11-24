@@ -12,7 +12,7 @@
         "source": "github",
         "repo": "simonediroma/claude-ghost-writer"
       },
-      "version": "1.7.0",
+      "version": "1.8.0",
       "description": "Collaborative ghost writer for books and long-form writing: onboarding, writing cycle, hostile critique, integration.",
       "category": "productivity",
       "keywords": [

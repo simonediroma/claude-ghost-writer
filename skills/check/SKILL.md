@@ -61,7 +61,7 @@ Check `book.config.json` for:
 - `author_voice.tone` not empty/default → onboarding session 3 complete
 
 ### 6. Skills count
-Count `.md` files in `skills/` subdirectories. Expected: 37.
+Count `.md` files in `skills/` subdirectories. Expected: 38.
 
 ### 7. Book graph
 - `graph.py` exists in the project root
@@ -106,7 +106,7 @@ Onboarding status
   ⚠️  Session 3 — Voice profile: incomplete — run /ghost-writer:setup-voice
 
 Skills
-  ✅ 37 skills found
+  ✅ 38 skills found
 
 Book graph
   ✅ graph.py + PyYAML available
