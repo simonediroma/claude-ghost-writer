@@ -22,9 +22,11 @@ Two commands:
 /plugin install ghost-writer@simonediroma-ghost-writer
 ```
 
-### From the Claude plugin directory (under review)
+### From the Claude plugin directory
 
-Ghost Writer has been submitted to Anthropic's plugin directory and is currently under review. Once approved, it will be installable directly from the directory — this section will be updated with the link.
+Ghost Writer is listed in Anthropic's plugin directory. Install it in one click from Claude.ai (it syncs to Claude Code and Cowork):
+
+**[Install Ghost Writer from the Claude plugin directory](https://claude.ai/customize/plugins/id/4b831b3b-c718-4a20-b786-598ed6566696%40anthropic-plugin-directory)**
 
 ### Local testing
 
