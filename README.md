@@ -10,7 +10,7 @@ Based on the writing method developed in [quantum_fatalism](https://github.com/s
 
 ## Installation
 
-### From GitHub (available now)
+### From GitHub
 
 Two commands:
 
@@ -22,16 +22,15 @@ Two commands:
 /plugin install ghost-writer@simonediroma-ghost-writer
 ```
 
-### From the official marketplace (coming soon)
+### From the Claude plugin directory (under review)
+
+Ghost Writer has been submitted to Anthropic's plugin directory and is currently under review. Once approved, it will be installable directly from the directory — this section will be updated with the link.
+
+### Local testing
 
 ```bash
-/plugin install ghost-writer@claude-plugins-official
-```
-
-### Test in locale
-
-```bash
-claude --plugin-dir ./ghost-writer
+git clone https://github.com/simonediroma/claude-ghost-writer.git
+claude --plugin-dir ./claude-ghost-writer
 /ghost-writer:check
 ```
 
