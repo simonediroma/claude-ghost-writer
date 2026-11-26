@@ -22,6 +22,10 @@ Two commands:
 /plugin install ghost-writer@simonediroma-ghost-writer
 ```
 
+### Manual install (.plugin file)
+
+Download [ghost-writer-1.8.0.plugin](https://github.com/simonediroma/claude-ghost-writer/raw/main/dist/ghost-writer-1.8.0.plugin) and drag it into the Claude app (or upload it from **Settings → Plugins**).
+
 ### From the official marketplace (coming soon)
 
 ```bash
