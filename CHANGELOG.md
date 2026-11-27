@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- **`/ghost-writer:gallery`**: square (or any non-2:3) covers are accepted as they are — the site now shows them whole instead of cropping. The skill no longer offers to crop; it only shrinks images over 2 MB.
+
 ## [1.8.0] — 2026-11-24
 
 ### Added

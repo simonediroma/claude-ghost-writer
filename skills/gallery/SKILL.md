@@ -11,7 +11,7 @@ Shows the book in the public gallery at https://www.claudeghostwriter.com/books/
 ```
 content/books/<slug>/
   index.md     required
-  cover.jpg    optional — .jpg, .png or .webp, 2:3 ratio, max 2 MB
+  cover.jpg    optional — .jpg, .png or .webp, max 2 MB (2:3 ideal; square OK)
 ```
 
 The maintainer reviews every submission. The site updates a few minutes after the merge.
@@ -63,7 +63,7 @@ Propose, wait for yes / change:
 3. **Short description** — 1–2 sentences, the hook, in the author's voice (`author_voice`). From the site tagline if present. **Count the characters**; max 300. No spoilers.
 4. **Links** — label + URL each, e.g. `Read online`, `Buy on Amazon`, `Listen to the podcast`, `Read on GitHub`. Only `https://`; strip tracking parameters (`utm_*`, `ref`, `tag`, `fbclid`, `gclid`).
 5. **About the book** (page text, optional) — 1–3 short paragraphs: the premise, then a line on how Ghost Writer was used. Reuse `site.yaml → book.paragraphs` when they exist.
-6. **Cover** (optional) — without it the site draws a typographic cover. If the image is over 2 MB, or not 2:3, offer to fix it with Pillow (`pip install pillow`): crop to 2:3 centred, resize to max 1200 px high, save as JPEG quality 85. Never crop without showing the result first.
+6. **Cover** (optional) — without it the site draws a typographic cover. Cards are 2:3: a 2:3 cover fills the frame; any other ratio (e.g. a square podcast cover) is shown whole, with a blurred copy of itself behind it. So **never crop** to fit: a square cover is fine as it is. Only if the image is over 2 MB, offer to shrink it with Pillow (`pip install pillow`): resize to max 1600 px on the long side, keep the ratio, save as JPEG quality 85. Show the result before using it.
 
 Then ask the three confirmations — all three are required by the site, the author must say yes to each:
 - the book was written (fully or in part) with the Ghost Writer plugin;
