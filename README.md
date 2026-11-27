@@ -30,7 +30,7 @@ Ghost Writer is listed in Anthropic's plugin directory. Install it in one click 
 
 ### Manual install (.plugin file)
 
-Download [ghost-writer-1.8.0.plugin](https://github.com/simonediroma/claude-ghost-writer/raw/main/dist/ghost-writer-1.8.0.plugin) and drag it into the Claude app (or upload it from **Settings → Plugins**).
+Get the `.plugin` file from the [GitHub Releases page](https://github.com/simonediroma/claude-ghost-writer/releases) and drag it into the Claude app (or upload it from **Settings → Plugins**).
 
 ### Local testing
 
@@ -116,7 +116,7 @@ The atomic commands (below) remain available for authors who want to control the
 | `/ghost-writer:graph check` | Which chapters are waiting, suspended or aligned |
 | `/ghost-writer:graph find [name]` | Show the card for a name |
 
-See [Book Graph](#book-graph) below. Requires `pip install pyyaml`.
+See [Book Graph](#book-graph) below. Requires the Python package [PyYAML](https://pypi.org/project/PyYAML/).
 
 ### Re-reading away from the computer
 
@@ -124,7 +124,7 @@ See [Book Graph](#book-graph) below. Requires `pip install pyyaml`.
 2. Read it on a tablet, phone or on paper and annotate the easiest way: highlights + comments in any PDF app, notes/dictation with the paragraph ID (`3.12 recieve → receive`), or photos of the marked-up printed pages.
 3. `/ghost-writer:corrections import annotated.pdf` (or paste the notes / send the photos). Everything lands in `corrections.md`; typos are applied in one go, the rest one at a time. Notes like "always…" / "never…" become rules in `style-rules.md`.
 
-Requires `pip install reportlab pymupdf`.
+Requires the Python packages [ReportLab](https://pypi.org/project/reportlab/) and [PyMuPDF](https://pypi.org/project/PyMuPDF/).
 | `/ghost-writer:character-interview [name]` | Optional — before writing scenes with key characters |
 | `/ghost-writer:character-check [name] [file]` | Optional — after writing scenes with profiled characters |
 
@@ -144,7 +144,7 @@ Requires `pip install reportlab pymupdf`.
 | `/ghost-writer:podcast jingle` | Composes an original intro jingle offline (warm, upbeat, mysterious, playful, grime) or a seamless `grime-loop` beat made from real CC0 recordings |
 | `/ghost-writer:podcast voice` | Pick or retune the narrator voice (speed, pauses) and optional character voices |
 
-100% free and open source: [Piper](https://github.com/OHF-Voice/piper1-gpl) (offline TTS) + ffmpeg. Requires `pip install piper-tts numpy` and `ffmpeg`. Chapters are never modified — scripts live in `podcast/scripts/`.
+100% free and open source: [Piper](https://github.com/OHF-Voice/piper1-gpl) (offline TTS) + ffmpeg. Requires the Python packages [piper-tts](https://pypi.org/project/piper-tts/) and [NumPy](https://pypi.org/project/numpy/), plus [ffmpeg](https://ffmpeg.org/download.html). Chapters are never modified — scripts live in `podcast/scripts/`.
 
 ### Utility
 
@@ -324,7 +324,7 @@ python3 build_site.py --check    # validate, write nothing
 python3 build_site.py            # build docs/
 ```
 
-Publish: repository **Settings → Pages → Deploy from a branch → `main` / `docs`**. With a podcast, set `podcast.base_url` to `https://<user>.github.io/<repository>/episodes` and run `python3 export_podcast.py feed` before the build. Requires `pip install pyyaml` (Pillow optional, for the 720 px cover).
+Publish: repository **Settings → Pages → Deploy from a branch → `main` / `docs`**. With a podcast, set `podcast.base_url` to `https://<user>.github.io/<repository>/episodes` and run `python3 export_podcast.py feed` before the build. Requires [PyYAML](https://pypi.org/project/PyYAML/) ([Pillow](https://pypi.org/project/pillow/) optional, for the 720 px cover).
 
 ---
 

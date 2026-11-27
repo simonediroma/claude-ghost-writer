@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.1] — 2026-11-27
+
+### Fixed
+
+- Directory submission: removed the packaged `dist/*.plugin` from the repo (now a GitHub Release asset), dropped `documentationUrl` from `plugin.json`, README links to package pages instead of install commands.
+
 ## [1.8.0] — 2026-11-24
 
 ### Added
