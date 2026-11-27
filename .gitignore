@@ -31,3 +31,7 @@ podcast/music/kit/vcsl/
 __pycache__/
 *.pyc
 podcast/music/kit/growlybass/
+
+# Packaged .plugin builds — never commit (the plugin directory review rejects them)
+dist/
+*.plugin

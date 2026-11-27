@@ -28,10 +28,6 @@ Ghost Writer is listed in Anthropic's plugin directory. Install it in one click 
 
 **[Install Ghost Writer from the Claude plugin directory](https://claude.ai/customize/plugins/id/4b831b3b-c718-4a20-b786-598ed6566696%40anthropic-plugin-directory)**
 
-### Manual install (.plugin file)
-
-Download [ghost-writer-1.8.1.plugin](https://github.com/simonediroma/claude-ghost-writer/raw/main/dist/ghost-writer-1.8.1.plugin) and drag it into the Claude app (or upload it from **Settings → Plugins**).
-
 ### Local testing
 
 ```bash
