@@ -135,7 +135,7 @@ gh pr create --repo simonediroma/claudeghostwriter.com --base main --head <user>
 **How Ghost Writer was used** (optional, a few lines): <one or two lines>
 
 ### Checklist
-- [x] One folder `content/books/<slug>/` with `index.md` (and optionally `cover.jpg` / `.png` / `.webp`, 2:3, max 2 MB)
+- [x] One folder `content/books/<slug>/` with `index.md` (and optionally `cover.jpg` / `.png` / `.webp`, max 2 MB; 2:3 ideal, square OK)
 - [x] The book was written (fully or in part) with the Ghost Writer plugin
 - [x] I am the author, or I have the author's permission to list it
 - [x] I have the rights to publish the cover image
