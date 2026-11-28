@@ -146,6 +146,8 @@ Requires `pip install reportlab pymupdf`.
 
 100% free and open source: [Piper](https://github.com/OHF-Voice/piper1-gpl) (offline TTS) + ffmpeg. Requires `pip install piper-tts numpy` and `ffmpeg`. Chapters are never modified — scripts live in `podcast/scripts/`.
 
+Step-by-step guide, from voice to Spotify / Apple Podcasts / YouTube Music: [guides/build-your-podcast.md](guides/build-your-podcast.md) (Italian).
+
 ### Utility
 
 | Command | What it does |
