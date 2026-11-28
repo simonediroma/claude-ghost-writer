@@ -34,7 +34,7 @@ Download [ghost-writer-1.8.1.plugin](https://claudeghostwriter.com/downloads/gho
 
 ### Using GitHub with Ghost Writer
 
-Versioning, backup, Claude Desktop/Code setup and free hosting for the book site: see the [GitHub guide (Italian)](guides/github.md).
+Versioning, backup, Claude Desktop/Code setup and free hosting for the book site: see the [GitHub guide](guides/github.md).
 
 ### Local testing
 

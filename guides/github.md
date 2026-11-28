@@ -1,57 +1,57 @@
-# Ghost Writer + GitHub — guida pratica
+# Ghost Writer + GitHub — practical guide
 
-Come usare GitHub con il plugin Ghost Writer: perché conviene, come collegarlo a Claude (Desktop e Code) e quali funzioni di GitHub usare per il sito del libro.
+How to use GitHub with the Ghost Writer plugin: why it pays off, how to connect it to Claude (Desktop and Code), and which GitHub features to use for the book's website.
 
 ---
 
-## 1. Perché conviene usare GitHub
+## 1. Why use GitHub
 
-Un libro scritto con Ghost Writer è una cartella di file di testo (`chapters/`, `book.config.json`, `book-memory.md`, `outline.md`, `graph/`, `podcast/`…). Metterla su GitHub ti dà:
+A book written with Ghost Writer is a folder of text files (`chapters/`, `book.config.json`, `book-memory.md`, `outline.md`, `graph/`, `podcast/`…). Putting it on GitHub gives you:
 
-| Vantaggio | Cosa significa per l'autore |
+| Benefit | What it means for the author |
 |---|---|
-| **Storico di ogni versione** | Ogni `demolish` → `integrate` cambia il testo. Con git puoi rivedere o recuperare qualsiasi versione precedente di un capitolo, anche mesi dopo. |
-| **Backup automatico** | Il libro non vive solo sul tuo computer. Se il disco si rompe, fai `git clone` e riparti. |
-| **Lavoro da più dispositivi** | Scrivi su Claude Desktop a casa, rivedi con Claude Code sul portatile, oppure da claude.ai/code nel browser: stessa cartella, sempre aggiornata. |
-| **Collaborazione** | Co-autori, editor e beta reader possono proporre modifiche (pull request) o lasciare note (issue) senza toccare il testo principale. |
-| **Sito gratuito** | `/ghost-writer:site` genera un sito pronto per **GitHub Pages**: hosting gratis, HTTPS incluso. |
-| **Distribuzione** | PDF, EPUB e MP3 del podcast possono stare nelle **Releases** di GitHub, con un link stabile per ogni versione. |
-| **Gallery** | `/ghost-writer:gallery` apre una pull request su claudeghostwriter.com per pubblicare il libro nella gallery del sito. Senza account GitHub si usa un form, con l'account è tutto automatico. |
+| **History of every version** | Every `demolish` → `integrate` cycle changes the text. With git you can review or restore any earlier version of a chapter, even months later. |
+| **Automatic backup** | The book doesn't live only on your computer. If the disk dies, `git clone` and carry on. |
+| **Work from several devices** | Write in Claude Desktop at home, revise with Claude Code on the laptop, or from claude.ai/code in the browser: same folder, always up to date. |
+| **Collaboration** | Co-authors, editors and beta readers can propose changes (pull requests) or leave notes (issues) without touching the main text. |
+| **Free website** | `/ghost-writer:site` generates a site ready for **GitHub Pages**: free hosting, HTTPS included. |
+| **Distribution** | PDF, EPUB and podcast MP3s can live in GitHub **Releases**, with a stable link for each version. |
+| **Gallery** | `/ghost-writer:gallery` opens a pull request on claudeghostwriter.com to list the book in the site's gallery. Without a GitHub account it falls back to a form; with one it's fully automatic. |
 
-**Repository privato o pubblico?** Le bozze di norma stanno in un repo **privato**. Attenzione: GitHub Pages su repo privato richiede un piano a pagamento (GitHub Pro). Soluzione gratuita: repo privato per il libro + repo pubblico solo per il sito (vedi §3.5).
+**Private or public repository?** Drafts usually belong in a **private** repo. Note: GitHub Pages on a private repo requires a paid plan (GitHub Pro). Free alternative: a private repo for the book + a public repo just for the site (see §3.5).
 
 ---
 
-## 2. Configurazione
+## 2. Setup
 
-### 2.1 Prerequisiti (una volta sola)
+### 2.1 Prerequisites (once)
 
-1. Crea un account su [github.com](https://github.com).
-2. Installa **git** ([git-scm.com](https://git-scm.com)) e la **GitHub CLI** ([cli.github.com](https://cli.github.com)).
-3. Accedi da terminale:
+1. Create an account on [github.com](https://github.com).
+2. Install **git** ([git-scm.com](https://git-scm.com)) and the **GitHub CLI** ([cli.github.com](https://cli.github.com)).
+3. Log in from the terminal:
 
    ```bash
-   gh auth login        # GitHub.com → HTTPS → login con browser
-   gh auth setup-git    # git usa le credenziali di gh
+   gh auth login        # GitHub.com → HTTPS → log in with browser
+   gh auth setup-git    # let git use gh's credentials
    ```
 
-4. Trasforma la cartella del libro in un repository:
+4. Turn the book folder into a repository:
 
    ```bash
-   cd il-mio-libro
+   cd my-book
    git init
    git add .
-   git commit -m "Inizio del libro"
-   gh repo create il-mio-libro --private --source . --push
+   git commit -m "Start of the book"
+   gh repo create my-book --private --source . --push
    ```
 
-Il plugin include già un `.gitignore` che esclude le voci Piper, i campioni audio e i kit musicali (file pesanti e rigenerabili).
+The plugin already ships a `.gitignore` that excludes Piper voices, audio samples and music kits (large, regenerable files).
 
-### 2.2 Claude Code (terminale, IDE, app desktop)
+### 2.2 Claude Code (terminal, IDE, desktop app)
 
-Claude Code usa direttamente `git` e `gh` installati sul tuo computer: dopo il §2.1 non serve altro.
+Claude Code uses the `git` and `gh` installed on your computer directly: after §2.1 nothing else is needed.
 
-**Installa il plugin da GitHub:**
+**Install the plugin from GitHub:**
 
 ```bash
 /plugin marketplace add simonediroma/claude-ghost-writer
@@ -59,67 +59,67 @@ Claude Code usa direttamente `git` e `gh` installati sul tuo computer: dopo il �
 /ghost-writer:check
 ```
 
-**Aggiornare il plugin** quando esce una nuova versione:
+**Update the plugin** when a new version is out:
 
 ```bash
 /plugin marketplace update simonediroma-ghost-writer
 ```
 
-**Uso quotidiano** — basta chiederlo in linguaggio naturale:
+**Day-to-day use** — just ask in plain language:
 
-- *"Fai commit del capitolo 3 con un messaggio che riassuma l'integrazione"*
-- *"Mostrami cosa è cambiato nel capitolo 5 rispetto a ieri"*
-- *"Riporta il capitolo 2 alla versione di prima della demolizione"*
-- *"Push su GitHub"*
+- *"Commit chapter 3 with a message summarizing the integration"*
+- *"Show me what changed in chapter 5 since yesterday"*
+- *"Restore chapter 2 to the version before the demolition"*
+- *"Push to GitHub"*
 
-Abitudine consigliata: un commit alla fine di ogni ciclo `/ghost-writer:chapter` e dopo ogni `integrate`.
+Recommended habit: one commit at the end of every `/ghost-writer:chapter` cycle and after every `integrate`.
 
-**Opzionale — Claude dentro GitHub.** Con `/install-github-app` installi la GitHub App di Claude sul repo: potrai scrivere `@claude` in una issue o pull request (es. *"@claude applica le correzioni di questa issue al capitolo 4"*).
+**Optional — Claude inside GitHub.** `/install-github-app` installs the Claude GitHub App on the repo: you can then write `@claude` in an issue or pull request (e.g. *"@claude apply the corrections in this issue to chapter 4"*).
 
-**Claude Code sul web (claude.ai/code).** Collega GitHub dalle impostazioni e scegli il repo del libro: Claude lavora su una copia nel cloud e fa push su un branch. Utile per lavorare dal telefono o da un computer senza niente installato.
+**Claude Code on the web (claude.ai/code).** Connect GitHub in the settings and pick the book's repo: Claude works on a cloud copy and pushes to a branch. Handy for working from a phone or a computer with nothing installed.
 
-### 2.3 Claude Desktop (Chat e Cowork)
+### 2.3 Claude Desktop (Chat and Cowork)
 
-**Installa il plugin:**
-- in un clic dalla [directory dei plugin di Claude](https://claude.ai/customize/plugins/id/4b831b3b-c718-4a20-b786-598ed6566696%40anthropic-plugin-directory) (si sincronizza su Claude Code e Cowork), oppure
-- scarica il file `.plugin` da [claudeghostwriter.com](https://claudeghostwriter.com) e trascinalo nell'app (o caricalo da **Impostazioni → Plugin**).
+**Install the plugin:**
+- in one click from the [Claude plugin directory](https://claude.ai/customize/plugins/id/4b831b3b-c718-4a20-b786-598ed6566696%40anthropic-plugin-directory) (it syncs to Claude Code and Cowork), or
+- download the `.plugin` file from [claudeghostwriter.com](https://claudeghostwriter.com) and drag it into the app (or upload it from **Settings → Plugins**).
 
-**Collega GitHub:**
-1. **Impostazioni → Connettori → GitHub → Connetti** e autorizza l'accesso.
-2. In una chat o in un Progetto: pulsante **+** → **Aggiungi da GitHub** → scegli il repo e i file (es. `outline.md`, `book-memory.md`, i capitoli).
+**Connect GitHub:**
+1. **Settings → Connectors → GitHub → Connect** and authorize access.
+2. In a chat or Project: **+** button → **Add from GitHub** → pick the repo and files (e.g. `outline.md`, `book-memory.md`, the chapters).
 
-Il connettore serve a dare a Claude il **contesto** del libro (leggere capitoli, outline, memoria) per discuterne, fare brainstorming o rivedere. Per **scrivere** sui file e fare commit usa Cowork sulla cartella locale del libro, oppure la scheda **Code** dell'app Desktop (è Claude Code, e funziona come al §2.2).
+The connector gives Claude the book's **context** (read chapters, outline, memory) to discuss it, brainstorm or review. To **write** files and commit, use Cowork on the book's local folder, or the **Code** tab of the Desktop app (that's Claude Code, and works as in §2.2).
 
-Flusso tipico misto: scrivi e committi con Claude Code / Cowork → in Chat, con il connettore GitHub, discuti il capitolo appena pushato.
+Typical mixed workflow: write and commit with Claude Code / Cowork → in Chat, with the GitHub connector, discuss the chapter you just pushed.
 
 ---
 
-## 3. Le funzioni di GitHub per il sito
+## 3. GitHub features for the website
 
-`/ghost-writer:site` genera `docs/index.html`: una pagina unica, senza dipendenze esterne, con copertina, presentazione, download, personaggi/idee chiave, podcast e grafo del libro.
+`/ghost-writer:site` generates `docs/index.html`: a single page with no external dependencies — cover, presentation, download, characters/key ideas, podcast and book graph.
 
-### 3.1 GitHub Pages — l'hosting (gratis)
+### 3.1 GitHub Pages — hosting (free)
 
-Metodo più semplice, senza configurazione:
+Simplest method, no configuration:
 
-1. Commit e push di `docs/`.
-2. Repo → **Settings → Pages → Build and deployment → Deploy from a branch** → branch `main`, cartella `/docs` → **Save**.
-3. Dopo circa un minuto il sito è online su `https://<utente>.github.io/<repo>/`.
+1. Commit and push `docs/`.
+2. Repo → **Settings → Pages → Build and deployment → Deploy from a branch** → branch `main`, folder `/docs` → **Save**.
+3. After about a minute the site is live at `https://<user>.github.io/<repo>/`.
 
-Limiti: 1 GB per sito, 100 MB per file, circa 100 GB di traffico al mese. Un episodio a 96 kbps pesa circa 0,7 MB al minuto.
+Limits: 1 GB per site, 100 MB per file, about 100 GB of bandwidth per month. An episode at 96 kbps is about 0.7 MB per minute.
 
-### 3.2 Dominio personalizzato
+### 3.2 Custom domain
 
-1. **Settings → Pages → Custom domain** → `www.ilmiolibro.it` → Save (GitHub crea il file `CNAME`).
-2. Dal tuo provider DNS: record `CNAME` da `www` a `<utente>.github.io`.
-3. Spunta **Enforce HTTPS** quando diventa disponibile.
+1. **Settings → Pages → Custom domain** → `www.mybook.com` → Save (GitHub creates the `CNAME` file).
+2. At your DNS provider: a `CNAME` record from `www` to `<user>.github.io`.
+3. Tick **Enforce HTTPS** once it becomes available.
 
-### 3.3 GitHub Actions — sito sempre aggiornato
+### 3.3 GitHub Actions — site always up to date
 
-Invece di ricostruire e pushare `docs/` a mano, lascia che GitHub lo rigeneri a ogni push. Crea `.github/workflows/site.yml`:
+Instead of rebuilding and pushing `docs/` by hand, let GitHub regenerate it on every push. Create `.github/workflows/site.yml`:
 
 ```yaml
-name: Sito del libro
+name: Book site
 on:
   push:
     branches: [main]
@@ -159,49 +159,49 @@ jobs:
         uses: actions/deploy-pages@v4
 ```
 
-Poi **Settings → Pages → Source: GitHub Actions**. Da quel momento ogni push (nuovo capitolo, sync del grafo, nuovo episodio) aggiorna il sito da solo, e `docs/` non serve più committarlo.
+Then **Settings → Pages → Source: GitHub Actions**. From then on every push (new chapter, graph sync, new episode) updates the site on its own, and `docs/` no longer needs to be committed.
 
-### 3.4 Releases — PDF, EPUB e podcast
+### 3.4 Releases — PDF, EPUB and podcast
 
-Le Releases accettano file fino a 2 GB, non pesano sul limite di 1 GB di Pages e danno un link stabile per ogni versione del libro:
+Releases accept files up to 2 GB, don't count toward the 1 GB Pages limit, and give a stable link for each version of the book:
 
 ```bash
-gh release create v1.0 manuscript/il-mio-libro.pdf manuscript/il-mio-libro.epub \
-  --title "Prima edizione" --notes "Capitoli 1–12"
+gh release create v1.0 manuscript/my-book.pdf manuscript/my-book.epub \
+  --title "First edition" --notes "Chapters 1–12"
 ```
 
-Link diretto al file: `https://github.com/<utente>/<repo>/releases/download/v1.0/il-mio-libro.pdf`. Usalo come `book.download` in `site.yaml`, oppure carica gli MP3 in una release e usa quell'indirizzo come `podcast.base_url` (vedi `/ghost-writer:podcast`). Conviene quando il podcast supera qualche centinaio di MB.
+Direct file link: `https://github.com/<user>/<repo>/releases/download/v1.0/my-book.pdf`. Use it as `book.download` in `site.yaml`, or upload the MP3s to a release and use that address as `podcast.base_url` (see `/ghost-writer:podcast`). Worth it once the podcast passes a few hundred MB.
 
-### 3.5 Libro privato, sito pubblico
+### 3.5 Private book, public site
 
-Se il repo del libro è privato e non hai GitHub Pro:
+If the book's repo is private and you don't have GitHub Pro:
 
-1. Crea un secondo repo **pubblico**, ad esempio `il-mio-libro-sito`.
-2. Copia lì il contenuto di `docs/` dopo ogni build (o chiedilo a Claude: *"copia docs/ nel repo del sito e fai push"*).
-3. Attiva Pages sul repo pubblico (§3.1).
+1. Create a second, **public** repo, e.g. `my-book-site`.
+2. Copy the contents of `docs/` there after each build (or ask Claude: *"copy docs/ to the site repo and push"*).
+3. Enable Pages on the public repo (§3.1).
 
-Bozze, demolizioni e memoria restano private: online va solo quello che hai approvato in `site.yaml`.
+Drafts, demolitions and memory stay private: only what you approved in `site.yaml` goes online.
 
-### 3.6 Issues e Discussions — feedback dei lettori
+### 3.6 Issues and Discussions — reader feedback
 
-- **Issues**: apri una issue per capitolo e chiedi ai beta reader di commentare lì. Poi incolla il testo in `/ghost-writer:corrections import` per trasformarlo in correzioni.
-- **Discussions** (Settings → Features): uno spazio pubblico per i lettori del sito. Aggiungi il link in `site.yaml` o nel footer.
+- **Issues**: open one issue per chapter and ask beta readers to comment there. Then paste the text into `/ghost-writer:corrections import` to turn it into corrections.
+- **Discussions** (Settings → Features): a public space for the site's readers. Add the link in `site.yaml` or the footer.
 
-### 3.7 Gallery di claudeghostwriter.com
+### 3.7 claudeghostwriter.com gallery
 
-Quando il sito è online, `/ghost-writer:gallery` prepara la scheda del libro e, con `gh` autenticato, apre la pull request sul repo del sito ufficiale (fork + branch + PR). Senza `gh` genera il link a un form di issue precompilato. Non viene inviato niente senza il tuo OK.
+Once the site is live, `/ghost-writer:gallery` drafts the book entry and, with `gh` authenticated, opens the pull request on the official site's repo (fork + branch + PR). Without `gh` it generates a link to a pre-filled issue form. Nothing is sent without your OK.
 
 ---
 
-## Riepilogo veloce
+## Quick summary
 
-| Obiettivo | Strumento |
+| Goal | Tool |
 |---|---|
-| Versioni e backup del libro | repo privato + commit dopo ogni `integrate` |
-| Scrivere con Claude | Claude Code (CLI, IDE, scheda Code) o Cowork |
-| Discutere il libro in chat | Claude Desktop + connettore GitHub |
-| Sito gratuito | `/ghost-writer:site` + GitHub Pages |
-| Sito che si aggiorna da solo | GitHub Actions |
-| Download e podcast pesanti | GitHub Releases |
-| Feedback dei lettori | Issues / Discussions |
-| Vetrina pubblica | `/ghost-writer:gallery` |
+| Versions and backup of the book | private repo + commit after every `integrate` |
+| Writing with Claude | Claude Code (CLI, IDE, Code tab) or Cowork |
+| Discussing the book in chat | Claude Desktop + GitHub connector |
+| Free website | `/ghost-writer:site` + GitHub Pages |
+| Self-updating site | GitHub Actions |
+| Heavy downloads and podcast | GitHub Releases |
+| Reader feedback | Issues / Discussions |
+| Public showcase | `/ghost-writer:gallery` |
