@@ -1,5 +1,5 @@
 ---
-description: Turn the book into a narrated podcast — one episode per chapter. Picks and tunes the narrator voice with audio samples, adapts each chapter into a script written for the ear (author approves every script), then renders MP3 episodes and an RSS feed. 100% free and open source — Piper TTS (offline) + ffmpeg. No API keys, no paid services.
+description: Turn the book into a narrated podcast — one episode per chapter. Picks and tunes the narrator voice with audio samples, adapts each chapter into a script written for the ear (author approves every script), then renders MP3 episodes and an RSS feed. Free by default — Piper TTS (offline) + ffmpeg, no API keys — or ElevenLabs (paid API) for premium and cloned voices.
 ---
 
 # Skill: Podcast
@@ -9,8 +9,9 @@ description: Turn the book into a narrated podcast — one episode per chapter. 
 Usage:
 - `/ghost-writer:podcast` — full flow (voice → plan → scripts → audio), resumes where it left off
 - `/ghost-writer:podcast voice` — choose or change the narrator voice and character voices
-- `/ghost-writer:podcast jingle` — compose or change the intro jingle (step 1c)
+- `/ghost-writer:podcast jingle` — compose or change the intro jingle (step 1d)
 - `/ghost-writer:podcast script [chapter]` — adapt one chapter into an episode script
+- `/ghost-writer:podcast cost [episode]` — ElevenLabs only: characters a build would send, net of the cache
 - `/ghost-writer:podcast build [episode]` — render audio for one or all approved scripts
 - `/ghost-writer:podcast feed` — generate `podcast/feed.xml` for Spotify / Apple Podcasts
 
@@ -20,13 +21,14 @@ Format: **narrated**. One narrator reads the book, with light adaptation for lis
 
 ## Prerequisites
 
-If `export_podcast.py` does not exist in the project root, generate it before any other step. The script wraps piper-tts and ffmpeg to implement these subcommands: `voices <lang>` (list available Piper voices), `sample <voice> [--text "…"]` (render a short sample), `jingle [--style …] [--seed N]` (synthesize an intro jingle), `build [episode.md]` (render approved scripts to MP3 with ID3 tags), `feed` (generate `podcast/feed.xml`). It reads voice and episode config from `book.config.json → podcast` and scripts from `podcast/scripts/`.
+If `export_podcast.py` does not exist in the project root, generate it before any other step. The script wraps a TTS engine and ffmpeg to implement these subcommands: `voices <lang>` (list available voices: the Piper catalog, or the account's voices with ElevenLabs), `sample <voice> [--text "…"]` (render a short sample), `jingle [--style …] [--seed N]` (synthesize an intro jingle), `cost [episode.md]` (ElevenLabs only: characters to send), `build [episode.md]` (render approved scripts to MP3 with ID3 tags), `feed` (generate `podcast/feed.xml`). It reads voice and episode config from `book.config.json → podcast` and scripts from `podcast/scripts/`. `podcast.engine` picks the engine: `piper` (default) or `elevenlabs` (see **ElevenLabs engine** below).
 
 Check both, and if something is missing give the install command and stop:
 ```bash
 python3 -c "import piper, numpy"   # pip install piper-tts numpy
 ffmpeg -version                     # apt install ffmpeg · brew install ffmpeg · winget install ffmpeg
 ```
+With `engine: "elevenlabs"`, piper-tts is not needed (numpy and ffmpeg still are), but an API key is: see below.
 Source text: `manuscript/[title]-final.md` if it exists (split by `# ` headings), otherwise the chapters in `chapters/` in outline order. If a chapter is still `draft`, warn the author once: the podcast is best made from integrated text.
 
 ---
@@ -35,7 +37,14 @@ Source text: `manuscript/[title]-final.md` if it exists (split by `# ` headings)
 
 Run this on the first use, if `book.config.json → podcast.voice` is empty, or on `/ghost-writer:podcast voice`.
 
-### 1a. Narrator
+### 1a. Engine
+Ask once which engine the author wants, and save it to `podcast.engine`:
+- **Piper** (default): free, offline, good quality. No account.
+- **ElevenLabs**: paid, more expressive voices, and the author can clone their own voice in their ElevenLabs account. Billed in characters: run `cost` before every build. Publishing commercially and voice cloning require a paid plan.
+
+### 1b. Narrator
+With ElevenLabs, skip to **ElevenLabs engine → Voice** below, then continue with step 3 (tuning).
+
 1. List the voices available for the book's language:
    ```bash
    python3 export_podcast.py voices it
@@ -51,14 +60,15 @@ Run this on the first use, if `book.config.json → podcast.voice` is empty, or 
    - **Pauses** (`sentence_pause`, `paragraph_pause`, in seconds): longer pauses give a calmer, more literary feel.
 4. Save the choices to `book.config.json → podcast`.
 
-### 1b. Character voices (optional; suggest only for the fiction, fable, children's-book and biography presets)
+### 1c. Character voices (optional; suggest only for the fiction, fable, children's-book and biography presets)
 If the book has dialogue and profiled characters in `characters/`, ask whether the main characters should have their own voice. For each one, render a sample with a line of that character's dialogue, then save it:
 ```json
 "voices": { "MARIO": { "voice": "it_IT-riccardo-x_low", "speed": 1.05 } }
 ```
+With ElevenLabs, `voice` is a voice_id and each character can also have its own `stability`, `similarity_boost`, `style`.
 Default is no character voices: the narrator reads everything, like a classic audiobook.
 
-### 1c. Intro jingle (optional)
+### 1d. Intro jingle (optional)
 Ask whether the author wants an intro jingle. The voice starts over the jingle's tail; `intro_overlap` sets how many seconds of overlap, default 1.5. Offer three options:
 
 **A. Composed jingle (default, offline, no license issues).** The script composes an original 6–9 second sting with no samples. The style comes from the preset: essay and biography → `warm`, manual → `upbeat`, fiction → `mysterious`, fable and children's book → `playful`. The seed is derived from the title, so each book gets its own jingle and the same seed always gives the same result.
@@ -169,7 +179,31 @@ Output: `podcast/episodes/episode-NN.mp3`, mono at 96 kbps, which is the standar
 
 Before rendering, check that every `[voice NAME]` used in the scripts is defined in `podcast.voices`. After rendering, report the duration of each episode and suggest listening to the first 2 minutes of episode 1 before publishing.
 
+With ElevenLabs, run `cost` first and show the author the total before rendering: `build` only sends what is not in the cache yet.
+
 When the author reports a word that is mispronounced, fix the spelling in the script and re-render only that episode. Do not change the chapter. Write the fix to the `## Pronunciation` section of `podcast/plan.md`, so later scripts apply it automatically.
+
+---
+
+## ElevenLabs engine
+
+Enabled by `podcast.engine: "elevenlabs"`. Everything else (plan, scripts and approval, jingle, feed, site) is the same as with Piper.
+
+**API key.** The script reads `ELEVENLABS_API_KEY` from the environment and sends it as the `xi-api-key` header. If it is not set, the request goes out without the header: in a Claude Code cloud session a network secret for `api.elevenlabs.io` adds it. Never write the key in `book.config.json`, in the script or in any committed file. If neither is available, tell the author how to set the variable and stop.
+
+**Voice.** `python3 export_podcast.py voices` lists the account's voices (`GET /v1/voices`: voice_id, name, labels). Recommend two or three that fit the book, or the author's cloned voice if there is one, render a `sample` of each from a real passage (this costs a few hundred characters), and save the chosen voice_id to `podcast.voice`. Tune `speed` (ElevenLabs accepts 0.7–1.2, clamp to that range), `stability` (lower = more expressive, higher = more even; default 0.5), `similarity_boost` (0.75) and `style` (0.0).
+
+**Model.** `podcast.model`, default `eleven_multilingual_v2`. Other models can be listed with `GET /v1/models`; let the author choose if they ask.
+
+**Rendering.** `POST /v1/text-to-speech/{voice_id}?output_format=pcm_<sample rate>` with `text`, `model_id` and `voice_settings` (stability, similarity_boost, style, speed). Send **whole paragraphs**, not single sentences: prosody is much better. Merge consecutive sentences of the same voice up to ~1,000 characters and split longer paragraphs at sentence boundaries (very long requests fail). Pass `previous_text` and `next_text` (the neighbouring blocks) so the tone stays continuous. `[pause N]` and paragraph breaks are rendered locally as silence, then the PCM blocks are concatenated and encoded as with Piper, intro and outro music included. Retry 429 and 5xx with exponential backoff (4 attempts); fail at once on other 4xx (401 = missing or wrong key, quota errors = out of characters).
+
+**Cache.** Save each rendered block to `podcast/cache/elevenlabs/<hash>.pcm`, where the hash covers the text and all voice settings (voice, model, speed, stability, similarity_boost, style). Re-rendering an unchanged paragraph then costs nothing: after a pronunciation fix, only the changed paragraph is billed. Add `podcast/cache/` to `.gitignore`.
+
+**Cost.** `python3 export_podcast.py cost [episode.md]` uses the same grouping as `build` and prints, per episode and in total, the characters not yet in the cache.
+
+**Pronunciation.** ElevenLabs reads English terms, names and most abbreviations correctly: keep the book's spelling and only spell out numbers and symbols. Phonetic respellings in `## Pronunciation` are for Piper only; if a word is misread, fix it in the script as usual.
+
+**Disclosure.** Remind the author to state in the show description that the narration uses a synthetic voice, including a clone of their own.
 
 ---
 
@@ -186,6 +220,7 @@ Ask for `podcast.base_url`, the public folder where the MP3s will be hosted. Fre
 
 ```json
 "podcast": {
+  "engine": "piper",
   "voice": "it_IT-paola-medium",
   "speaker": null,
   "speed": 0.95,
@@ -199,6 +234,7 @@ Ask for `podcast.base_url`, the public folder where the MP3s will be hosted. Fre
   "base_url": ""
 }
 ```
+With ElevenLabs: `"engine": "elevenlabs"`, `"voice"` = a voice_id, and also `"model": "eleven_multilingual_v2"`, `"stability": 0.5`, `"similarity_boost": 0.75`, `"style": 0.0`.
 
 ---
 

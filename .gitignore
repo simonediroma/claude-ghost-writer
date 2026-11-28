@@ -24,6 +24,7 @@ Thumbs.db
 # Podcast — downloaded Piper voices (large) and rendered audio
 podcast/voices/
 podcast/samples/
+podcast/cache/
 # podcast/episodes/
 podcast/music/kit/vcsl/
 

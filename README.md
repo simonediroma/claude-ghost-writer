@@ -148,7 +148,7 @@ Requires `pip install reportlab pymupdf`.
 | `/ghost-writer:podcast jingle` | Composes an original intro jingle offline (warm, upbeat, mysterious, playful, grime) or a seamless `grime-loop` beat made from real CC0 recordings |
 | `/ghost-writer:podcast voice` | Pick or retune the narrator voice (speed, pauses) and optional character voices |
 
-100% free and open source: [Piper](https://github.com/OHF-Voice/piper1-gpl) (offline TTS) + ffmpeg. Requires `pip install piper-tts numpy` and `ffmpeg`. Chapters are never modified — scripts live in `podcast/scripts/`.
+Free and open source by default: [Piper](https://github.com/OHF-Voice/piper1-gpl) (offline TTS) + ffmpeg. Requires `pip install piper-tts numpy` and `ffmpeg`. Optional: [ElevenLabs](https://elevenlabs.io) (paid API, `podcast.engine: "elevenlabs"`) for premium or cloned voices, with a local cache and `/ghost-writer:podcast cost` to see the characters before each build. Chapters are never modified — scripts live in `podcast/scripts/`.
 
 ### Utility
 

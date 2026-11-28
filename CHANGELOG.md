@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- **`/ghost-writer:podcast`**: optional ElevenLabs engine (`podcast.engine: "elevenlabs"`) for premium or cloned voices. Whole-paragraph requests with `previous_text` / `next_text`, local cache in `podcast/cache/elevenlabs/` (unchanged paragraphs cost nothing), `cost` subcommand to see the characters before a build. Piper stays the free default.
+
 ## [1.8.1] — 2026-11-27
 
 ### Changed
