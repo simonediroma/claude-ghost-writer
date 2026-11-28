@@ -326,6 +326,8 @@ python3 build_site.py            # build docs/
 
 Publish: repository **Settings → Pages → Deploy from a branch → `main` / `docs`**. With a podcast, set `podcast.base_url` to `https://<user>.github.io/<repository>/episodes` and run `python3 export_podcast.py feed` before the build. Requires `pip install pyyaml` (Pillow optional, for the 720 px cover).
 
+Full walkthrough: [Build Your Book Website](guides/build-your-book-website.md).
+
 ---
 
 ## Core Principles
