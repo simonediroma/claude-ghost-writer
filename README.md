@@ -32,6 +32,10 @@ Ghost Writer is listed in Anthropic's plugin directory. Install it in one click 
 
 Download [ghost-writer-1.8.1.plugin](https://claudeghostwriter.com/downloads/ghost-writer-1.8.1.plugin) from the website and drag it into the Claude app (or upload it from **Settings → Plugins**).
 
+### Using GitHub with Ghost Writer
+
+Versioning, backup, Claude Desktop/Code setup and free hosting for the book site: see the [GitHub guide (Italian)](guides/github.md).
+
 ### Local testing
 
 ```bash
